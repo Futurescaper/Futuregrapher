@@ -18,6 +18,7 @@
         if (!colors || colors.length == 0)
             return null;
 
+
         if (colors.length == 1)
             return colors[0];
 
