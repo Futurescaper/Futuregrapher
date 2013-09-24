@@ -99,7 +99,7 @@ d3graph = function(el, options) {
 
     var w = this.width = this.el.innerWidth();
     var h = this.height = this.el.innerHeight();
-    this.scale = this.settings.initialZoom || settings.zoom.default;
+    this.scale = this.settings.initialZoom || 1.0;
     this.trans = [(w / 2) - (w * this.scale / 2), (h / 2) - (h * this.scale / 2)];
 
     this.el.on('click', function (evt) {
@@ -264,7 +264,7 @@ d3graph = function(el, options) {
             });
         else {
             l.style('fill', 'none');
-            if(!settings.graph || settings.graph.directional != false)
+            if(options.directional)
                 l.attr('marker-end', function(link) {
                     return 'url(#' + (self.id||'') + self.settings.markerId + '_' + (link.marker ? link.marker : 'default') + ')';
                 });
@@ -276,7 +276,7 @@ d3graph = function(el, options) {
             .style("stroke-width", function (d) { return _linklib.getLinkWidth(d); })
             .style("stroke", function (d) {
                 if(self.settings.taperedLinks)
-                    return self.settings.taperedLinkBorders ? colors.getDarkerColorHex(d3color(color_scale(d.ratio))) : 'rgb(255,255,255,.5)';
+                    return self.settings.taperedLinkBorders ? d3colors.getDarkerColorHex(d3color(color_scale(d.ratio))) : 'rgb(255,255,255,.5)';
 
                 return _linklib.getLinkColor(d);
             });
@@ -327,8 +327,8 @@ d3graph = function(el, options) {
 
         if(this.vis.node()) {
             this.vis.node().oncontextmenu = function() {
-                if(!self.currentNode)
-                    return settings.debug;
+                //if(!self.currentNode)
+                //    return settings.debug;
 
                 return _nodelib.onNodeRightClick(self.currentNode);
             };
