@@ -1,5 +1,8 @@
 ﻿if(Meteor.isClient)
 d3styles = new function(graph) {
+    if(!graph)
+        return;
+
     var self = this;
 
     this.settings = {
