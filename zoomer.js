@@ -1,5 +1,5 @@
 if(Meteor.isClient)
-d3zoomer = new function () {
+d3zoomer = function () {
     this.widget = null;
 
     this.initialize = function (graph, widgetId) {

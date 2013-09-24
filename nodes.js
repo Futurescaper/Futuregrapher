@@ -1,5 +1,5 @@
 ﻿if(Meteor.isClient)
-d3nodes = new function (d3graph) {
+d3nodes = function (d3graph) {
     this.getNodeColor = function (node, minColor, maxColor) {
         if(node.selected && !window.inCauseEffectView)
             return d3colors.rgba(d3colors.getRgbaFromHex('ff0000'));

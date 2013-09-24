@@ -1,5 +1,5 @@
 if(Meteor.isClient)
-d3selector = new function (graph) {
+d3selector = function (graph) {
     this.selection = [];
 
     this.toggleNode = function(node) {

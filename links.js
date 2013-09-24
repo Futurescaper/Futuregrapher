@@ -1,5 +1,5 @@
 ﻿if(Meteor.isClient)
-d3links = new function (graph) {
+d3links = function (graph) {
     var self = this;
 
     this.d3LineBasis = d3.svg.line().interpolate("basis");
