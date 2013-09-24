@@ -1,5 +1,5 @@
 ﻿if(Meteor.isClient)
-d3graph = new function(el, options) {
+d3graph = function(el, options) {
     this.nodes = [];
     this.links = [];
     this.nodeDictionary = new Dictionary();
