@@ -1,4 +1,5 @@
-﻿d3highlights = new function (graph) {
+﻿if(Meteor.isClient)
+d3highlights = new function (graph) {
     this.fadeOut = function (opacity, time) {
 
         // cancel all pending transitions

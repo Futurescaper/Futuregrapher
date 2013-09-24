@@ -5,5 +5,7 @@
     "author": "Kevin Marzec <kevin@futurescaper.com>",
     "version": "0.1.0",
     "git": "https://github.com/Futurescaper/meteor-d3graph.git",
-    "packages": {}
+    "packages": {
+        "d3": {}
+    }
 }

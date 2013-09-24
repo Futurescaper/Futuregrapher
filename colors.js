@@ -1,4 +1,5 @@
-﻿d3colors = {
+﻿
+d3colors = {
     colorBlend: function(col1, col2, blend) {
         return [ Math.round(col1[0] + (col2[0] - col1[0]) * blend),
                 Math.round(col1[1] + (col2[1] - col1[1]) * blend),

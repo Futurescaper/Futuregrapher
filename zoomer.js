@@ -1,3 +1,4 @@
+if(Meteor.isClient)
 d3zoomer = new function () {
     this.widget = null;
 

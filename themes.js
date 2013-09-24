@@ -1,3 +1,4 @@
+if(Meteor.isClient)
 d3themes = new function () {
     this.initialize = function (graph, page) {
         if(!data)

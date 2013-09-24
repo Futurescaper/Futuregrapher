@@ -1,3 +1,4 @@
+if(Meteor.isClient)
 d3selector = new function (graph) {
     this.selection = [];
 

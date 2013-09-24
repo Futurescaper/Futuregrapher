@@ -1,4 +1,5 @@
-﻿d3labels = new function (graph) {
+﻿if(Meteor.isClient)
+d3labels = new function (graph) {
     var self = this;
 
     this.onLabelClick = function (node) {
