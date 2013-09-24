@@ -6,16 +6,16 @@ Package.on_use(function(api, where) {
     api.use(['d3'], 'client');
     api.add_files([
         'dictionary.js',
-        'd3graph.js',
+        'nodes.js',
         'highlights.js',
         'labels.js',
         'links.js',
-        'nodes.js',
         'selector.js',
         'styles.js',
         'tags.js',
         'themes.js',
-        'zoomer.js'
+        'zoomer.js',
+        'd3graph.js',
     ]);
 
     if (api.export)
