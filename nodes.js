@@ -7,7 +7,7 @@ d3nodes = function (graph) {
         if(node._color)
             return d3colors.rgba(colors.getRgbaFromHex(node._color));
 
-        var color = d3colors.colorBlend(d3colors.getRgbaFromHex(minColor || graph.d3styles().colors.nodeMin), d3colors.getRgbaFromHex(maxColor || graph.d3styles().colors.nodeMax), node.ratio);
+        var color = d3colors.blend(d3colors.getRgbaFromHex(minColor || graph.d3styles().colors.nodeMin), d3colors.getRgbaFromHex(maxColor || graph.d3styles().colors.nodeMax), node.ratio);
         var fill = d3colors.rgba(color);
         if (node.color != fill)
             node.color = fill;

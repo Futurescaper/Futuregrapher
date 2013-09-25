@@ -271,7 +271,7 @@ d3graph = function(el, options) {
             .style("stroke-width", function (d) { return _linklib.getLinkWidth(d); })
             .style("stroke", function (d) {
                 if(self.settings.taperedLinks)
-                    return self.settings.taperedLinkBorders ? d3colors.getDarkerColorHex(d3color(color_scale(d.ratio))) : 'rgb(255,255,255,.5)';
+                    return self.settings.taperedLinkBorders ? d3colors.darken(d3color(color_scale(d.ratio))).hex() : 'rgb(255,255,255,.5)';
 
                 return _linklib.getLinkColor(d);
             });

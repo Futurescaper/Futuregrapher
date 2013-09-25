@@ -411,26 +411,26 @@
             if(d.data && d.data.length > 0 && d.data[0].get && d.data[0].get('isEdge')) {
                 // HACK!
                 if(window.application.state.colorFilterActive && d.source.color && d.source.color == d.target.color) {
-                    d.color = d.source.color.indexOf('#') >= 0 ? d3colors.getLighterColorHex(d.source.color) : d.source.color;
+                    d.color = d.source.color.indexOf('#') >= 0 ? d3colors.lighten(d.source.color).hex() : d.source.color;
                     if(d.color.indexOf('#') >= 0) {
                         // limit the brightness
                         var rgb = d3colors.getRgbaFromHex(d.color);
                         var brightness = (rgb[0] * 2 + rgb[1] + rgb[2] * 3) / 6;
                         if(brightness > 200)
-                            d.color = d3colors.getDarkerColorHex(d.source.color,.8);
+                            d.color = d3colors.darken(d.source.color,.8).hex();
                     }
                 }
                 /*else if(settings.edgeTypes) {
                  var type = settings.edgeTypes[d.data[0].get('relationship')];
 
                  // HACK: if more than 1 type of relationship on this link, make it gray
-                 d.color = (!type || !type.color) ? '#888888' : type.color; //graph.d3styles().getDarkerColorHex(type.color,.8);
+                 d.color = (!type || !type.color) ? '#888888' : type.color; // graph.d3styles().darken(type.color,.8).hex();
                  }*/
                 else
                     d.color = (d.data[0].get('quality') == 'increasing') ? minColor || graph.d3styles().colors.linkMin : maxColor || graph.d3styles().colors.linkMax;
             }
             else
-                d.color = d3colors.rgba(d3colors.colorBlend(d3colors.getRgbaFromHex(minColor || graph.d3styles().colors.linkMin), d3colors.getRgbaFromHex(maxColor || graph.d3styles().colors.linkMax), d.ratio));
+                d.color = d3colors.rgba(d3colors.blend(d3colors.getRgbaFromHex(minColor || graph.d3styles().colors.linkMin), d3colors.getRgbaFromHex(maxColor || graph.d3styles().colors.linkMax), d.ratio));
             return d.color;
         };
 
