@@ -30,10 +30,7 @@ d3styles = function(graph) {
     };
 
     this.getLinkMarker = function(link) {
-        return "url(#"
-                + ((graph.highlightlib().count() == 0 || graph
-                        .highlightlib().isLinkHighlighted(link)) ? 'arrow'
-                        : '') + ")";
+        return "url(#" + ((graph.d3highlights().count() == 0 || graph.d3highlights().isLinkHighlighted(link)) ? 'arrow' : '') + ")";
     };
 
     this.getNodeBorderColor = function(node, darkening) {

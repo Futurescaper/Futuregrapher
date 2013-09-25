@@ -23,9 +23,9 @@ if(Meteor.isClient)
                     this.graph.vis.attr('transform', 'translate(' + this.graph.trans + ') scale(' + this.graph.scale + ')');
 
                     // update labels
-                    this.graph.labellib().updateLabelSizesForZoom(this.graph.scale);
-                    this.graph.nodelib().updateNodeSizesForZoom(this.graph.scale);
-                    this.graph.linklib().updateLinkSizesForZoom(this.graph.scale);
+                    this.graph.d3labels().updateLabelSizesForZoom(this.graph.scale);
+                    this.graph.d3nodes().updateNodeSizesForZoom(this.graph.scale);
+                    this.graph.d3links().updateLinkSizesForZoom(this.graph.scale);
 
                     if(this.widget) {
                         this.doZoom = false;
@@ -87,9 +87,9 @@ if(Meteor.isClient)
                     graph.vis.attr('transform', 'translate(' + graph.trans + ') scale(' + graph.scale + ')');
                     graph.zoom.translate(graph.trans).scale(graph.scale);
 
-                    graph.labellib().updateLabelSizesForZoom(y);
-                    graph.nodelib().updateNodeSizesForZoom(y);
-                    graph.linklib().updateLinkSizesForZoom(y);
+                    graph.d3labels().updateLabelSizesForZoom(y);
+                    graph.d3nodes().updateNodeSizesForZoom(y);
+                    graph.d3links().updateLinkSizesForZoom(y);
                 }, this)
             });
 

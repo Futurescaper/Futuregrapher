@@ -81,7 +81,7 @@ d3labels = function (graph) {
     };
 
     this.getLabelColor = function (node) {
-        node.labelColor = graph.stylelib().colors.label;
+        node.labelColor = graph.d3styles().colors.label;
         return node.labelColor;
     };
 

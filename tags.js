@@ -47,7 +47,7 @@ d3tags = function (graph) {
             // find the index
             for (var i = 0; i < graph.nodes.length; i++)
                 if (graph.nodes[i] == node)
-                    return graph.nodelib().removeNodeByIndex(i);
+                    return graph.d3nodes().removeNodeByIndex(i);
         }
     };
 

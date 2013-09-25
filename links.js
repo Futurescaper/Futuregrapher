@@ -61,8 +61,8 @@
             var type = linkSettings.type||0;
             var update = linkSettings.update == false ? false : true;
 
-            var source = graph.nodelib().getNode(from),
-                target = graph.nodelib().getNode(to),
+            var source = graph.d3nodes().getNode(from),
+                target = graph.d3nodes().getNode(to),
                 link;
 
             if (!source) {
@@ -182,7 +182,7 @@
                             graph.links.splice(i, 1);
                         }
                         else if (t) {
-                            var index = $.inArray(t, graph.taglib().getTagNames(link));
+                            var index = $.inArray(t, graph.d3tags().getTagNames(link));
                             if (index >= 0) {
                                 var _tag = link.tags[index];
 
@@ -361,7 +361,7 @@
                     return a;
 
                 // calculate the standard string-based interpolation value
-                var path = graph.linklib().calculatePath(d);
+                var path = graph.d3links().calculatePath(d);
                 if(!path)
                     return '';
 
@@ -400,8 +400,8 @@
                 .style('stroke', $.proxy(function(d) {
                     var c = this.getLinkColor(d);
                     d.marker = 'custom_' + c.replace(/[()]/g, '');
-                    if(!graph.linklib().hasMarkerDefinition(d.marker))
-                        graph.linklib().addMarkerDefinition(d.marker, c);
+                    if(!graph.d3links().hasMarkerDefinition(d.marker))
+                        graph.d3links().addMarkerDefinition(d.marker, c);
                     graph.visLinks.selectAll('svg g.links path[source="' + d.source.id + '"][target="' + d.target.id + '"]').attr('marker-end', 'url(#' + (graph.id||'') + graph.settings.markerId + '_' + d.marker + ')');
                     return c;
                 }, this));
@@ -424,13 +424,13 @@
                  var type = settings.edgeTypes[d.data[0].get('relationship')];
 
                  // HACK: if more than 1 type of relationship on this link, make it gray
-                 d.color = (!type || !type.color) ? '#888888' : type.color; //graph.stylelib().getDarkerColorHex(type.color,.8);
+                 d.color = (!type || !type.color) ? '#888888' : type.color; //graph.d3styles().getDarkerColorHex(type.color,.8);
                  }*/
                 else
-                    d.color = (d.data[0].get('quality') == 'increasing') ? minColor || graph.stylelib().colors.linkMin : maxColor || graph.stylelib().colors.linkMax;
+                    d.color = (d.data[0].get('quality') == 'increasing') ? minColor || graph.d3styles().colors.linkMin : maxColor || graph.d3styles().colors.linkMax;
             }
             else
-                d.color = d3colors.rgba(d3colors.colorBlend(d3colors.getRgbaFromHex(minColor || graph.stylelib().colors.linkMin), d3colors.getRgbaFromHex(maxColor || graph.stylelib().colors.linkMax), d.ratio));
+                d.color = d3colors.rgba(d3colors.colorBlend(d3colors.getRgbaFromHex(minColor || graph.d3styles().colors.linkMin), d3colors.getRgbaFromHex(maxColor || graph.d3styles().colors.linkMax), d.ratio));
             return d.color;
         };
 

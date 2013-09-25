@@ -7,7 +7,7 @@ d3nodes = function (graph) {
         if(node._color)
             return d3colors.rgba(colors.getRgbaFromHex(node._color));
 
-        var color = d3colors.colorBlend(d3colors.getRgbaFromHex(minColor || graph.stylelib().colors.nodeMin), d3colors.getRgbaFromHex(maxColor || graph.stylelib().colors.nodeMax), node.ratio);
+        var color = d3colors.colorBlend(d3colors.getRgbaFromHex(minColor || graph.d3styles().colors.nodeMin), d3colors.getRgbaFromHex(maxColor || graph.d3styles().colors.nodeMax), node.ratio);
         var fill = d3colors.rgba(color);
         if (node.color != fill)
             node.color = fill;
@@ -24,7 +24,7 @@ d3nodes = function (graph) {
     };
 
     this.getNodeBorderWidth = function (node) {
-        return graph.stylelib().settings.nodeBorderSize;
+        return graph.d3styles().settings.nodeBorderSize;
     };
 
     this.getNode = function (name) {
@@ -210,7 +210,7 @@ d3nodes = function (graph) {
 
                     // if we're removing a tag as well, find the tag
                     if (t) {
-                        var index = $.inArray(t, graph.taglib().getTagNames(n));
+                        var index = $.inArray(t, graph.d3tags().getTagNames(n));
                         if (index >= 0) {
                             var _tag = n.tags[index];
 
@@ -422,8 +422,8 @@ d3nodes = function (graph) {
             if (graph.settings.embedLabels)
                 graph.visLabels
                     .selectAll('g.label[id="' + node.id + '"] text')
-                    .each(graph.labellib().getEmbeddedLabelFontSize)
-                    .each(graph.labellib().wordWrapLabel);
+                    .each(graph.d3labels().getEmbeddedLabelFontSize)
+                    .each(graph.d3labels().wordWrapLabel);
             else
                 graph.visLabels
                     .selectAll('g.label[id="' + node.id + '"] text')
@@ -465,8 +465,8 @@ d3nodes = function (graph) {
 
         graph.visNodes.selectAll('g.node circle')
             .attr('r', function(d) { d._radius = d.radius / s; return d._radius; })
-            .style('stroke', function(d) { return graph.stylelib().getNodeBorderColor(d); })
-            .style('stroke-width', (parseInt(graph.stylelib().settings.nodeBorderSize) / s)||1);
+            .style('stroke', function(d) { return graph.d3styles().getNodeBorderColor(d); })
+            .style('stroke-width', (parseInt(graph.d3styles().settings.nodeBorderSize) / s)||1);
     };
 
     this.animateNodeClick = function(node, callback) {
@@ -549,7 +549,7 @@ d3nodes = function (graph) {
                     x.style('stroke', position.stroke);
                 else if(position.color) {
                     node.color = position.color;
-                    x.style('stroke', graph.stylelib().getNodeBorderColor(node));
+                    x.style('stroke', graph.d3styles().getNodeBorderColor(node));
                 }
                 var opacity = (node.labelOpacity || node.opacity || 1.0);
                 graph.visLabels.selectAll('g.label[id="' + position.id + '"]')
@@ -564,7 +564,7 @@ d3nodes = function (graph) {
                     .text(function(d) { return opacity > 0 ? d.title : ''; })
                     //.style('font-size', function(d) { return jQuery.isNumeric(d.fontSize) ? d.fontSize + 'em' : d.fontSize })
                     .attr('text-anchor', function(d) { return position.anchor||(d.x < center.x ? 'end' : 'start') })
-                    .attr('fill', function(d) { return position.labelColor||graph.stylelib().getNodeBorderColor(d); } /*LABEL FIX:node.labelColor*/);
+                    .attr('fill', function(d) { return position.labelColor||graph.d3styles().getNodeBorderColor(d); } /*LABEL FIX:node.labelColor*/);
             }
         });
 
@@ -574,7 +574,7 @@ d3nodes = function (graph) {
                 //.delay(function (d, i) { return i * 2; })
                 .duration(time || 500)
                 .style('opacity', 1.0)
-                .attrTween('d', graph.linklib().calculatePathTween); //function (d) { return graph.linklib().calculatePath(d); });
+                .attrTween('d', graph.d3links().calculatePathTween); //function (d) { return graph.linklib().calculatePath(d); });
         else
             graph._links
                 .transition()
@@ -638,7 +638,7 @@ d3nodes = function (graph) {
                     });
                     return parseInt(width||1);
                 })
-                .attrTween('d', graph.linklib().calculatePathTween);
+                .attrTween('d', graph.d3links().calculatePathTween);
 
         // Update labels
         graph.visLabels
@@ -646,7 +646,7 @@ d3nodes = function (graph) {
             .transition()
             .delay(function (d, i) { return i * 2; })
             .duration(time || 500)
-            .attr('transform', function (node) { return graph.labellib().transformLabel(node, center); });
+            .attr('transform', function (node) { return graph.d3labels().transformLabel(node, center); });
     };
 
     this.getNodeTooltip = function (node) {

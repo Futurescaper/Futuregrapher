@@ -20,7 +20,7 @@ d3selector = function (graph) {
             graph._nodes.select('g.node[id="' + node.id + '"] circle')
                 .transition()
                 .duration(50)
-                .style('fill', graph.stylelib().colors.nodeSelected || '#ff0000');
+                .style('fill', graph.d3styles().colors.nodeSelected || '#ff0000');
             this.selection.push(node);
         }
 
@@ -53,7 +53,7 @@ d3selector = function (graph) {
             graph._nodes.select('g.node[id="' + n.id + '"] circle')
                 .transition()
                 .duration(50)
-                .style('fill', graph.stylelib().colors.nodeSelected || '#ff0000');
+                .style('fill', graph.d3styles().colors.nodeSelected || '#ff0000');
         }
     };
 }
