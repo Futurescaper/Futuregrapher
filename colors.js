@@ -43,10 +43,17 @@ d3color = function(hexOrRgba) {
 };
 
 d3colors = {
+    getd3Color: function(color) {
+        return color.length ? new d3color(color) : color;
+    },
+
     // Blend two colors together at a certain % of blending
     blend: function(color1, color2, blend) {
-        var rgb1 = color1.rgba();
-        var rgb2 = color2.rgba();
+        var col1 = this.getd3Color(color1);
+        var col2 = this.getd3Color(color2);
+
+        var rgb1 = col1.rgba();
+        var rgb2 = col2.rgba();
 
         return new d3color([Math.round(rgb1[0] + (rgb2[0] - rgb1[0]) * blend),
                 Math.round(rgb1[1] + (rgb2[1] - rgb1[1]) * blend),
