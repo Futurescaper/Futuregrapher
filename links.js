@@ -430,7 +430,7 @@
                     d.color = (d.data[0].get('quality') == 'increasing') ? minColor || graph.d3styles().colors.linkMin : maxColor || graph.d3styles().colors.linkMax;
             }
             else
-                d.color = d3colors.rgba(d3colors.blend(d3colors.getRgbaFromHex(minColor || graph.d3styles().colors.linkMin), d3colors.getRgbaFromHex(maxColor || graph.d3styles().colors.linkMax), d.ratio));
+                d.color = d3colors.blend(d3colors.getRgbaFromHex(minColor || graph.d3styles().colors.linkMin), d3colors.getRgbaFromHex(maxColor || graph.d3styles().colors.linkMax), d.ratio).rgbastr();
             return d.color;
         };
 

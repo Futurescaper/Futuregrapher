@@ -2,10 +2,10 @@
 d3nodes = function (graph) {
     this.getNodeColor = function (node, minColor, maxColor) {
         if(node.selected && !window.inCauseEffectView)
-            return d3colors.rgba(d3colors.getRgbaFromHex('ff0000'));
+            return new d3color(d3colors.getRgbaFromHex('ff0000')).rgbastr();
 
         if(node._color)
-            return d3colors.rgba(colors.getRgbaFromHex(node._color));
+            return new d3color(colors.getRgbaFromHex(node._color)).rgbastr();
 
         var color = d3colors.blend(d3colors.getRgbaFromHex(minColor || graph.d3styles().colors.nodeMin), d3colors.getRgbaFromHex(maxColor || graph.d3styles().colors.nodeMax), node.ratio);
         var fill = color.rgbastr();
