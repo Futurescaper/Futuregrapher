@@ -110,7 +110,7 @@ d3colors = {
     // Private methods
     getRgbaFromHex: function(hexColor) {
         return [
-                parseInt(this._cutHex(c).substring(0, 2), 16),
+                parseInt(this._cutHex(hexColor).substring(0, 2), 16),
                 parseInt(this._cutHex(hexColor).substring(2, 4), 16),
                 parseInt(this._cutHex(hexColor).substring(4, 6), 16),
                 1 ];
