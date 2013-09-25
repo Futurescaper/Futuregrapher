@@ -459,8 +459,9 @@
         this.clearLinks = function() {
             var self = this;
             $.each(graph.links, function(i, link) {
-                self.removeLink(link.from, link.to);
+                self.removeLink(link.from, link.to, null, false, true);
             });
+            graph.update();
         };
 
         this.onLinkMouseover = function(link) {

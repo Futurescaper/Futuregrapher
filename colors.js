@@ -1,48 +1,122 @@
-﻿
-d3colors = {
-    colorBlend: function(col1, col2, blend) {
-        return [ Math.round(col1[0] + (col2[0] - col1[0]) * blend),
-                Math.round(col1[1] + (col2[1] - col1[1]) * blend),
-                Math.round(col1[2] + (col2[2] - col1[2]) * blend),
-                col1[3] + (col2[3] - col1[3]) * blend ];
-    },
+﻿// A basic color object
+d3color = function(hexOrRgba) {
+    // if hex, then grab the colors as rgba
+    if(hexOrRgba && typeof hexOrRgba == "string" && (hexOrRgba.length == 6 || (hexOrRgba.length == 7 && hexOrRgba[0] == '#'))) {
+        var rgba = d3colors.getRgbaFromHex(hexOrRgba);
+        this.color = { r: rgba[0], g: rgba[1], b: rgba[2], a: rgba[3] };
+    }
+    else
+        // just assign the values
+        this.color = (!hexOrRgba || hexOrRgba.length < 3) ?
+                        { r: 0, g: 0, b: 0, a: 1 } :
+                        { r: hexOrRgba[0], g: hexOrRgba[1], b: hexOrRgba[2], a: (hexOrRgba.length > 3) ? hexOrRgba[3] : 1 };
 
-    rgba: function(col) {
-        var r = col[0] > 256 ? 256 : Math.floor(col[0]);
-        var g = col[1] > 256 ? 256 : Math.floor(col[1]);
-        var b = col[2] > 256 ? 256 : Math.floor(col[2]);
+    // Get or set the color's hex value
+    this.hex = function(val) {
+        if(!val)
+            return d3colors.getHexFromRgb(this.color.r, this.color.g, this.color.b);
+
+        var rgba = d3color.getRgbaFromHex(val);
+        this.color = { r: rgba[0], g: rgba[1], b: rgba[2], a: rgba[3] };
+    };
+
+    // Get or set the color's rgba value
+    this.rgba = function(val) {
+        if(!val)
+            return [this.color.r, this.color.b, this.color.g, this.color.a];
+
+        if(val.length >= 3)
+            this.color = { r: val[0], g: val[1], b: val[2], a: val.length > 3 ? val[3] : 1 };
+    };
+
+    // Gets the color's rgba values as a html color string - "rgb(r, g, b)"
+    this.rgbastr = function() {
+        var r = this.color.r > 256 ? 256 : Math.floor(this.color.r);
+        var g = this.color.g > 256 ? 256 : Math.floor(this.color.g);
+        var b = this.color.b > 256 ? 256 : Math.floor(this.color.b);
         return 'rgb(' + r + ',' + g + ',' + b + ')';
-                // IE FIX + col[3] + ')';
+    };
+
+    this.hsv = function() {
+        return d3colors.rgbToHsv(this.color.r, this.color.g, this.color.b);
+    }
+};
+
+d3colors = {
+    // Blend two colors together at a certain % of blending
+    blend: function(color1, color2, blend) {
+        var rgb1 = color1.rgba();
+        var rgb2 = color2.rgba();
+
+        return new d3color([Math.round(rgb1[0] + (rgb2[0] - rgb1[0]) * blend),
+                Math.round(rgb1[1] + (rgb2[1] - rgb1[1]) * blend),
+                Math.round(rgb1[2] + (rgb2[2] - rgb1[2]) * blend),
+                rgb1[3] + (rgb2[3] - rgb1[3]) * blend]);
     },
 
-    getAverageColor: function(colors) {
+    // Takes an array of d3colors and returns the average of all of them
+    average: function(colors) {
         if (!colors || colors.length == 0)
             return null;
-
 
         if (colors.length == 1)
             return colors[0];
 
         var totalR = 0, totalG = 0, totalB = 0;
         for ( var i = 0; i < colors.length; i++) {
-            totalR += colors[i][0];
-            totalG += colors[i][1];
-            totalB += colors[i][2];
+            var rgb = colors[i].rgba();
+            totalR += rgb[0];
+            totalG += rgb[1];
+            totalB += rgb[2];
         }
 
-        return [ totalR / colors.length, totalG / colors.length,
-                totalB / colors.length, 1 ];
+        return new d3color([totalR / colors.length, totalG / colors.length, totalB / colors.length, 1]);
     },
 
+    // Gets a darker shade of the specified color, with val=0 being completely black and val=1 being no darker.  Defaults to .5
+    darken: function(color, val) {
+        var color = this.getRgbaFromHex(color.hex());
+        var r = color[0] * (val||.5);
+        var g = color[1] * (val||.5);
+        var b = color[2] * (val||.5);
+
+        return new d3color([r, g, b]);
+    },
+
+    // Gets a lighter shade of the specified color, with val=0 being no lighter and val=1 being completely white.  Defaults to .5
+    lighten: function(color, val) {
+        var color = this.getRgbaFromHex(color.hex());
+        var r = color[0] + (255 - color[0]) * (val||.5);
+        var g = color[1] + (255 - color[1]) * (val||.5);
+        var b = color[2] + (255 - color[2]) * (val||.5);
+
+        return new d3color([r, g, b]);
+    },
+
+    // Gets the color on a default spectrum at a certain ratio (between 0 and 1)
+    spectrum: function(ratio) {
+        if(ratio < 0 || ratio > 1.0)
+            return '#666666';
+
+        var i = parseInt(ratio * 255.0);
+        var r = Math.round(Math.sin(0.024 * i) * 127 + 128);
+        var g = Math.round(Math.sin(0.024 * i + 2) * 127 + 128);
+        var b = Math.round(Math.sin(0.024 * i + 4) * 127 + 128);
+
+        // and return a color matching that ratio along the full spectrum
+        return new d3color([r, g, b]);
+    },
+
+    // Private methods
     getRgbaFromHex: function(hexColor) {
         return [
-                parseInt(this.cutHex(hexColor).substring(0, 2), 16),
-                parseInt(this.cutHex(hexColor).substring(2, 4), 16),
-                parseInt(this.cutHex(hexColor).substring(4, 6), 16),
+                parseInt(this._cutHex(c).substring(0, 2), 16),
+                parseInt(this._cutHex(hexColor).substring(2, 4), 16),
+                parseInt(this._cutHex(hexColor).substring(4, 6), 16),
                 1 ];
     },
 
-    cutHex: function(h) {
+    _cutHex: function(h) {
         return h.charAt(0) == '#' ? h.substring(1, 7) : h;
     },
 
@@ -63,37 +137,6 @@ d3colors = {
         var match = text.match(/\d+/g);
         if(match && match.length >= 3)
             return [ parseInt(match[0]), parseInt(match[1]), parseInt(match[2]), 1 ];
-    },
-
-    getDarkerColorHex: function(hex, val) {
-        var color = this.getRgbaFromHex(hex);
-        var r = color[0] * (val||.5);
-        var g = color[1] * (val||.5);
-        var b = color[2] * (val||.5);
-
-        return this.getHexFromRgb(r, g, b);
-    },
-
-    getLighterColorHex: function(hex, val) {
-        var color = this.getRgbaFromHex(hex);
-        var r = color[0] + (255 - color[0]) * (val||.5);
-        var g = color[1] + (255 - color[1]) * (val||.5);
-        var b = color[2] + (255 - color[2]) * (val||.5);
-
-        return this.getHexFromRgb(r, g, b);
-    },
-
-    getColorByIndex: function(index, length) {
-        if(index < 0)
-            return '#666666';
-
-        var i = index * 255 / length;
-        var r = Math.round(Math.sin(0.024 * i) * 127 + 128);
-        var g = Math.round(Math.sin(0.024 * i + 2) * 127 + 128);
-        var b = Math.round(Math.sin(0.024 * i + 4) * 127 + 128);
-
-        // and return a color matching that ratio along the full spectrum
-        return this.getHexFromRgb(r, g, b);
     },
 
     hsvToRgb: function(h, s, v) {

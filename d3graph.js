@@ -73,27 +73,22 @@ d3graph = function(el, options) {
         onGraphClick: options.onGraphClick,
         onNodeTooltip: options.onNodeTooltip,
         onLinkTooltip: options.onLinkTooltip,
-        onNodeAdded: options.onNodeAdded,
-        onNodeRemoved: options.onNodeRemoved,
-        onNodeChanged: options.onNodeChanged,
         onNodeClick: options.onNodeClick,
         onNodeRightClick: options.onNodeRightClick,
         onNodeMouseover: options.onNodeMouseover,
         onNodeMouseout: options.onNodeMouseout,
         onNodeDblClick: options.onNodeDblClick,
-        onHighlightAdded: options.onHighlightAdded,
-        onHighlightRemoved: options.onHighlightRemoved,
         onLabelClick: options.onLabelClick,
         onLabelMouseover: options.onLabelMouseover,
         onLabelMouseout: options.onLabelMouseout
     };
 
-    this.nodelib = function () { return _nodelib; };
-    this.linklib = function () { return _linklib; };
-    this.taglib = function () { return _taglib; };
-    this.highlightlib = function () { return _highlightlib; };
-    this.stylelib = function () { return _stylelib; };
-    this.labellib = function () { return _labellib; };
+    this.d3nodes = function () { return _nodelib; };
+    this.d3links = function () { return _linklib; };
+    this.d3tags = function () { return _taglib; };
+    this.d3highlights = function () { return _highlightlib; };
+    this.d3styles = function () { return _stylelib; };
+    this.d3labels = function () { return _labellib; };
 
     this.force = function () { return self.visLayout; };
 
@@ -426,6 +421,10 @@ d3graph = function(el, options) {
             if (self.fixedMode)
                 return;
 
+            // FIX FOR IE10 WHERE THE MARKERS DON'T GET MOVED WITH THE LINES
+            if(navigator.appVersion.indexOf("MSIE 10") != -1)
+                link.each(function() { this.parentNode.insertBefore(this, this); });
+
             // calculate graph center
             var center = self.getCenter();
 
@@ -500,26 +499,11 @@ d3graph = function(el, options) {
         self.fixedMode = true;
     };
 
-    this.autoLayout = function () {
-        // Clear all temporary values
-        $.each(self.nodes, function (i, n) {
-            n._radius = undefined;
-            n.fixed = false;
-        });
-
+    this.start = function () {
         // turn off fixed mode and resume the forces
         self.fixedMode = false;
         if (self.force)
             self.force.resume();
-    };
-
-    this.setForceActive = function (active) {
-        $.each(self.nodes, function (i, node) { node.fixed = !active; });
-    };
-
-    // executeAnalysis expects the plugin to perform some processing and then do whatever rendering is necessary.
-    this.executeAnalysis = function (plugin, callback) {
-        plugin.execute(this, callback);
     };
 
     /* Node methods */
@@ -542,10 +526,6 @@ d3graph = function(el, options) {
 
     this.moveNodes = function (positions, time, ignoreLinks) {
         return _nodelib.moveNodes(positions, time, ignoreLinks);
-    };
-
-    this.removeTemporaryNodes = function () {
-        return _nodelib.removeTemporaryNodes();
     };
 
     this.getNode = function (id) {
@@ -574,13 +554,6 @@ d3graph = function(el, options) {
 
     /* End link methods */
 
-    /* Tag methods */
-    this.removeTag = function (tag) {
-        return _taglib.removeTag(tag);
-    };
-
-    /* End tag methods */
-
     /* Highlight methods */
 
     this.fadeOut = function (time, callback) {
@@ -589,14 +562,6 @@ d3graph = function(el, options) {
 
     this.fadeIn = function (time, callback) {
         return _highlightlib.fadeIn(time, callback);
-    };
-
-    this.addHighlight = function (tag, options) {
-        //return _highlightlib.addHighlight(tag, options);
-    };
-
-    this.removeHighlight = function (tag) {
-        //return _highlightlib.removeHighlight(tag);
     };
 
     this.animateLine = function(x1, y1, x2, y2, color, time, thickness) {
