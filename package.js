@@ -13,6 +13,7 @@ Package.on_use(function(api, where) {
         'links.js',
         'selector.js',
         'styles.js',
+        'tags.js',
         'zoomer.js',
         'd3graph.js',
     ]);
