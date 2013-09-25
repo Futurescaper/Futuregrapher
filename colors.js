@@ -23,7 +23,7 @@ d3color = function(hexOrRgba) {
     // Get or set the color's rgba value
     this.rgba = function(val) {
         if(!val)
-            return [this.color.r, this.color.b, this.color.g, this.color.a];
+            return [this.color.r, this.color.g, this.color.b, this.color.a];
 
         if(val.length >= 3)
             this.color = { r: val[0], g: val[1], b: val[2], a: val.length > 3 ? val[3] : 1 };
