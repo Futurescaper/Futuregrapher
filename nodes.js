@@ -181,16 +181,16 @@ d3nodes = function (graph) {
         }
     };
 
-    /// Public Method: removeNode(name)
+    /// Public Method: removeNode(id, tag, forceRemove)
     ///
     /// <summary>
     /// Decreases the node's weight by one, and if the weight <= 0, removes the node from the graph.
     /// If a tag is specified, it also removes one instance of the tag.
     /// </summary>
-    /// <param name="name">The node name</param>
+    /// <param name="id">The node id</param>
     /// <param name="tag">The tag to be removed from this node.</param>
     /// <returns>If successful, undefined, otherwise an error message.
-    this.removeNode = function (id, tag, fade, forceRemove) {
+    this.removeNode = function (id, tag, forceRemove) {
         var t = tag;
         node = graph.nodeDictionary.get(id);
         if (node) {

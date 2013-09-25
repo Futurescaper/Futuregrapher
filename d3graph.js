@@ -44,13 +44,12 @@ d3graph = function(el, options) {
         maxRadius: this.options.maxRadius || 20,
         minNodeRatio: .01,
         nodeBorderSize: this.options.nodeBorderSize||0,
-        nodeBorderColor: this.options.nodeBorderColor||'#CCCCCC',
         sizeFalloffPower: 1,
         chargeRatioFalloffPower: 0,
         linkConstant: this.options.linkConstant || 1,
         linkMultiplier: 0.5,
-        maxLinkThickness: this.options.maxLinkThickness||1.0,
-        minLinkThickness: this.options.minLinkThickness||1.0,
+        maxLinkThickness: this.options.maxLinkThickness||.8,
+        minLinkThickness: this.options.minLinkThickness||4.0,
         highlightedLinkThickness: this.options.highlightedLinkThickness||5,
         linkRadiiFalloffPower:this.options.linkRadiiFalloffPower || 1,
         layoutUpdateSpeed: 500,
@@ -89,6 +88,7 @@ d3graph = function(el, options) {
     this.d3highlights = function () { return _highlightlib; };
     this.d3styles = function () { return _stylelib; };
     this.d3labels = function () { return _labellib; };
+    this.d3zoomer = function() { return this.zoomer; };
 
     this.force = function () { return self.visLayout; };
 

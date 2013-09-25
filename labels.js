@@ -31,9 +31,9 @@ d3labels = function (graph) {
         graph.visLabels.selectAll('g.label text').style('font-size', function(d) {
             var size = graph.settings.minFontSize;
             if(scale <= 1.0)
-                size = ((graph.settings.maxFontSize - graph.settings.minFontSize) / (2 * (1.0 - settings.zoom.min))) * (scale - settings.zoom.min) + graph.settings.minFontSize;
+                size = ((graph.settings.maxFontSize - graph.settings.minFontSize) / (2 * (1.0 - graph.d3zoomer().zoom.min))) * (scale - graph.d3zoomer().zoom.min) + graph.settings.minFontSize;
             else
-                size = ((graph.settings.maxFontSize - graph.settings.minFontSize) / (2 * (settings.zoom.max - 1.0))) * (scale - settings.zoom.max) + graph.settings.maxFontSize;
+                size = ((graph.settings.maxFontSize - graph.settings.minFontSize) / (2 * (graph.d3zoomer().zoom.max - 1.0))) * (scale - graph.d3zoomer().zoom.max) + graph.settings.maxFontSize;
 
             // increase or decrease size based on its ratio
             var min = .8;
