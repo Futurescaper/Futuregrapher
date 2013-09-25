@@ -15,6 +15,17 @@ d3nodes = function (graph) {
         return fill;
     };
 
+    this.getNodeBorderColor = function(node, darkening) {
+        if (!graph.d3styles().settings.nodeBorderSize)
+            return '';
+
+        var color = (node.color && node.color.indexOf('#') == 0) ? d3colors.getRgbaFromHex(node.color) : d3colors.getColorFromRgbText(node.color);
+        if (!color)
+            return '';
+
+        return d3colors.darken(new d3color(color), darkening||graph.d3styles().settings.nodeBorderDarkening||.8).hex();
+    };
+
     this.getNodeRadius = function (node) {
         var r = node._radius || node.radius;
         if(isNaN(r))
@@ -465,7 +476,7 @@ d3nodes = function (graph) {
 
         graph.visNodes.selectAll('g.node circle')
             .attr('r', function(d) { d._radius = d.radius / s; return d._radius; })
-            .style('stroke', function(d) { return graph.d3styles().getNodeBorderColor(d); })
+            .style('stroke', function(d) { return graph.d3nodes().getNodeBorderColor(d); })
             .style('stroke-width', (parseInt(graph.d3styles().settings.nodeBorderSize) / s)||1);
     };
 
@@ -549,7 +560,7 @@ d3nodes = function (graph) {
                     x.style('stroke', position.stroke);
                 else if(position.color) {
                     node.color = position.color;
-                    x.style('stroke', graph.d3styles().getNodeBorderColor(node));
+                    x.style('stroke', graph.d3nodes().getNodeBorderColor(node));
                 }
                 var opacity = (node.labelOpacity || node.opacity || 1.0);
                 graph.visLabels.selectAll('g.label[id="' + position.id + '"]')
@@ -564,7 +575,7 @@ d3nodes = function (graph) {
                     .text(function(d) { return opacity > 0 ? d.title : ''; })
                     //.style('font-size', function(d) { return jQuery.isNumeric(d.fontSize) ? d.fontSize + 'em' : d.fontSize })
                     .attr('text-anchor', function(d) { return position.anchor||(d.x < center.x ? 'end' : 'start') })
-                    .attr('fill', function(d) { return position.labelColor||graph.d3styles().getNodeBorderColor(d); } /*LABEL FIX:node.labelColor*/);
+                    .attr('fill', function(d) { return position.labelColor||graph.d3nodes().getNodeBorderColor(d); } /*LABEL FIX:node.labelColor*/);
             }
         });
 

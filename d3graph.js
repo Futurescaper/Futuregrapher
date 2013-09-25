@@ -305,7 +305,7 @@ d3graph = function(el, options) {
                 .style('stroke-width', _stylelib.settings.nodeBorderSize)
                 .style('cursor', 'pointer')
                 .style('fill', function (d) { d.color = _nodelib.getNodeColor(d); return d.color; })
-                .style('stroke', function(d) { return _stylelib.getNodeBorderColor(d); });
+                .style('stroke', function(d) { return _nodelib.getNodeBorderColor(d); });
         else
             nodeEnter.append("circle")
                 .style('fill', function (d) { d.color = _nodelib.getNodeColor(d); return d.color; })
@@ -369,7 +369,7 @@ d3graph = function(el, options) {
             labels.append('text')
                 .attr('baseline', 'middle')
                 .style('font-size', function (d) { return _labellib.getLabelSize(d); })
-                .attr('fill', function (d) { return _stylelib.getNodeBorderColor(d); /*LABEL FIX:_labellib.getLabelColor(d);*/ })
+                .attr('fill', function (d) { return _nodelib.getNodeBorderColor(d); /*LABEL FIX:_labellib.getLabelColor(d);*/ })
                 //.style('text-shadow', '-1px -1px 2px #FFF, 1px -1px 2px #FFF, -1px 1px 2px #FFF, 1px 1px 2px #FFF')
                 .style('opacity', function(d) { return _labellib.getLabelOpacity(d); })
                 .text(function (d) { return d.hideLabel ? '' : d.title; });
@@ -474,7 +474,7 @@ d3graph = function(el, options) {
         var center = this.getCenter();
         this.visLabels
             .selectAll('g.label text')
-            .attr('fill', function (d) { return _stylelib.getNodeBorderColor(d); /*LABEL FIX:_labellib.getLabelColor(d);*/ })
+            .attr('fill', function (d) { return _nodelib.getNodeBorderColor(d); /*LABEL FIX:_labellib.getLabelColor(d);*/ })
             .attr('text-anchor', function (node) { return self.settings.embedLabels ? 'middle' : (node.x < center.x ? 'end' : 'start'); });
     };
 
