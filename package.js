@@ -16,8 +16,11 @@ Package.on_use(function(api, where) {
         'tags.js',
         'zoomer.js',
         'd3graph.js',
+        'filters.js'
     ]);
 
-    if (api.export)
+    if (api.export) {
         api.export("d3graph");
+        api.export("d3filters");
+    }
 });
