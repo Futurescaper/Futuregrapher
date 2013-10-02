@@ -97,6 +97,7 @@ d3highlights = function (graph) {
                    (options.links == 'connected' && (!sourceNodes.filter(function(n) { return n.id == link.source.id; }).length || !sourceNodes.filter(function(n) { return n.id == link.target.id; }).length)) ||
                     (/*helpers.isArray(options.links) &&*/ $.inArray(link, options.links) < 0)) {
                         console.log("Setting link invisible: " + link.source.title + " -> " + link.target.title);
+                        console.log("Source id=" + sourceNodes[0].id + " link source id=" + link.source.id + " link target id=" + link.target.id);
                         graph.visLinks
                             .selectAll('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
                             //.transition()
