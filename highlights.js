@@ -95,12 +95,16 @@ d3highlights = function (graph) {
                 if((options.links == 'all' && (!nodes.filter(function(n) { return n.id == link.source.id; }).length || !nodes.filter(function(n) { return n.id == link.target.id; }).length)) ||
                    (options.links == 'node' && !sourceNodes.filter(function(n) { return n.id == link.source.id || n.id == link.target.id; }).length) ||
                    (options.links == 'connected' && (!sourceNodes.filter(function(n) { return n.id == link.source.id; }).length || !sourceNodes.filter(function(n) { return n.id == link.target.id; }).length)) ||
-                    (/*helpers.isArray(options.links) &&*/ $.inArray(link, options.links) < 0))
+                    (/*helpers.isArray(options.links) &&*/ $.inArray(link, options.links) < 0)) {
+                        console.log("Setting link invisible: " + link.source.title + " -> " + link.target.title);
                         graph.visLinks
                             .selectAll('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
                             //.transition()
                             //.duration(options.time||0)
                             .style('opacity', options.opacity||0);
+                }
+                else
+                    console.log("Keeping link visible: " + link.source.title + " -> " + link.target.title);
             });
         }
         else
