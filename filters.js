@@ -27,7 +27,7 @@ if(Meteor.isClient)
         };
 
         this.add = function(id, type, filter) {
-            this.filters.push({ id: id, type: type, filter: filter });
+            this.filters.push({ id: id, type: type, module: filter });
         }
 
         /*
@@ -88,40 +88,21 @@ if(Meteor.isClient)
                 return null;
             }
 
-            if(!opts.async) {
-                // run it immediately
-                if(!filter.module) {
-                    if(opts.error)
-                        opts.error('Filter not loaded for synchronous execution');
-                    return null;
-                }
-
-                this.addSetAndGet(filter.module, id, params);
-
-                var key = id + '-' + (params ? JSON.stringify(params) : '');
-                if(!this.currentFilters[key]) {
-                    _DEBUG("Executing filter: " + args.id);
-                    this.currentFilters[key] = filter.module.execute(nodes, params);
-                }
-                this._afterExecute(filter, params, this.currentFilters[key], opts);
-
-                return { filter: filter, result: this.currentFilters[key] };
+            if(!filter.module) {
+                if(opts.error)
+                    opts.error('Filter not loaded for synchronous execution');
+                return null;
             }
 
-            require(['graph/filters/' + type + '/' + id], $.proxy(function(f) {
-                filter.module = f;
-                this.addSetAndGet(filter.module, id, params);
+            this.addSetAndGet(filter.module, id, params);
+            var key = id + '-' + (params ? JSON.stringify(params) : '');
+            if(!this.currentFilters[key]) {
+                _DEBUG("Executing filter: " + args.id);
+                this.currentFilters[key] = filter.module.execute(nodes, params);
+            }
+            this._afterExecute(filter, params, this.currentFilters[key], opts);
 
-                var key = id + '-' + (params ? JSON.stringify(params) : '');
-                if(!this.currentFilters[key]) {
-                    _DEBUG("Executing filter: " + args.id);
-                    this.currentFilters[key] = filter.module.execute(nodes, params, this.graph);
-                }
-
-                this._afterExecute(filter, params, this.currentFilters[key], opts);
-                if(opts.success)
-                    opts.success(this.currentFilters[key]);
-            }, this));
+            return { filter: filter, result: this.currentFilters[key] };
         };
 
         this.addSetAndGet = function(module, id, params) {
