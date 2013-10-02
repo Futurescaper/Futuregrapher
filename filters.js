@@ -487,7 +487,7 @@ if(Meteor.isClient)
             var filters = this.getActiveFilters('value');
             if(filters.length)
                 filter = filters[0];
-            this.draw(settings.resolution, filter, filter ? filter.params : null);
+            this.draw(null, filter, filter ? filter.params : null);
         };
 
         this.showColorLegend = function(legend) {
