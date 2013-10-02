@@ -305,6 +305,7 @@ if(Meteor.isClient)
                 n.visible = (!colorFilter || n.visibility.color) && (!filters || !filters.length || n.visibility.filter);
             });
 
+            /*
             this.graph.displayNodes({
                 nodes: $.grep(
                     this.graph.nodes,
@@ -312,9 +313,10 @@ if(Meteor.isClient)
                         return n.visible;
                     }),
                 time: 10,
-                links: 'all', //'connected',
+                links: 'connected',
                 opacity:.1
             });
+            */
         };
 
         var _palette = [
