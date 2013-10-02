@@ -309,10 +309,10 @@ if(Meteor.isClient)
                 nodes: $.grep(
                     this.graph.nodes,
                     function(n) {
-                        return !n.visible;
+                        return n.visible;
                     }),
                 time: 10,
-                links: 'connected',
+                links: 'all', //'connected',
                 opacity:.1
             });
         };
