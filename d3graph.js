@@ -577,6 +577,15 @@ d3graph = function(el, options) {
         return _labellib.showTop(top);
     };
 
+    this.getImage = function() {
+        var el = this.el.find('svg');
+
+        $('canvas').css({ width: el.width(), height: el.height() });
+        var html = new XMLSerializer().serializeToString(el[0]);
+        canvg('canvas', html);
+        return document.getElementById('canvas').toDataURL('image/png');
+    };
+
     // Start it
     this.update();
 }

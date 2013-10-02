@@ -5,6 +5,9 @@ Package.describe({
 Package.on_use(function(api, where) {
     api.use(['d3'], 'client');
     api.add_files([
+        'canvg/rgbcolor.js',
+        'canvg/StackColor.js',
+        'canvg/canvg.js',
         'dictionary.js',
         'colors.js',
         'nodes.js',
