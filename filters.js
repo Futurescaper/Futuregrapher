@@ -167,6 +167,8 @@ if(Meteor.isClient)
                 this.draw(opts.maxNodes, filter, params, opts);
 
             // TODO: raise the event signalling that the filter was run
+            if(opts.success)
+                opts.success();
 
             return true;
         };
