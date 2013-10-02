@@ -3,7 +3,7 @@ d3selector = function (graph) {
     this.selection = [];
 
     this.toggleNode = function(node) {
-        _DEBUG("selector.selected node: " + node.title);
+        //_DEBUG("selector.selected node: " + node.title);
         if(this.isSelected(node.id)) {
             graph._nodes.select('g.node[id="' + node.id + '"] circle')
                 .transition()

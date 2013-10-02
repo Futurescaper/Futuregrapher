@@ -3,7 +3,7 @@ d3labels = function (graph) {
     var self = this;
 
     this.onLabelClick = function (node) {
-        _DEBUG("Label click: " + node.title);
+        //_DEBUG("Label click: " + node.title);
         if (graph.events.onLabelClick && typeof (graph.events.onLabelClick === "function"))
             graph.events.onLabelClick(node);
     };

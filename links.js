@@ -66,12 +66,12 @@
                 link;
 
             if (!source) {
-                _DEBUG("Unable to find source node: " + from);
+                //_DEBUG("Unable to find source node: " + from);
                 return false;
             }
 
             if (!target) {
-                _DEBUG("Unable to find target node: " + to);
+                //_DEBUG("Unable to find target node: " + to);
                 return false;
             }
 

@@ -249,9 +249,9 @@ d3nodes = function (graph) {
 
         var links = [];
 
-        _DEBUG("Node: " + to.title);
+        //_DEBUG("Node: " + to.title);
         while(p >= 0) {
-            _DEBUG("Node: " + nodes[p].title);
+            //_DEBUG("Node: " + nodes[p].title);
 
             // add the link from nodes[p] to nodes[i]
             var l = this.getLinkToIndex(nodes[p], i);
@@ -265,7 +265,7 @@ d3nodes = function (graph) {
                 break;
         }
 
-        _DEBUG("Node: " + from.title);
+        //_DEBUG("Node: " + from.title);
 
         // add the link from 'from' to nodes[i]
         var l = this.getLinkToIndex(from, i);
@@ -483,7 +483,7 @@ d3nodes = function (graph) {
     this.animateNodeClick = function(node, callback) {
         var r = graph.visNodes.selectAll('g.node[id="' + node.id + '"] circle').attr('r');
         var c = graph.visNodes.selectAll('g.node[id="' + node.id + '"] circle').style('fill');
-        _DEBUG("r=" + r + " c=" + c);
+        //_DEBUG("r=" + r + " c=" + c);
         graph.visNodes.selectAll('g.node[id="' + node.id + '"] circle')
             .transition()
             .delay(function (d, i) { return i * 2; })
