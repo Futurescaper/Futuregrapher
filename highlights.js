@@ -89,13 +89,14 @@ d3highlights = function (graph) {
                 .text(function(d) { return ''; });
         });
 
+        var isArray = this.isArray;
         if(options.links) {
             // and any connections that are not hooked up to a source and target node that are both visible
             $.each(graph.links, function(i, link) {
                 if((options.links == 'all' && (!$.grep(nodes, function(n) { return n.id == link.source.id; }).length || !$.grep(nodes, function(n) { return n.id == link.target.id; }).length)) ||
                    (options.links == 'node' && !$.grep(sourceNodes, function(n) { return n.id == link.source.id || n.id == link.target.id; }).length) ||
                    (options.links == 'connected' && (!$.grep(sourceNodes, function(n) { return n.id == link.source.id; }).length || !$.grep(sourceNodes, function(n) { return n.id == link.target.id; }).length)) ||
-                    (/*helpers.isArray(options.links) &&*/ $.inArray(link, options.links) < 0)) {
+                    (isArray(options.links) && $.inArray(link, options.links) < 0)) {
                         console.log("Setting link invisible: " + link.source.title + " -> " + link.target.title);
                         console.log("Source id=" + sourceNodes[0].id + " link source id=" + link.source.id + " link target id=" + link.target.id);
                         graph.visLinks
@@ -113,6 +114,10 @@ d3highlights = function (graph) {
                 //.transition()
                 //.duration(options.time||0)
                 .style('opacity', options.opacity||0);
+    };
+
+    this.isArray = function(obj) {
+        return Object.prototype.toString.call(obj) === "[object Array]";
     };
 
     Array.prototype.move = function (old_index, new_index) {
