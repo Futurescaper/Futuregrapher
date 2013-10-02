@@ -203,34 +203,33 @@
                 graph.update();
         },
 
-            this.calculateLinks = function () {
-                var max = 0,
-                    min = Infinity,
-                    i,
-                    w;
+        this.calculateLinks = function () {
+            var max = 0,
+                min = Infinity,
+                i,
+                w;
 
-                for (i = 0; i < graph.links.length; i++) {
-                    w = graph.links[i].value;
-                    if (w < min)
-                        min = w;
-                    if (w > max)
-                        max = w;
+            for (i = 0; i < graph.links.length; i++) {
+                w = graph.links[i].value;
+                if (w < min)
+                    min = w;
+                if (w > max)
+                    max = w;
+            }
+            //if (min == max)
+            //    min--;
+
+            for (i = 0; i < graph.links.length; i++) {
+                if(max == min)
+                    graph.links[i].normalized = graph.links[i].ratio = 0;
+                else {
+                    w = (graph.links[i].value - min) / (max - min);
+                    graph.links[i].normalized = w;
+                    graph.links[i].ratio = graph.links[i].value / max;
                 }
-                //if (min == max)
-                //    min--;
-
-                for (i = 0; i < graph.links.length; i++) {
-                    if(max == min)
-                        graph.links[i].normalized = graph.links[i].ratio = 0;
-                    else {
-                        w = (graph.links[i].value - min) / (max - min);
-                        graph.links[i].normalized = w;
-                        graph.links[i].ratio = graph.links[i].value / max;
-                    }
-                    graph.links[i].tooltip = this.getLinkTooltip(graph.links[i]);
-                }
-            };
-
+                graph.links[i].tooltip = this.getLinkTooltip(graph.links[i]);
+            }
+        };
 
         this.calculatePath = function (d) {
             if(graph.settings.taperedLinks) {
@@ -410,7 +409,7 @@
         this.getLinkColor = function (d, minColor, maxColor) {
             if(d.data && d.data.length > 0 && d.data[0].get && d.data[0].get('isEdge')) {
                 // HACK!
-                if(window.application.state.colorFilterActive && d.source.color && d.source.color == d.target.color) {
+                if(graph.colorFilterActive && d.source.color && d.source.color == d.target.color) {
                     d.color = d.source.color.indexOf('#') >= 0 ? d3colors.lighten(d.source.color).hex() : d.source.color;
                     if(d.color.indexOf('#') >= 0) {
                         // limit the brightness
