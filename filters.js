@@ -6,10 +6,6 @@ if(Meteor.isClient)
         this.activeFilters = [];
         this.currentFilters = [];
 
-        if(_Filters)
-            for(var i in _Filters) {
-                Helper.debug("Found filter: " + i);
-            }
         /*
          handler.notifications.bind('structureChanged', function() {
          this.clearFilterValues();
@@ -30,14 +26,9 @@ if(Meteor.isClient)
                 return matches[0];
         };
 
-        this.ready = function(callback) {
-            if(this.loaded)
-                callback();
-            else {
-                this.readyCallback = callback;
-                this.load(callback);
-            }
-        };
+        this.add = function(id, type, filter) {
+            this.filters.push({ id: id, type: type, filter: filter });
+        }
 
         /*
          this.load = function(callback) {
@@ -78,12 +69,7 @@ if(Meteor.isClient)
             }
         };
 
-        this.executeFilters = function(filters, options) {
-            // execute multiple filters and then re-draw
-
-        };
-
-        this.executeFilter = function(args) {
+        this.execute = function(args) {
             // it not, execute this filter and assign all of the values
             var opts = args.options || { async: true, draw: true, axes: [] };
             var id = args.id
@@ -500,7 +486,7 @@ if(Meteor.isClient)
             var target = filters.length;
             for(var i = 0; i < filters.length; i++) {
                 var f = filters[i];
-                this.executeFilter({
+                this.execute({
                     id: f.filter.id,
                     type: f.filter.type,
                     params: f.params,
@@ -588,7 +574,7 @@ if(Meteor.isClient)
                     });
 
                     // run the color filter again
-                    self.executeFilter({
+                    self.execute({
                         id: filter.filter.id,
                         type: filter.filter.type,
                         params: filter.params,
