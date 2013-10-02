@@ -8,7 +8,7 @@ d3styles = function(graph) {
         nodeTooltipClass : graph.options.nodeTooltipClass || 'tipsy-node',
         linkTooltipClass : graph.options.linkTooltipClass || 'tipsy-link',
         nodeBorderSize : graph.options.nodeBorderSize || 0,
-        nodeBorderDarkening: graph.options.nodeBorderDarkening
+        nodeBorderDarkening: graph.options.nodeBorderDarkening ||.8
     };
 
     this.colors = {
