@@ -408,19 +408,22 @@
 
         this.getLinkColor = function (d, minColor, maxColor) {
             if(graph.colorFilterActive && d.source.color && d.source.color == d.target.color) {
-                d.color = d.source.color.indexOf('#') >= 0 ? d3colors.lighten(d.source.color).hex() : d.source.color;
+                d.color = d.source.color.indexOf('#') >= 0 ?
+                            d3colors.lighten(new d3color(d.source.color)).hex() :
+                            d.source.color;
+
                 if(d.color.indexOf('#') >= 0) {
                     // limit the brightness
                     var rgb = d3colors.getRgbaFromHex(d.color);
                     var brightness = (rgb[0] * 2 + rgb[1] + rgb[2] * 3) / 6;
                     if(brightness > 200)
-                        d.color = d3colors.darken(d.source.color,.8).hex();
+                        d.color = d3colors.darken(new d3color(d.source.color),.8).hex();
                 }
             }
             else
                 d.color = d3colors.blend(
-                                    d3colors.getRgbaFromHex(minColor || graph.d3styles().colors.linkMin),
-                                    d3colors.getRgbaFromHex(maxColor || graph.d3styles().colors.linkMax),
+                                    new d3color(d3colors.getRgbaFromHex(minColor || graph.d3styles().colors.linkMin)),
+                                    new d3color(d3colors.getRgbaFromHex(maxColor || graph.d3styles().colors.linkMax)),
                                     d.ratio)
                                   .rgbastr();
             return d.color;
