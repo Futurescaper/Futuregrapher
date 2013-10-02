@@ -227,10 +227,10 @@ if(Meteor.isClient)
 
             var graph = this.graph;
             graph.update();
-            graph.nodelib().updateNodeSizesForZoom(graph.scale);
-            graph.labellib().updateLabelSizesForZoom(graph.scale);
-            graph.linklib().updateLinkSizesForZoom(graph.scale);
-            graph.linklib().updateLinkColors();
+            graph.d3nodes().updateNodeSizesForZoom(graph.scale);
+            graph.d3labels().updateLabelSizesForZoom(graph.scale);
+            graph.d3links().updateLinkSizesForZoom(graph.scale);
+            graph.d3links().updateLinkColors();
         };
 
         this.updateLabelVisibility = function(filter) {
@@ -345,8 +345,8 @@ if(Meteor.isClient)
             var nodes = g._nodes.select('svg g.node circle');
 
             if(!useGraphColors && color && color.min && color.max) {
-                g.stylelib().colors.nodeMin = color.min;
-                g.stylelib().colors.nodeMax = color.max;
+                g.d3styles().colors.nodeMin = color.min;
+                g.d3styles().colors.nodeMax = color.max;
             }
 
             // calculate the ratio for each node based on this filter value
@@ -369,29 +369,29 @@ if(Meteor.isClient)
 
                     return (filter.filter.type == 'color') ?
                         (d.color = (val >= 0 ? _palette[val] : '#EEEEEE')) :
-                        (d.color = g.nodelib().getNodeColor(d, g.stylelib().colors.nodeMin, g.stylelib().colors.nodeMax));
+                        (d.color = g.d3nodes().getNodeColor(d, g.d3styles().colors.nodeMin, g.d3styles().colors.nodeMax));
                 })
                 .style('stroke', function(d) {
-                    return g.stylelib().getNodeBorderColor(d);
+                    return g.d3styles().getNodeBorderColor(d);
                 });
 
             g.visLinks
                 .selectAll('g.links path')
-                .style('stroke-width', function(d) { return g.linklib().getLinkWidth(d); });
+                .style('stroke-width', function(d) { return g.d3links().getLinkWidth(d); });
 
-            g.linklib().updateLinkColors();
+            g.d3links().updateLinkColors();
 
             // set label colours
             g.visLabels
                 .selectAll('g.label text')
                 .attr('fill', function (d) {
-                    return g.stylelib().getNodeBorderColor(d,.6);
+                    return g.d3styles().getNodeBorderColor(d,.6);
                 });
 
             var y = g.scale;
-            g.labellib().updateLabelSizesForZoom(y);
-            g.nodelib().updateNodeSizesForZoom(y);
-            g.linklib().updateLinkSizesForZoom(y);
+            g.d3labels().updateLabelSizesForZoom(y);
+            g.d3nodes().updateNodeSizesForZoom(y);
+            g.d3links().updateLinkSizesForZoom(y);
         };
 
         this.setRadii = function(filter) {
