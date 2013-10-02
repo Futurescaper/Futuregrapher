@@ -210,7 +210,7 @@ d3graph = function(el, options) {
         }, this));
 
     var nodes = this.nodes = force.nodes();
-    var links = this.links = window.links = force.links();
+    var links = this.links = force.links();
 
     this.getNodes = function () { return nodes; };
 

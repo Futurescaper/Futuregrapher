@@ -5,6 +5,7 @@ if(Meteor.isClient)
         this.filters = [];
         this.activeFilters = [];
         this.currentFilters = [];
+        this.colorFilterActive = false;
 
         /*
          handler.notifications.bind('structureChanged', function() {
@@ -183,7 +184,7 @@ if(Meteor.isClient)
             var filters = this.getActiveFilters('color');
             if(filters.length) {
                 // HACK!
-                window.application.state.colorFilterActive = true;
+                this.colorFilterActive = true;
 
                 this.setColors(filters[0]);
                 if(filters[0].filter.type == 'color') {
@@ -193,7 +194,7 @@ if(Meteor.isClient)
             }
             else {
                 // HACK!
-                window.application.state.colorFilterActive = false;
+                this.colorFilterActive = false;
 
                 // otherwise see if we have a value filter of color type and set the colors
                 filters = this.getActiveFilters('value', 'color');
@@ -222,7 +223,7 @@ if(Meteor.isClient)
 
             // TODO: and same for links
 
-            window.application.events.trigger('graphStateChanged', this.graph);
+            //window.application.events.trigger('graphStateChanged', this.graph);
 
             var graph = this.graph;
             graph.update();
