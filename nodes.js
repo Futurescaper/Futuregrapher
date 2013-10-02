@@ -96,7 +96,7 @@ d3nodes = function (graph) {
             centrality: nodeDefinition.centrality,
             showFullLabel: nodeDefinition.showFullLabel,
             dom: {},
-            count: 1,
+            count: weight || 1,
             frequency: 1,
             visible: true,
             visibility: {},
