@@ -72,7 +72,7 @@ if(Meteor.isClient)
 
         this.execute = function(args) {
             // it not, execute this filter and assign all of the values
-            var opts = args.options || { async: true, draw: true, axes: [] };
+            var opts = args.options || { async: true, draw: true, axes: [ 'size', 'color'] };
             var id = args.id
             var type = args.type;
             var params = args.params;
@@ -99,7 +99,7 @@ if(Meteor.isClient)
             var key = id + '-' + (params ? JSON.stringify(params) : '');
 
             if(!this.currentFilters[key])
-                this.currentFilters[key] = filter.module.execute(nodes, params);
+                this.currentFilters[key] = filter.module.execute(nodes, params, this.graph);
 
             this._afterExecute(filter, params, this.currentFilters[key], opts);
 
