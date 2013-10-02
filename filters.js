@@ -96,10 +96,10 @@ if(Meteor.isClient)
 
             this.addSetAndGet(filter.module, id, params);
             var key = id + '-' + (params ? JSON.stringify(params) : '');
-            if(!this.currentFilters[key]) {
-                _DEBUG("Executing filter: " + args.id);
+
+            if(!this.currentFilters[key])
                 this.currentFilters[key] = filter.module.execute(nodes, params);
-            }
+
             this._afterExecute(filter, params, this.currentFilters[key], opts);
 
             return { filter: filter, result: this.currentFilters[key] };
@@ -133,8 +133,6 @@ if(Meteor.isClient)
         };
 
         this._afterExecute = function(filter, params, result, opts) {
-            _DEBUG("After execute filter: " + filter.id);
-
             // de-activate any filters that are no longer active
             var axes = opts.axes||[];
 
@@ -176,8 +174,6 @@ if(Meteor.isClient)
             var opts = options||{};
             var showColorLegend = opts.legend;
             var margins = opts.margins;
-
-            _DEBUG("Filters.draw(" + count + ")");
 
             // first see if we need to prune any nodes
             if(count && count > 0 && count < this.graph.nodes.length)
