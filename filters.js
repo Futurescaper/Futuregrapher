@@ -372,7 +372,7 @@ if(Meteor.isClient)
                         (d.color = g.d3nodes().getNodeColor(d, g.d3styles().colors.nodeMin, g.d3styles().colors.nodeMax));
                 })
                 .style('stroke', function(d) {
-                    return g.d3styles().getNodeBorderColor(d);
+                    return g.d3nodes().getNodeBorderColor(d);
                 });
 
             g.visLinks
@@ -385,7 +385,7 @@ if(Meteor.isClient)
             g.visLabels
                 .selectAll('g.label text')
                 .attr('fill', function (d) {
-                    return g.d3styles().getNodeBorderColor(d,.6);
+                    return g.d3nodes().getNodeBorderColor(d,.6);
                 });
 
             var y = g.scale;
