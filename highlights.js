@@ -92,9 +92,9 @@ d3highlights = function (graph) {
         if(options.links) {
             // and any connections that are not hooked up to a source and target node that are both visible
             $.each(graph.links, function(i, link) {
-                if((options.links == 'all' && (!nodes.filter(function(n) { return n.id == link.source.id; }).length || !nodes.filter(function(n) { return n.id == link.target.id; }).length)) ||
-                   (options.links == 'node' && !sourceNodes.filter(function(n) { return n.id == link.source.id || n.id == link.target.id; }).length) ||
-                   (options.links == 'connected' && (!sourceNodes.filter(function(n) { return n.id == link.source.id; }).length || !sourceNodes.filter(function(n) { return n.id == link.target.id; }).length)) ||
+                if((options.links == 'all' && (!$.grep(nodes, function(n) { return n.id == link.source.id; }).length || !$.grep(nodes, function(n) { return n.id == link.target.id; }).length)) ||
+                   (options.links == 'node' && !$.grep(sourceNodes, function(n) { return n.id == link.source.id || n.id == link.target.id; }).length) ||
+                   (options.links == 'connected' && (!$.grep(sourceNodes, function(n) { return n.id == link.source.id; }).length || !$.grep(sourceNodes, function(n) { return n.id == link.target.id; }).length)) ||
                     (/*helpers.isArray(options.links) &&*/ $.inArray(link, options.links) < 0)) {
                         console.log("Setting link invisible: " + link.source.title + " -> " + link.target.title);
                         console.log("Source id=" + sourceNodes[0].id + " link source id=" + link.source.id + " link target id=" + link.target.id);

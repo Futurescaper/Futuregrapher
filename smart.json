@@ -3,7 +3,7 @@
     "description": "Create and manipulate D3 force-directed graphs",
     "homepage": "https://github.com/Futurescaper/meteor-d3graph",
     "author": "Kevin Marzec - Futurescaper Ltd. <kevin@futurescaper.com>",
-    "version": "0.1.43",
+    "version": "0.1.44",
     "git": "https://github.com/Futurescaper/meteor-d3graph.git",
     "packages": {}
 }
