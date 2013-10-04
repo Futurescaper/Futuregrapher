@@ -1,11 +1,11 @@
 if(Meteor.isClient)
     d3zoomer = function () {
-        this.widget = null;
+        var doZoom = true;
+        var widget = null;
+        var zoom = { min:.25, max: 20, default:.8 };
 
         this.initialize = function (graph, widgetId) {
             this.graph = graph;
-
-            this.zoom = { min:.25, max: 20 };
 
             d3.behavior.zoom()
                 .translate(graph.trans)
@@ -16,21 +16,21 @@ if(Meteor.isClient)
                 if(graph.noZoom)
                     return;
 
-                this.graph.trans = d3.event.translate;
+                graph.trans = d3.event.translate;
 
                 // FIX: after using the zoom widget, this value is not holding the current scale value!!!
-                this.graph.scale = d3.event.scale;
+                graph.scale = d3.event.scale;
                 //Helper.debug("Mouse zoom: " + this.graph.trans + ": Scale=" + this.graph.scale);
-                this.graph.vis.attr('transform', 'translate(' + this.graph.trans + ') scale(' + this.graph.scale + ')');
+                graph.vis.attr('transform', 'translate(' + graph.trans + ') scale(' + graph.scale + ')');
 
                 // update labels
-                this.graph.d3labels().updateLabelSizesForZoom(this.graph.scale);
-                this.graph.d3nodes().updateNodeSizesForZoom(this.graph.scale);
-                this.graph.d3links().updateLinkSizesForZoom(this.graph.scale);
+                graph.d3labels().updateLabelSizesForZoom(graph.scale);
+                graph.d3nodes().updateNodeSizesForZoom(graph.scale);
+                graph.d3links().updateLinkSizesForZoom(graph.scale);
 
-                if(this.widget) {
-                    this.doZoom = false;
-                    this.widget.setValue(0, Math.sqrt(this.graph.scale - this.zoom.min) / Math.sqrt(this.zoom.max - this.zoom.min));
+                if(widget) {
+                    doZoom = false;
+                    widget.setValue(0, Math.sqrt(graph.scale - zoom.min) / Math.sqrt(zoom.max - zoom.min));
                 }
             }
 
@@ -58,7 +58,7 @@ if(Meteor.isClient)
         };
 
         this.createWidget = function(id) {
-            var dragdealer = new Dragdealer(id, {
+            widget = new Dragdealer(id, {
                 horizontal: false,
                 vertical: true,
                 //steps: 100,
@@ -66,12 +66,12 @@ if(Meteor.isClient)
                 //slide: false,
                 y: Math.sqrt((this.zoom.default - this.zoom.min) / (this.zoom.max - this.zoom.min)),
                 animationCallback: $.proxy(function(x, y) {
-                    if(!this.doZoom)
+                    if(!doZoom)
                         return;
 
                     y = Math.pow(Math.sqrt(this.zoom.max - this.zoom.min) * y, 2) + this.zoom.min;
-                    if(y < settings.zoom.min)
-                        y = settings.zoom.min;
+                    if(y < this.zoom.min)
+                        y = this.zoom.min;
 
                     var trans = [(this.graph.width / 2) - (this.graph.width * y / 2), (this.graph.height / 2) - (this.graph.height * y / 2)];
 
@@ -94,9 +94,9 @@ if(Meteor.isClient)
                 }, this)
             });
 
-            this.widget = dragdealer;
-
-            var self = this;
-            $('#' + id).mouseenter(function() { Helper.debug("Entered zoom widget"); self.doZoom = true; });
+            $('#' + id).mouseenter(function() {
+                Helper.debug("Entered zoom widget");
+                doZoom = true;
+            });
         };
     }
