@@ -2,9 +2,10 @@ if(Meteor.isClient)
     d3zoomer = function () {
         var doZoom = true;
         var widget = null;
-        var zoom = { min:.25, max: 20, default:.8 };
 
-        this.initialize = function (graph, widgetId) {
+        var zoom = this.zoom = { min:.25, max: 20, default:.8 };
+
+        this.initialize = $.proxy(function (graph, widgetId) {
             this.graph = graph;
 
             d3.behavior.zoom()
@@ -55,7 +56,7 @@ if(Meteor.isClient)
 
             if(widgetId)
                 this.createWidget(widgetId);
-        };
+        }, this);
 
         this.createWidget = $.proxy(function(id) {
             widget = new Dragdealer(id, {
