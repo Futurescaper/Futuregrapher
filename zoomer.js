@@ -10,7 +10,7 @@ if(Meteor.isClient)
             d3.behavior.zoom()
                 .translate(graph.trans)
                 .scale(graph.scale)
-                .scaleExtent([this.zoom.min, this.zoom.max]);
+                .scaleExtent([zoom.min, zoom.max]);
 
             function rescale() {
                 if(graph.noZoom)
@@ -57,21 +57,21 @@ if(Meteor.isClient)
                 this.createWidget(widgetId);
         };
 
-        this.createWidget = function(id) {
+        this.createWidget = $.proxy(function(id) {
             widget = new Dragdealer(id, {
                 horizontal: false,
                 vertical: true,
                 //steps: 100,
                 //snap: false,
                 //slide: false,
-                y: Math.sqrt((this.zoom.default - this.zoom.min) / (this.zoom.max - this.zoom.min)),
+                y: Math.sqrt((zoom.default - zoom.min) / (zoom.max - zoom.min)),
                 animationCallback: $.proxy(function(x, y) {
                     if(!doZoom)
                         return;
 
-                    y = Math.pow(Math.sqrt(this.zoom.max - this.zoom.min) * y, 2) + this.zoom.min;
-                    if(y < this.zoom.min)
-                        y = this.zoom.min;
+                    y = Math.pow(Math.sqrt(zoom.max - zoom.min) * y, 2) + zoom.min;
+                    if(y < zoom.min)
+                        y = zoom.min;
 
                     var trans = [(this.graph.width / 2) - (this.graph.width * y / 2), (this.graph.height / 2) - (this.graph.height * y / 2)];
 
@@ -98,5 +98,5 @@ if(Meteor.isClient)
                 Helper.debug("Entered zoom widget");
                 doZoom = true;
             });
-        };
+        }, this);
     }
