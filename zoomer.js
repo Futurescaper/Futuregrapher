@@ -7,31 +7,32 @@ if(Meteor.isClient)
 
             this.zoom = { min:.25, max: 20 };
 
-            this.graph.zoom = d3.behavior.zoom()
+            d3.behavior.zoom()
                 .translate(graph.trans)
                 .scale(graph.scale)
-                .scaleExtent([this.zoom.min, this.zoom.max])  // TODO: FIX  - - settings.zoom.min, settings.zoom.max])
-                .on('zoom', $.proxy(function () {
-                    if(graph.noZoom)
-                        return;
+                .scaleExtent([this.zoom.min, this.zoom.max]);
 
-                    this.graph.trans = d3.event.translate;
+            function rescale() {
+                if(graph.noZoom)
+                    return;
 
-                    // FIX: after using the zoom widget, this value is not holding the current scale value!!!
-                    this.graph.scale = d3.event.scale;
-                    //Helper.debug("Mouse zoom: " + this.graph.trans + ": Scale=" + this.graph.scale);
-                    this.graph.vis.attr('transform', 'translate(' + this.graph.trans + ') scale(' + this.graph.scale + ')');
+                this.graph.trans = d3.event.translate;
 
-                    // update labels
-                    this.graph.d3labels().updateLabelSizesForZoom(this.graph.scale);
-                    this.graph.d3nodes().updateNodeSizesForZoom(this.graph.scale);
-                    this.graph.d3links().updateLinkSizesForZoom(this.graph.scale);
+                // FIX: after using the zoom widget, this value is not holding the current scale value!!!
+                this.graph.scale = d3.event.scale;
+                //Helper.debug("Mouse zoom: " + this.graph.trans + ": Scale=" + this.graph.scale);
+                this.graph.vis.attr('transform', 'translate(' + this.graph.trans + ') scale(' + this.graph.scale + ')');
 
-                    if(this.widget) {
-                        this.doZoom = false;
-                        this.widget.setValue(0, Math.sqrt(this.graph.scale - this.zoom.min) / Math.sqrt(this.zoom.max - this.zoom.min));
-                    }
-                }, this));
+                // update labels
+                this.graph.d3labels().updateLabelSizesForZoom(this.graph.scale);
+                this.graph.d3nodes().updateNodeSizesForZoom(this.graph.scale);
+                this.graph.d3links().updateLinkSizesForZoom(this.graph.scale);
+
+                if(this.widget) {
+                    this.doZoom = false;
+                    this.widget.setValue(0, Math.sqrt(this.graph.scale - this.zoom.min) / Math.sqrt(this.zoom.max - this.zoom.min));
+                }
+            }
 
             this.graph.vis = d3.select('#' + graph.el.attr('id')).append("svg:svg")
                 .attr("width", graph.width)
@@ -41,7 +42,7 @@ if(Meteor.isClient)
                 // -- Zooming / panning code
                 .attr('pointer-events', 'all')
                 .append('svg:g')
-                .call(this.graph.zoom)
+                .call(d3.behavior.zoom().on('zoom', rescale))
                 .append('svg:g');
 
             this.graph.vis
