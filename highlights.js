@@ -97,16 +97,12 @@ d3highlights = function (graph) {
                    (options.links == 'node' && !$.grep(sourceNodes, function(n) { return n.id == link.source.id || n.id == link.target.id; }).length) ||
                    (options.links == 'connected' && (!$.grep(sourceNodes, function(n) { return n.id == link.source.id; }).length || !$.grep(sourceNodes, function(n) { return n.id == link.target.id; }).length)) ||
                     (isArray(options.links) && $.inArray(link, options.links) < 0)) {
-                        console.log("Setting link invisible: " + link.source.title + " -> " + link.target.title);
-                        console.log("Source id=" + sourceNodes[0].id + " link source id=" + link.source.id + " link target id=" + link.target.id);
                         graph.visLinks
                             .selectAll('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
                             //.transition()
                             //.duration(options.time||0)
                             .style('opacity', options.opacity||0);
                 }
-                else
-                    console.log("Keeping link visible: " + link.source.title + " -> " + link.target.title);
             });
         }
         else
