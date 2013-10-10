@@ -129,7 +129,7 @@ d3highlights = function (graph) {
 
     this.animate = function(node, settings) {
         var time = settings.time || 150;
-        var ani = graph.d3.selectAll('g.node[id="' + node.id + '"] circle')
+        var ani = graph.d3().selectAll('g.node[id="' + node.id + '"] circle')
             .transition()
             .duration(time);
 

@@ -28,7 +28,7 @@ d3labels = function (graph) {
             .style('text-shadow', scale > 2.5 ? '' : '-1px -1px 2px #FFF, 1px -1px 2px #FFF, -1px 1px 2px #FFF, 1px 1px 2px #FFF')
             .attr('transform', function(d) { return self.transformLabel(d, center, scale); });
 
-        graph.visLabels.selectAll('g.label text').style('font-size', function(d) {
+        graph.d3().selectAll('g.label text').style('font-size', function(d) {
             var size = graph.settings.minFontSize;
             if(scale <= 1.0)
                 size = ((graph.settings.maxFontSize - graph.settings.minFontSize) / (2 * (1.0 - graph.d3zoomer().zoom.min))) * (scale - graph.d3zoomer().zoom.min) + graph.settings.minFontSize;
@@ -50,7 +50,7 @@ d3labels = function (graph) {
         if(top && nodes.length > top) {
             var cutoff = nodes[top][property||'value'];
             var count = 0;
-            graph.visLabels.selectAll('g.label text').text(function(d) {
+            graph.d3().selectAll('g.label text').text(function(d) {
                 if(d[property||'value'] >= cutoff) { //} && count <= top) {
                     count++;
                     d.hideLabel = false;
@@ -61,7 +61,7 @@ d3labels = function (graph) {
             });
         }
         else
-            graph.visLabels.selectAll('g.label text').text(function(d) { d.hideLabel = false; return d.title });
+            graph.d3().selectAll('g.label text').text(function(d) { d.hideLabel = false; return d.title });
     };
 
     this.transformLabel = function (d, center, scale) {

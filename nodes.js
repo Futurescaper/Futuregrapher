@@ -389,33 +389,33 @@ d3nodes = function (graph) {
 
             // remove the label
             if (fade)
-                graph.visLabels.select('g.label[id="' + node.id + '"]')
+                graph.d3().select('g.label[id="' + node.id + '"]')
                     .transition()
                     .duration(250)
                     .style('opacity', 0)
-                    .each('end', function () { graph.visLabels.select('g.label[id="' + node.id + '"]').remove(); });
+                    .each('end', function () { graph.d3().select('g.label[id="' + node.id + '"]').remove(); });
             else
-                graph.visLabels.select('g.label[id="' + node.id + '"]').remove();
+                graph.d3().select('g.label[id="' + node.id + '"]').remove();
 
             // remove the node
             if (fade)
-                graph.visNodes.select('g.node[id="' + node.id + '"] circle')
+                graph.d3().select('g.node[id="' + node.id + '"] circle')
                     .transition()
                     .duration(250)
                     .style('opacity', 0)
-                    .each('end', function () { graph.visNodes.select('g.node[id="' + node.id + '"]').remove(); });
+                    .each('end', function () { graph.d3().select('g.node[id="' + node.id + '"]').remove(); });
             else
-                graph.visNodes.select('g.node[id="' + node.id + '"]').remove();
+                graph.d3().select('g.node[id="' + node.id + '"]').remove();
 
             // remove any links to/from it
             if (fade)
-                graph.visLinks.selectAll('path.link[source="' + node.id + '"], path.link[target="' + node.id + '"]')
+                graph.d3().selectAll('path.link[source="' + node.id + '"], path.link[target="' + node.id + '"]')
                     .transition()
                     .duration(250)
                     .style('opacity', 0)
-                    .each('end', function () { graph.visLinks.selectAll('path.link[source="' + node.id + '"], path.link[target="' + node.id + '"]').remove(); });
+                    .each('end', function () { graph.d3().selectAll('path.link[source="' + node.id + '"], path.link[target="' + node.id + '"]').remove(); });
             else
-                graph.visLinks.selectAll('path.link[source="' + node.id + '"], path.link[target="' + node.id + '"]').remove();
+                graph.d3().selectAll('path.link[source="' + node.id + '"], path.link[target="' + node.id + '"]').remove();
 
             // remove from our internal dictionary
             graph.nodeDictionary.remove(node.id);
@@ -431,12 +431,12 @@ d3nodes = function (graph) {
             node.title = title;
             node.showFullLabel = showFull;
             if (graph.settings.embedLabels)
-                graph.visLabels
+                graph.d3()
                     .selectAll('g.label[id="' + node.id + '"] text')
                     .each(graph.d3labels().getEmbeddedLabelFontSize)
                     .each(graph.d3labels().wordWrapLabel);
             else
-                graph.visLabels
+                graph.d3()
                     .selectAll('g.label[id="' + node.id + '"] text')
                     .text(title)
                     .style('font-size', function (d) { return d.fontSize + 'em'; /*return graph.labellib().getLabelSize(d);*/ });
@@ -448,10 +448,10 @@ d3nodes = function (graph) {
         if(!r)
             r = .75;
 
-        graph.visLabels.selectAll('g.label[id="' + node.id + '"] text').remove();
+        graph.d3().selectAll('g.label[id="' + node.id + '"] text').remove();
         $('g.node[id="' + node.id + '"] body').parent().remove();
 
-        var fo = graph.vis.selectAll('g.node[id="' + node.id + '"]')
+        var fo = graph.d3().selectAll('g.node[id="' + node.id + '"]')
             .append('svg:foreignObject')
             .attr('x', function(d) { return -1.0 * r * (d._radius || d.radius); })
             .attr('y', function(d) { return -1.0 * r * (d._radius || d.radius); })
@@ -474,24 +474,24 @@ d3nodes = function (graph) {
         else if(!s)
             s = 1;
 
-        graph.visNodes.selectAll('g.node circle')
+        graph.d3().selectAll('g.node circle')
             .attr('r', function(d) { d._radius = d.radius / s; return d._radius; })
             .style('stroke', function(d) { return graph.d3nodes().getNodeBorderColor(d); })
             .style('stroke-width', (parseInt(graph.d3styles().settings.nodeBorderSize) / s)||1);
     };
 
     this.animateNodeClick = function(node, callback) {
-        var r = graph.visNodes.selectAll('g.node[id="' + node.id + '"] circle').attr('r');
-        var c = graph.visNodes.selectAll('g.node[id="' + node.id + '"] circle').style('fill');
+        var r = graph.d3().selectAll('g.node[id="' + node.id + '"] circle').attr('r');
+        var c = graph.d3().selectAll('g.node[id="' + node.id + '"] circle').style('fill');
         //_DEBUG("r=" + r + " c=" + c);
-        graph.visNodes.selectAll('g.node[id="' + node.id + '"] circle')
+        graph.d3().selectAll('g.node[id="' + node.id + '"] circle')
             .transition()
             .delay(function (d, i) { return i * 2; })
             .duration(75)
             .style('fill', '#FFFF00')
             .attr('r', r * 1.25);
         setTimeout(function() {
-            graph.visNodes.selectAll('g.node[id="' + node.id + '"] circle')
+            graph.d3().selectAll('g.node[id="' + node.id + '"] circle')
                 .transition()
                 .delay(function (d, i) { return i * 2; })
                 .duration(75)
@@ -537,7 +537,7 @@ d3nodes = function (graph) {
             });
 
             if (node) {
-                graph.visNodes.selectAll('g.node[id="' + position.id + '"]')
+                graph.d3().selectAll('g.node[id="' + position.id + '"]')
                     .each(function (d) { d.fixed = true; })
                     .transition()
                     .delay(function (d, i) { return i * 2; })
@@ -545,7 +545,7 @@ d3nodes = function (graph) {
                     .attr('cx', function(d) { return d.x; }).attr('cy', function(d) { return d.y; })
                     .attr('transform', function (d) { return 'translate(' + d.x + ',' + d.y + ')'; });
 
-                var x = graph.visNodes.selectAll('g.node[id="' + position.id + '"] circle')
+                var x = graph.d3().selectAll('g.node[id="' + position.id + '"] circle')
                     .transition()
                     .delay(function (d, i) { return i * 2; })
                     .duration(time || 500);
@@ -563,12 +563,12 @@ d3nodes = function (graph) {
                     x.style('stroke', graph.d3nodes().getNodeBorderColor(node));
                 }
                 var opacity = (node.labelOpacity || node.opacity || 1.0);
-                graph.visLabels.selectAll('g.label[id="' + position.id + '"]')
+                graph.d3().selectAll('g.label[id="' + position.id + '"]')
                     //.transition()
                     //.duration(time || 500)
                     .style('opacity', opacity);
 
-                graph.visLabels.selectAll('g.label[id="' + position.id + '"] text')
+                graph.d3().selectAll('g.label[id="' + position.id + '"] text')
                     //.transition()
                     //.duration(time || 500)
                     .style('opacity', opacity)
@@ -652,7 +652,7 @@ d3nodes = function (graph) {
                 .attrTween('d', graph.d3links().calculatePathTween);
 
         // Update labels
-        graph.visLabels
+        graph.d3()
             .selectAll('g.label')
             .transition()
             .delay(function (d, i) { return i * 2; })

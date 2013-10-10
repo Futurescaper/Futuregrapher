@@ -394,14 +394,14 @@
 
         this.updateLinkColors = function() {
             // calculate link positions
-            graph.visLinks
+            graph.d3()
                 .selectAll('g.links path')
                 .style('stroke', $.proxy(function(d) {
                     var c = this.getLinkColor(d);
                     d.marker = 'custom_' + c.replace(/[()]/g, '');
                     if(!graph.d3links().hasMarkerDefinition(d.marker))
                         graph.d3links().addMarkerDefinition(d.marker, c);
-                    graph.visLinks.selectAll('svg g.links path[source="' + d.source.id + '"][target="' + d.target.id + '"]').attr('marker-end', 'url(#' + (graph.id||'') + graph.settings.markerId + '_' + d.marker + ')');
+                    graph.d3().selectAll('svg g.links path[source="' + d.source.id + '"][target="' + d.target.id + '"]').attr('marker-end', 'url(#' + (graph.id||'') + graph.settings.markerId + '_' + d.marker + ')');
                     return c;
                 }, this));
         };

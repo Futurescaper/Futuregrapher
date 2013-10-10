@@ -255,7 +255,7 @@ if(Meteor.isClient)
                 sorted = sorted.sort(function(a, b) { return (b.getValue(filterKey) || b.value) - (a.getValue(filterKey)|| a.value); });
 
                 // turn the labels off
-                this.graph.visLabels
+                this.graph.d3()
                     .selectAll('g.label text')
                     .text(function(d) {
                         d.hideLabel = true;
@@ -264,7 +264,7 @@ if(Meteor.isClient)
 
                 // and on for the top 'count'
                 for(var i = 0; i < count; i++) {
-                    this.graph.visLabels
+                    this.graph.d3()
                         .selectAll('g.label[id="' + sorted[i].id + '"] text')
                         .text(function(d) {
                             d.hideLabel = false;
@@ -275,7 +275,7 @@ if(Meteor.isClient)
             }
             else if(nodes.length > 0) {
                 // show them all
-                this.graph.visLabels
+                this.graph.d3()
                     .selectAll('g.label text')
                     .text(function(d) {
                         d.hideLabel = false;
@@ -384,8 +384,7 @@ if(Meteor.isClient)
             g.d3links().updateLinkColors();
 
             // set label colours
-            g.visLabels
-                .selectAll('g.label text')
+            g.d3().selectAll('g.label text')
                 .attr('fill', function (d) {
                     return g.d3nodes().getNodeBorderColor(d,.6);
                 });

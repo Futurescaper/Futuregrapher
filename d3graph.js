@@ -452,11 +452,11 @@ d3graph = function(el, options) {
                 });
 
             // Update labels
-            self.visLabels
+            self.d3()
                 .selectAll('g.label')
                 .attr('transform', function (node) { return _labellib.transformLabel(node, center); });
 
-            self.visLabels
+            self.d3()
                 .selectAll('g.label text')
                 .attr('text-anchor', function (node) { return self.settings.embedLabels ? 'middle' : (RTL ? (node.x < center.x ? 'start' : 'end') : (node.x < center.x ? 'end' : 'start')); });
         });
@@ -468,13 +468,13 @@ d3graph = function(el, options) {
     };
 
     this.updateTooltips = function () {
-        this.visNodes.selectAll('svg circle').each(function (d) { d.tooltip = _nodelib.getNodeTooltip(d); });
+        this.d3().selectAll('g.nodes circle').each(function (d) { d.tooltip = _nodelib.getNodeTooltip(d); });
     };
 
     this.updateLabels = function() {
         var self = this;
         var center = this.getCenter();
-        this.visLabels
+        this.d3()
             .selectAll('g.label text')
             .attr('fill', function (d) { return _nodelib.getNodeBorderColor(d); /*LABEL FIX:_labellib.getLabelColor(d);*/ })
             .attr('text-anchor', function (node) { return self.settings.embedLabels ? 'middle' : (node.x < center.x ? 'end' : 'start'); });
