@@ -37,7 +37,7 @@ d3highlights = function (graph) {
             //.duration(time || 0)
             .style('opacity', function(d) { return d.visible ? 1 : 0 });
 
-        graph.visLinks.selectAll('g.links path')
+        graph.d3().selectAll('g.links path')
             //.transition()
             //.duration(time || 0)
             .style('opacity', function(d) { return d.source.visible && d.target.visible ? 1 : 0 });
@@ -97,7 +97,7 @@ d3highlights = function (graph) {
                    (options.links == 'node' && !$.grep(sourceNodes, function(n) { return n.id == link.source.id || n.id == link.target.id; }).length) ||
                    (options.links == 'connected' && (!$.grep(sourceNodes, function(n) { return n.id == link.source.id; }).length || !$.grep(sourceNodes, function(n) { return n.id == link.target.id; }).length)) ||
                     (isArray(options.links) && $.inArray(link, options.links) < 0)) {
-                        graph.visLinks
+                        graph.d3()
                             .selectAll('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
                             //.transition()
                             //.duration(options.time||0)
@@ -106,7 +106,7 @@ d3highlights = function (graph) {
             });
         }
         else
-            graph.visLinks.selectAll('g.links path')
+            graph.d3().selectAll('g.links path')
                 //.transition()
                 //.duration(options.time||0)
                 .style('opacity', options.opacity||0);
