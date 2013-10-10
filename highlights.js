@@ -8,17 +8,17 @@ d3highlights = function (graph) {
             .transition()
             .duration(0);
 
-        graph._nodes.select('g.node circle')
+        graph.d3().selectAll('g.node circle')
             .transition()
             .duration(time || 0)
             .style('opacity', opacity||0);
 
-        graph.visLinks.selectAll('g.links path')
+        graph.d3().selectAll('g.links path')
             .transition()
             .duration(time || 0)
             .style('opacity', opacity||0);
 
-        graph.visLabels.selectAll('g.labels text')
+        graph.d3().selectAll('g.labels text')
             .transition()
             .duration(time || 0)
             .style('opacity', opacity||0);
@@ -32,7 +32,7 @@ d3highlights = function (graph) {
             .duration(0);
         */
 
-        graph.visNodes.selectAll('g.node circle')
+        graph.d3().selectAll('g.node circle')
             //.transition()
             //.duration(time || 0)
             .style('opacity', function(d) { return d.visible ? 1 : 0 });
@@ -42,7 +42,7 @@ d3highlights = function (graph) {
             //.duration(time || 0)
             .style('opacity', function(d) { return d.source.visible && d.target.visible ? 1 : 0 });
 
-        graph.visLabels.selectAll('g.label text')
+        graph.d3().selectAll('g.label text')
             .text(function(d) { return d.hideLabel || !d.visible ? '' : d.title; });
     };
 
@@ -72,19 +72,19 @@ d3highlights = function (graph) {
         $.each(graph.nodes, function(i, node) {
             if(nodes.filter(function(n) { return n.visible && n.id == node.id; }).length > 0) {
                 // show the label
-                graph.visLabels
+                graph.d3()
                     .selectAll('g.label[id="' + node.id + '"] text')
                     .text(function(d) { return (d.hideLabel && !options.showLabels) ? '' : d.title; });
                 return;
             }
 
-            graph.visNodes
+            graph.d3()
                 .selectAll('g.node[id="' + node.id + '"] circle')
                 //.transition()
                 //.duration(options.time||0)
                 .style('opacity', options.opacity||0);
 
-            graph.visLabels
+            graph.d3()
                 .selectAll('g.label[id="' + node.id + '"] text')
                 .text(function(d) { return ''; });
         });
@@ -129,7 +129,7 @@ d3highlights = function (graph) {
 
     this.animate = function(node, settings) {
         var time = settings.time || 150;
-        var ani = graph._nodes.select('svg g.node[id="' + node.id + '"] circle')
+        var ani = graph.d3.selectAll('g.node[id="' + node.id + '"] circle')
             .transition()
             .duration(time);
 
@@ -188,7 +188,7 @@ d3highlights = function (graph) {
 
     this.setNodeRadius = function (node, radius, time) {
         node._radius = radius;
-        graph._nodes.select('svg g.node[id="' + node.id + '"] circle')
+        graph.d3().selectAll('g.node[id="' + node.id + '"] circle')
             .transition()
             .duration(time || 150)
             .attr('r', node._radius || node.radius);

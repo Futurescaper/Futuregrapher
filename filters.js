@@ -344,7 +344,8 @@ if(Meteor.isClient)
         this.setColors = function(filter, useGraphColors) {
             var g = this.graph;
             var color = filter.result ? (filter.result.color || filter.filter.module.color) : filter.filter.module.color;
-            var nodes = g._nodes.select('svg g.node circle');
+            //var nodes = g._nodes.select('svg g.node circle');
+            var nodes = g.d3().selectAll('g.node circle');
 
             if(!useGraphColors && color && color.min && color.max) {
                 g.d3styles().colors.nodeMin = color.min;
@@ -377,8 +378,7 @@ if(Meteor.isClient)
                     return g.d3nodes().getNodeBorderColor(d);
                 });
 
-            g.visLinks
-                .selectAll('g.links path')
+            g.d3().selectAll('g.links path')
                 .style('stroke-width', function(d) { return g.d3links().getLinkWidth(d); });
 
             g.d3links().updateLinkColors();
@@ -409,9 +409,8 @@ if(Meteor.isClient)
 
             g.calculate(filter.filter.id + '-' + (filter.params ? JSON.stringify(filter.params) : ''));
 
-            g._nodes
-                .select('svg g.node circle')
-                .attr('r', function(d) { return d.radius; });
+            //g._nodes.select('svg g.node circle')
+            g.d3().selectAll('g.node circle').attr('r', function(d) { return d.radius; });
         };
 
         this.setPosition = function(filter, axis, margins) {
