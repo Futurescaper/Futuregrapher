@@ -83,6 +83,7 @@ d3graph = function(el, options) {
     };
 
     this.d3 = function() { return d3.select('#' + el.attr('id')); };
+
     this.d3nodes = function () { return _nodelib; };
     this.d3links = function () { return _linklib; };
     this.d3tags = function () { return _taglib; };
