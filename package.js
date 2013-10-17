@@ -25,6 +25,6 @@ Package.on_use(function(api, where) {
     if (api.export) {
         api.export('d3graph');
         api.export('d3filters');
-        api.export('d3color');
+        api.export('d3colors');
     }
 });
