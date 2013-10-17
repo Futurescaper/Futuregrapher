@@ -1,7 +1,11 @@
 ﻿// A basic color object
 d3color = function(hexOrRgba) {
+    if(hexOrRgba && typeof(hexOrRgba) === "string" && hexOrRgb.toLowerCase().startsWith('rgb')) {
+        var rgba = d3colors.getColorFromRgbText(hexOrRgba);
+        this.color = { r: rgba[0], g: rgba[1], b: rgba[2], a: rgba[3] };
+    }
     // if hex, then grab the colors as rgba
-    if(hexOrRgba && typeof hexOrRgba == "string" && (hexOrRgba.length == 6 || (hexOrRgba.length == 7 && hexOrRgba[0] == '#'))) {
+    else if(hexOrRgba && typeof hexOrRgba == "string" && (hexOrRgba.length == 6 || (hexOrRgba.length == 7 && hexOrRgba[0] == '#'))) {
         var rgba = d3colors.getRgbaFromHex(hexOrRgba);
         this.color = { r: rgba[0], g: rgba[1], b: rgba[2], a: rgba[3] };
     }
