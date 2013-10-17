@@ -1,6 +1,6 @@
 ﻿// A basic color object
 d3color = function(hexOrRgba) {
-    if(hexOrRgba && typeof(hexOrRgba) === "string" && hexOrRgba.toLowerCase().startsWith('rgb')) {
+    if(hexOrRgba && typeof(hexOrRgba) === "string" && hexOrRgba.toLowerCase().indexOf('rgb') == 0) {
         var rgba = d3colors.getColorFromRgbText(hexOrRgba);
         this.color = { r: rgba[0], g: rgba[1], b: rgba[2], a: rgba[3] };
     }
