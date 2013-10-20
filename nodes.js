@@ -215,7 +215,7 @@ d3nodes = function (graph) {
                     // drop the node weight by 1
                     n.value -= 1;
                     if (n.value <= 0 || forceRemove) {
-                        self.removeNodeByIndex(i, fade);
+                        self.removeNodeByIndex(i);
                         return;
                     }
 
