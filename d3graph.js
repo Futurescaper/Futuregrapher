@@ -134,9 +134,9 @@ d3graph = function(el, options) {
         this.zoomer.initialize(this, this.options.zoomWidgetId);
     }
     else {
-        this.vis = d3.select('#' + this.el.attr('id')).append("svg:svg")
-            .attr("width", w)
-            .attr("height", h);
+        this.vis = d3.select('#' + this.el.attr('id')).append("svg:svg");
+            //.attr("width", w)
+            //.attr("height", h);
 
         if(this.options.class)
             this.vis.attr('class', this.options.class);
