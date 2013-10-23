@@ -108,6 +108,8 @@
                     data: data ? [data] : [],
                     value: weight,
                     normalized: 0,
+                    edgecolor: linkSettings.color,
+                    directional: linkSettings.directional,
                     type: type,
                     ratio: weight,
                     marker: linkSettings.marker
@@ -203,33 +205,33 @@
                 graph.update();
         },
 
-        this.calculateLinks = function () {
-            var max = 0,
-                min = Infinity,
-                i,
-                w;
+            this.calculateLinks = function () {
+                var max = 0,
+                    min = Infinity,
+                    i,
+                    w;
 
-            for (i = 0; i < graph.links.length; i++) {
-                w = graph.links[i].value;
-                if (w < min)
-                    min = w;
-                if (w > max)
-                    max = w;
-            }
-            //if (min == max)
-            //    min--;
-
-            for (i = 0; i < graph.links.length; i++) {
-                if(max == min)
-                    graph.links[i].normalized = graph.links[i].ratio = 0;
-                else {
-                    w = (graph.links[i].value - min) / (max - min);
-                    graph.links[i].normalized = w;
-                    graph.links[i].ratio = graph.links[i].value / max;
+                for (i = 0; i < graph.links.length; i++) {
+                    w = graph.links[i].value;
+                    if (w < min)
+                        min = w;
+                    if (w > max)
+                        max = w;
                 }
-                graph.links[i].tooltip = this.getLinkTooltip(graph.links[i]);
-            }
-        };
+                //if (min == max)
+                //    min--;
+
+                for (i = 0; i < graph.links.length; i++) {
+                    if(max == min)
+                        graph.links[i].normalized = graph.links[i].ratio = 0;
+                    else {
+                        w = (graph.links[i].value - min) / (max - min);
+                        graph.links[i].normalized = w;
+                        graph.links[i].ratio = graph.links[i].value / max;
+                    }
+                    graph.links[i].tooltip = this.getLinkTooltip(graph.links[i]);
+                }
+            };
 
         this.calculatePath = function (d) {
             if(graph.settings.taperedLinks) {
@@ -401,7 +403,11 @@
                     d.marker = 'custom_' + c.replace(/[()]/g, '');
                     if(!graph.d3links().hasMarkerDefinition(d.marker))
                         graph.d3links().addMarkerDefinition(d.marker, c);
-                    graph.d3().selectAll('svg g.links path[source="' + d.source.id + '"][target="' + d.target.id + '"]').attr('marker-end', 'url(#' + (graph.id||'') + graph.settings.markerId + '_' + d.marker + ')');
+                    graph.d3()
+                        .selectAll('svg g.links path[source="' + d.source.id + '"][target="' + d.target.id + '"]')
+                        .attr('marker-end', function(d) {
+                            return d.directional == false ? '' : 'url(#' + (graph.id||'') + graph.settings.markerId + '_' + d.marker + ')'
+                        });
                     return c;
                 }, this));
         };
@@ -409,8 +415,8 @@
         this.getLinkColor = function (d, minColor, maxColor) {
             if(graph.colorFilterActive && d.source.color && d.source.color == d.target.color) {
                 d.color = d.source.color.indexOf('#') >= 0 ?
-                            d3colors.lighten(d.source.color).hex() :
-                            d.source.color;
+                    d3colors.lighten(d.source.color).hex() :
+                    d.source.color;
 
                 if(d.color.indexOf('#') >= 0) {
                     // limit the brightness
@@ -422,10 +428,10 @@
             }
             else
                 d.color = d3colors.blend(
-                                    new d3color(d3colors.getRgbaFromHex(minColor || graph.d3styles().colors.linkMin)),
-                                    new d3color(d3colors.getRgbaFromHex(maxColor || graph.d3styles().colors.linkMax)),
-                                    d.ratio)
-                                  .rgbastr();
+                        new d3color(d3colors.getRgbaFromHex(minColor || d.edgecolor ? d3colors.lighten(d.edgecolor).hex() : graph.d3styles().colors.linkMin)),
+                        new d3color(d3colors.getRgbaFromHex(maxColor || d.edgecolor ? d3colors.darken(d.edgecolor).hex() : graph.d3styles().colors.linkMax)),
+                        d.ratio)
+                    .rgbastr();
             return d.color;
         };
 
