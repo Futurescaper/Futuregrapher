@@ -8,7 +8,7 @@ if(Meteor.isClient)
         this.initialize = $.proxy(function (graph, widgetId) {
             this.graph = graph;
 
-            this.zoombehavior = d3.behavior.zoom()
+            d3.behavior.zoom()
                 .translate(graph.trans)
                 .scale(graph.scale)
                 .scaleExtent([zoom.min, zoom.max]);
@@ -18,8 +18,6 @@ if(Meteor.isClient)
                     return;
 
                 graph.trans = d3.event.translate;
-                if(isNaN(graph.trans))
-                    graph.trans = [0,0];
 
                 // FIX: after using the zoom widget, this value is not holding the current scale value!!!
                 graph.scale = d3.event.scale;
@@ -45,7 +43,7 @@ if(Meteor.isClient)
                 // -- Zooming / panning code
                 .attr('pointer-events', 'all')
                 .append('svg:g')
-                .call(this.zoombehavior.on('zoom', rescale))
+                .call(d3.behavior.zoom().on('zoom', rescale))
                 .append('svg:g');
 
             this.graph.vis
