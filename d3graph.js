@@ -71,6 +71,9 @@
 
         this.events = {
             onGraphClick: options.onGraphClick,
+            onGraphMousemove: options.onGraphMousemove,
+            onGraphMouseup: options.onGraphMouseup,
+            onGraphMousedown: options.onGraphMousedown,
             onGraphDoubleClick: options.onGraphDoubleClick,
             onNodeTooltip: options.onNodeTooltip,
             onLinkTooltip: options.onLinkTooltip,
@@ -157,6 +160,11 @@
             if(this.options.class)
                 this.vis.attr('class', this.options.class);
         }
+
+        this.vis
+            .on('mousemove', this.events.onGraphMousemove)
+            .on('mousedown', this.events.onGraphMousedown)
+            .on('mouseup', this.events.onGraphMouseup);
 
         this.markers = this.vis
             .append("svg:defs");
