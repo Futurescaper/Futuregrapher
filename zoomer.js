@@ -18,6 +18,8 @@ if(Meteor.isClient)
                     return;
 
                 graph.trans = d3.event.translate;
+                if(isNaN(graph.trans))
+                    graph.trans = [0,0];
 
                 // FIX: after using the zoom widget, this value is not holding the current scale value!!!
                 graph.scale = d3.event.scale;
@@ -35,16 +37,15 @@ if(Meteor.isClient)
                 }
             }
 
-            this.graph.vis = d3.select('#' + graph.el.attr('id')).append("svg:svg")
+            this.graph.display = d3.select('#' + graph.el.attr('id')).append("svg:svg")
                 .attr("width", graph.width)
                 .attr("height", graph.height)
                 .attr("class", graph.options.class)
-
-                // -- Zooming / panning code
                 .attr('pointer-events', 'all')
                 .append('svg:g')
-                .call(this.zoombehavior.on('zoom', rescale))
-                .append('svg:g');
+                .call(this.zoombehavior.on('zoom', rescale));
+
+            this.graph.vis = this.graph.display.append('svg:g');
 
             this.graph.vis
                 .append('rect')
