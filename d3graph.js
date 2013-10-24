@@ -70,6 +70,7 @@
 
         this.events = {
             onGraphClick: options.onGraphClick,
+            onGraphDoubleClick: options.onGraphDoubleClick,
             onNodeTooltip: options.onNodeTooltip,
             onLinkTooltip: options.onLinkTooltip,
             onNodeClick: options.onNodeClick,
@@ -102,6 +103,11 @@
         this.el.on('click', function (evt) {
             if (self.events.onGraphClick && typeof (self.events.onGraphClick) === "function")
                 self.events.onGraphClick(evt);
+        });
+
+        this.el.on('dblclick', function (evt) {
+            if (self.events.onGraphDoubleClick && typeof (self.events.onGraphDoubleClick) === "function")
+                self.events.onGraphDoubleClick(evt);
         });
 
         this.linkDistance = function (d) {
