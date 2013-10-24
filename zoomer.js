@@ -8,10 +8,12 @@ if(Meteor.isClient)
         this.initialize = $.proxy(function (graph, widgetId) {
             this.graph = graph;
 
-            d3.behavior.zoom()
+            this.zoombehavior = d3.behavior.zoom()
                 .translate(graph.trans)
                 .scale(graph.scale)
-                .scaleExtent([zoom.min, zoom.max]);
+                .scaleExtent([zoom.min, zoom.max])
+                .on('zoom', rescale)
+                .on('dblclick.zoom', null);
 
             function rescale() {
                 if(graph.noZoom)
@@ -43,8 +45,7 @@ if(Meteor.isClient)
                 // -- Zooming / panning code
                 .attr('pointer-events', 'all')
                 .append('svg:g')
-                .call(d3.behavior.zoom().on('zoom', rescale))
-                .on('dblclick.zoom', null)
+                .call(this.zoombehavior)
                 .append('svg:g');
 
             this.graph.vis
