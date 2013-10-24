@@ -106,8 +106,11 @@
         });
 
         this.el.on('dblclick', function (evt) {
-            if (self.events.onGraphDoubleClick && typeof (self.events.onGraphDoubleClick) === "function")
+            if (self.events.onGraphDoubleClick && typeof (self.events.onGraphDoubleClick) === "function") {
+                if(evt.preventDefault) evt.preventDefault();
+                if(evt.stopPropagation) evt.stopPropagation();
                 self.events.onGraphDoubleClick(evt);
+            }
         });
 
         this.linkDistance = function (d) {
