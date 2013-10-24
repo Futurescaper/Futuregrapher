@@ -11,9 +11,7 @@ if(Meteor.isClient)
             this.zoombehavior = d3.behavior.zoom()
                 .translate(graph.trans)
                 .scale(graph.scale)
-                .scaleExtent([zoom.min, zoom.max])
-                .on('zoom', rescale)
-                .on('dblclick.zoom', null);
+                .scaleExtent([zoom.min, zoom.max]);
 
             function rescale() {
                 if(graph.noZoom)
@@ -45,7 +43,7 @@ if(Meteor.isClient)
                 // -- Zooming / panning code
                 .attr('pointer-events', 'all')
                 .append('svg:g')
-                .call(this.zoombehavior)
+                .call(this.zoombehavior.on('zoom', rescale))
                 .append('svg:g');
 
             this.graph.vis
