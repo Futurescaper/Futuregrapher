@@ -698,6 +698,16 @@ d3nodes = function (graph) {
             graph.events.onNodeMouseout(node, d3.event);
     };
 
+    this.onNodeMousedown = function (node) {
+        if (graph.events.onNodeMousedown && typeof (graph.events.onNodeMousedown === "function"))
+            graph.events.onNodeMousedown(node, d3.event);
+    };
+
+    this.onNodeMouseup = function (node) {
+        if (graph.events.onNodeMouseup && typeof (graph.events.onNodeMouseup === "function"))
+            graph.events.onNodeMouseup(node, d3.event);
+    };
+
     this.onNodeRightClick = function(node) {
         if(graph.events.onNodeRightClick && typeof (graph.events.onNodeRightClick === "function")) {
             graph.events.onNodeRightClick(node, d3.event||window.event);

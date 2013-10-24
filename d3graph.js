@@ -78,6 +78,8 @@
             onNodeRightClick: options.onNodeRightClick,
             onNodeMouseover: options.onNodeMouseover,
             onNodeMouseout: options.onNodeMouseout,
+            onNodeMousedown: options.onNodeMousedown,
+            onNodeMouseup: options.onNodeMouseup,
             onNodeDblClick: options.onNodeDblClick,
             onLabelClick: options.onLabelClick,
             onLabelMouseover: options.onLabelMouseover,
@@ -295,6 +297,8 @@
                 .attr('id', function (d) { return d.id; })
                 .on('mouseover', function (d) { return _nodelib.onNodeMouseover(d); })
                 .on('mouseout', function (d) { return _nodelib.onNodeMouseout(d); })
+                .on('mousedown', function(d) { return _nodelib.onNodeMousedown(d); })
+                .on('mouseup', function(d) { return _nodelib.onNodeMouseup(d); })
                 .on('click', function (d) { return _nodelib.onNodeClick(d); })
                 .on('dblclick', function(d) { return _nodelib.onNodeDblClick(d); });
 
