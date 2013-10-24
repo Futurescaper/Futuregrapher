@@ -466,6 +466,9 @@ d3nodes = function (graph) {
     };
 
     this.updateNodeSizesForZoom = function(scale) {
+        if(!graph.d3zoomer())
+            return;
+
         var s = scale;
         if(s < 1)
             s = 1;

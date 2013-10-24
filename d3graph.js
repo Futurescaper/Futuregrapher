@@ -162,9 +162,9 @@
         }
 
         this.vis
-            .on('mousemove', this.events.onGraphMousemove)
-            .on('mousedown', this.events.onGraphMousedown)
-            .on('mouseup', this.events.onGraphMouseup);
+            .on('mousemove', function() { if(this.events.onGraphMousemove) this.events.onGraphMousemove(); })
+            .on('mousedown', function() { if(this.events.onGraphMousedown) this.events.onGraphMousedown(); })
+            .on('mouseup', function() { if(this.events.onGraphMouseup) this.events.onGraphMouseup(); });
 
         this.markers = this.vis
             .append("svg:defs");

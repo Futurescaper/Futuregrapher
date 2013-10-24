@@ -21,6 +21,9 @@ d3labels = function (graph) {
     };
 
     this.updateLabelSizesForZoom = function(scale) {
+        if(!graph.d3zoomer())
+            return;
+
         var self = this;
         var center = graph.getCenter();
 

@@ -138,6 +138,9 @@
         };
 
         this.updateLinkSizesForZoom = function(scale) {
+            if(!graph.d3zoomer())
+                return;
+
             var self = this;
             graph._links
                 .style("stroke-width", function (d) { return /*Math.max(.25,*/ self.getLinkWidth(d) / scale; /*);*/ })
