@@ -37,15 +37,16 @@ if(Meteor.isClient)
                 }
             }
 
-            this.graph.display = d3.select('#' + graph.el.attr('id')).append("svg:svg")
+            this.graph.vis = d3.select('#' + graph.el.attr('id')).append("svg:svg")
                 .attr("width", graph.width)
                 .attr("height", graph.height)
                 .attr("class", graph.options.class)
+
+                // -- Zooming / panning code
                 .attr('pointer-events', 'all')
                 .append('svg:g')
-                .call(this.zoombehavior.on('zoom', rescale));
-
-            this.graph.vis = this.graph.display.append('svg:g');
+                .call(this.zoombehavior.on('zoom', rescale))
+                .append('svg:g');
 
             this.graph.vis
                 .append('rect')
