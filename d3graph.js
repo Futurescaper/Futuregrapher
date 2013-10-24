@@ -405,7 +405,7 @@
                     .text(function (d) { return d.hideLabel ? '' : d.title; });
             }
 
-            $('#' + this.el.attr('id') + ' svg circle').tipsy({
+            $('#' + this.el.attr('id') + ' svg g.nodes circle').tipsy({
                 html: true,
                 fade: false,
                 hoverlock: true,
@@ -418,7 +418,7 @@
                 gravity: $.fn.tipsy.autoWE
             });
 
-            $('#' + this.el.attr('id') + ' svg path').tipsy({
+            $('#' + this.el.attr('id') + ' svg g.links path').tipsy({
                 html: true,
                 fade: false,
                 hoverlock: true,
