@@ -81,6 +81,10 @@
             onNodeMousedown: options.onNodeMousedown,
             onNodeMouseup: options.onNodeMouseup,
             onNodeDblClick: options.onNodeDblClick,
+            onLinkMouseover: options.onLinkMouseover,
+            onLinkMouseout: options.onLinkMouseout,
+            onLinkMousedown: options.onLinkMousedown,
+            onLinkMouseup: options.onLinkMouseup,
             onLabelClick: options.onLabelClick,
             onLabelMouseover: options.onLabelMouseover,
             onLabelMouseout: options.onLabelMouseout

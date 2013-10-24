@@ -466,10 +466,22 @@
         };
 
         this.onLinkMouseover = function(link) {
-            //_DEBUG("Mouseover link: " + link.source.title);
+            if (graph.events.onLinkMouseover&& typeof (graph.events.onLinkMouseover === "function"))
+                graph.events.onLinkMouseover(link, d3.event);
         };
 
         this.onLinkMouseout = function(link) {
-            //_DEBUG("Mouseout link: " + link.source.title);
+            if (graph.events.onLinkMouseout&& typeof (graph.events.onLinkMouseout === "function"))
+                graph.events.onLinkMouseout(link, d3.event);
+        };
+
+        this.onLinkMousedown = function(link) {
+            if (graph.events.onLinkMousedown&& typeof (graph.events.onLinkMousedown === "function"))
+                graph.events.onLinkMousedown(link, d3.event);
+        };
+
+        this.onLinkMouseup = function(link) {
+            if (graph.events.onLinkMouseup&& typeof (graph.events.onLinkMouseup === "function"))
+                graph.events.onLinkMouseup(link, d3.event);
         };
     }
