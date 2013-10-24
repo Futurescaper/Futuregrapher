@@ -65,7 +65,8 @@
             taperedLinkMaxColor: this.options.taperedLinkMaxColor||"#006D2C",
             taperedLinkMinSize: this.options.taperedLinkMinSize,
             taperedLinkMaxSize: this.options.taperedLinkMaxSize,
-            reverseLabelPosition: this.options.reverseLabelPosition
+            reverseLabelPosition: this.options.reverseLabelPosition,
+            constrainNodes: this.options.constrainNodes
         };
 
         this.events = {
@@ -445,7 +446,7 @@
                 // Update nodes
                 node
                     .attr("transform", function (d) {
-                        if(self.settings.constrictNodes) {
+                        if(self.settings.constrainNodes) {
                             if(d.x < d.radius)
                                 d.x = d.radius;
                             if(d.y < d.radius)
