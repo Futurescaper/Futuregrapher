@@ -483,26 +483,25 @@ d3nodes = function (graph) {
             .style('stroke-width', (parseInt(graph.d3styles().settings.nodeBorderSize) / s)||1);
     };
 
-    this.animateNodeClick = function(node, callback) {
+    this.animateNodeClick = function(node, time, callback) {
         var r = graph.d3().selectAll('g.node[id="' + node.id + '"] circle').attr('r');
         var c = graph.d3().selectAll('g.node[id="' + node.id + '"] circle').style('fill');
-        //_DEBUG("r=" + r + " c=" + c);
         graph.d3().selectAll('g.node[id="' + node.id + '"] circle')
             .transition()
             .delay(function (d, i) { return i * 2; })
-            .duration(75)
+            .duration(time / 3)
             .style('fill', '#FFFF00')
             .attr('r', r * 1.25);
         setTimeout(function() {
             graph.d3().selectAll('g.node[id="' + node.id + '"] circle')
                 .transition()
                 .delay(function (d, i) { return i * 2; })
-                .duration(75)
+                .duration(time / 3)
                 .style('fill', c)
                 .attr('r', r);
         }, 80);
 
-        setTimeout(function() { if(callback) callback(); }, 220);
+        setTimeout(function() { if(callback) callback(); }, time + 20);
     };
 
     this.moveNodes = function (positions, time, ignoreLinks) {
