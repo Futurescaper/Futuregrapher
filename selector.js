@@ -10,14 +10,14 @@ d3selector = function (graph) {
     this.setNode = function(node, on) {
         if(on) {
             node.originalColor = graph._nodes.select('g.node[id="' + node.id + '"] circle').style('fill');
-            graph._nodes.select('g.node[id="' + node.id + '"] circle')
+            graph.vis.select('g.node[id="' + node.id + '"] circle')
                 .transition()
                 .duration(50)
                 .style('fill', graph.d3styles().colors.nodeSelected || '#ff0000');
             this.selection.push(node);
         }
         else {
-            graph._nodes.select('g.node[id="' + node.id + '"] circle')
+            graph.vis.select('g.node[id="' + node.id + '"] circle')
                 .transition()
                 .duration(50)
                 .style('fill', node.originalColor);
@@ -40,7 +40,7 @@ d3selector = function (graph) {
     this.clear = function() {
         for(var i = 0; i < this.selection.length; i++) {
             var n = this.selection[i];
-            graph._nodes.select('g.node[id="' + n.id + '"] circle')
+            graph.vis.select('g.node[id="' + n.id + '"] circle')
                 .transition()
                 .duration(50)
                 .style('fill', function(d) { return d.originalColor; });
@@ -52,7 +52,7 @@ d3selector = function (graph) {
     this.refresh = function() {
         for(var i = 0; i < this.selection.length; i++) {
             var n = this.selection[i];
-            graph._nodes.select('g.node[id="' + n.id + '"] circle')
+            graph.vis.select('g.node[id="' + n.id + '"] circle')
                 .transition()
                 .duration(50)
                 .style('fill', graph.d3styles().colors.nodeSelected || '#ff0000');
