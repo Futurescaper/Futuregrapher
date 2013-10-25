@@ -27,7 +27,9 @@ if(Meteor.isClient)
                 graph._nodes.select('g.node[id="' + node.id + '"] circle')
                     .transition()
                     .duration(50)
-                    .style('fill', node.originalColor);
+                    .style('fill', node.originalColor)
+                    .style('stroke', function(d) { return graph.d3nodes().getNodeBorderColor(d); });
+
                 for(var i = 0; i < nodes.length; i++)
                     if(nodes[i].id == node.id) {
                         nodes.splice(i, 1);
@@ -38,16 +40,17 @@ if(Meteor.isClient)
 
         this.setLink = function(link, on) {
             if(on) {
-                graph._links.select('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
+                graph.visLinks.select('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
                     .transition()
                     .duration(50)
-                    .style('stroke-width', 5);
+                    .style("stroke-width", function (d) { return 4 * graph.d3links().getLinkWidth(d) / graph.scale; });
+                links.push(link);
             }
             else {
-                graph._links.select('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
+                graph.visLinks.select('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
                     .transition()
                     .duration(50)
-                    .style('stroke-width', 1);
+                    .style('stroke-width', function (d) { return graph.d3links().getLinkWidth(d) / graph.scale; });
 
                 for(var i = 0; i < links.length; i++)
                     if(links[i].id == link.id) {
@@ -55,6 +58,14 @@ if(Meteor.isClient)
                         break;
                     }
             }
+        };
+
+        this.getNode = function(index) {
+            return nodes[index];
+        };
+
+        this.getLink = function(index) {
+            return links[index];
         };
 
         this.isNodeSelected = function(id) {
@@ -82,8 +93,8 @@ if(Meteor.isClient)
             for(var i = 0; i < nodes.length; i++) {
                 var n = nodes[i];
                 graph._nodes.select('g.node[id="' + n.id + '"] circle')
-                    .transition()
-                    .duration(50)
+                    //.transition()
+                    //.duration(50)
                     .style('fill', function(d) { return d.originalColor; })
                     .style('stroke', function(d) { return graph.d3nodes().getNodeBorderColor(d); });
             }
@@ -94,9 +105,9 @@ if(Meteor.isClient)
         this.clearLinks = function() {
             for(var i = 0; i < links.length; i++) {
                 var link = links[i];
-                graph._links.select('g.link path[id="' + link.id + '"] circle')
-                    .transition()
-                    .duration(50)
+                graph.visLinks.select('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
+                    //.transition()
+                    //.duration(50)
                     .style('stroke-width', function(d) { return 1; });
             }
 
@@ -107,8 +118,8 @@ if(Meteor.isClient)
             for(var i = 0; i < nodes.length; i++) {
                 var n = nodes[i];
                 graph._nodes.select('g.node[id="' + n.id + '"] circle')
-                    .transition()
-                    .duration(50)
+                    //.transition()
+                    //.duration(50)
                     .style('fill', graph.d3styles().colors.nodeSelected || '#ff0000')
                     .style('stroke', '#800000');
             }
