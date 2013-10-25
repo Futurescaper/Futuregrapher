@@ -3,8 +3,20 @@ d3selector = function (graph) {
     this.selection = [];
 
     this.toggleNode = function(node) {
-        //_DEBUG("selector.selected node: " + node.title);
-        if(this.isSelected(node.id)) {
+        this.setNode(node, !this.isSelected(node.id));
+        return node.selected;
+    };
+
+    this.setNode = function(node, on) {
+        if(on) {
+            node.originalColor = graph._nodes.select('g.node[id="' + node.id + '"] circle').style('fill');
+            graph._nodes.select('g.node[id="' + node.id + '"] circle')
+                .transition()
+                .duration(50)
+                .style('fill', graph.d3styles().colors.nodeSelected || '#ff0000');
+            this.selection.push(node);
+        }
+        else {
             graph._nodes.select('g.node[id="' + node.id + '"] circle')
                 .transition()
                 .duration(50)
@@ -15,16 +27,6 @@ d3selector = function (graph) {
                     break;
                 }
         }
-        else {
-            node.originalColor = graph._nodes.select('g.node[id="' + node.id + '"] circle').style('fill');
-            graph._nodes.select('g.node[id="' + node.id + '"] circle')
-                .transition()
-                .duration(50)
-                .style('fill', graph.d3styles().colors.nodeSelected || '#ff0000');
-            this.selection.push(node);
-        }
-
-        return node.selected;
     };
 
     this.isSelected = function(id) {

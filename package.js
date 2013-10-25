@@ -27,5 +27,6 @@ Package.on_use(function(api, where) {
         api.export('d3filters');
         api.export('d3colors');
         api.export('d3color');
+        api.export('d3selector');
     }
 });
