@@ -43,7 +43,7 @@ if(Meteor.isClient)
                 // -- Zooming / panning code
                 .attr('pointer-events', 'all')
                 .append('svg:g')
-                .call(this.behavior.on('zoom', rescale))
+                .call(this.behavior.on('zoom', rescale)).on('dblclick.zoom', null)
                 .append('svg:g');
 
             this.graph.vis

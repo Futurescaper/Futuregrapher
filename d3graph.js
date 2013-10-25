@@ -84,6 +84,7 @@
             onNodeMousedown: options.onNodeMousedown,
             onNodeMouseup: options.onNodeMouseup,
             onNodeDblClick: options.onNodeDblClick,
+            onLinkClick: options.onLinkClick,
             onLinkMouseover: options.onLinkMouseover,
             onLinkMouseout: options.onLinkMouseout,
             onLinkMousedown: options.onLinkMousedown,
@@ -280,6 +281,7 @@
                 .attr('target', function (link) { return link.target.id; })
                 .on('mouseover', function (d) { _linklib.onLinkMouseover(d); })
                 .on('mouseout', function (d) { _linklib.onLinkMouseout(d); })
+                .on('click', function(d) { _linklib.onLinkClick(d); })
                 .attr('class', 'link');
 
             if(this.settings.taperedLinks)
