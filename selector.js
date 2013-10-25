@@ -1,10 +1,16 @@
 if(Meteor.isClient)
     d3selector = function (graph) {
-        this.selection = [];
+        var nodes = [];
+        var links = [];
 
         this.toggleNode = function(node) {
-            this.setNode(node, !this.isSelected(node.id));
+            this.setNode(node, !this.isNodeSelected(node.id));
             return node.selected;
+        };
+
+        this.toggleLink = function(link) {
+            this.setLink(link, !this.isLinkSelected(link.id));
+            return link.selected;
         };
 
         this.setNode = function(node, on) {
@@ -15,32 +21,66 @@ if(Meteor.isClient)
                     .duration(50)
                     .style('fill', graph.d3styles().colors.nodeSelected || '#ff0000')
                     .style('stroke', '#800000');
-                this.selection.push(node);
+                nodes.push(node);
             }
             else {
                 graph._nodes.select('g.node[id="' + node.id + '"] circle')
                     .transition()
                     .duration(50)
                     .style('fill', node.originalColor);
-                for(var i = 0; i < this.selection.length; i++)
-                    if(this.selection[i].id == node.id) {
-                        this.selection.splice(i, 1);
+                for(var i = 0; i < nodes.length; i++)
+                    if(nodes[i].id == node.id) {
+                        nodes.splice(i, 1);
                         break;
                     }
             }
         };
 
-        this.isSelected = function(id) {
-            return $.grep(this.selection, function(t) { return t.id == id; }).length > 0;
+        this.setLink = function(link, on) {
+            if(on) {
+                graph._links.select('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
+                    .transition()
+                    .duration(50)
+                    .style('stroke-width', 5);
+            }
+            else {
+                graph._links.select('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
+                    .transition()
+                    .duration(50)
+                    .style('stroke-width', 1);
+
+                for(var i = 0; i < links.length; i++)
+                    if(links[i].id == link.id) {
+                        links.splice(i, 1);
+                        break;
+                    }
+            }
         };
 
-        this.getCount = function() {
-            return this.selection.length;
+        this.isNodeSelected = function(id) {
+            return $.grep(nodes, function(t) { return t.id == id; }).length > 0;
+        };
+
+        this.isLinkSelected = function(id) {
+            return $.grep(links, function(t) { return t.id == id; }).length > 0;
+        };
+
+        this.getNodeCount = function() {
+            return nodes.length;
+        };
+
+        this.getLinkCount = function() {
+            return links.length;
         };
 
         this.clear = function() {
-            for(var i = 0; i < this.selection.length; i++) {
-                var n = this.selection[i];
+            this.clearNodes();
+            this.clearLinks();
+        };
+
+        this.clearNodes = function() {
+            for(var i = 0; i < nodes.length; i++) {
+                var n = nodes[i];
                 graph._nodes.select('g.node[id="' + n.id + '"] circle')
                     .transition()
                     .duration(50)
@@ -48,12 +88,24 @@ if(Meteor.isClient)
                     .style('stroke', function(d) { return graph.d3nodes().getNodeBorderColor(d); });
             }
 
-            this.selection = [];
+            nodes = [];
+        };
+
+        this.clearLinks = function() {
+            for(var i = 0; i < links.length; i++) {
+                var link = links[i];
+                graph._links.select('g.link path[id="' + link.id + '"] circle')
+                    .transition()
+                    .duration(50)
+                    .style('stroke-width', function(d) { return 1; });
+            }
+
+            links = [];
         };
 
         this.refresh = function() {
-            for(var i = 0; i < this.selection.length; i++) {
-                var n = this.selection[i];
+            for(var i = 0; i < nodes.length; i++) {
+                var n = nodes[i];
                 graph._nodes.select('g.node[id="' + n.id + '"] circle')
                     .transition()
                     .duration(50)
