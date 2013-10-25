@@ -493,6 +493,9 @@
             force.start();
 
             this.updateLabels();
+            _nodelib.updateNodeSizesForZoom(this.scale);
+            _linklib.updateLinkSizesForZoom(this.scale);
+            _labellib.updateLabelSizesForZoom(this.scale);
         };
 
         this.updateTooltips = function () {
