@@ -669,14 +669,18 @@ d3nodes = function (graph) {
 
     this.onNodeClick = function (node) {
         if (graph.events.onNodeClick && typeof (graph.events.onNodeClick === "function")) {
-            graph.events.onNodeClick(node, d3.event);
             d3.event.preventDefault();
+
+            if(window.event) {
+                window.event.preventDefault();
+                window.event.stopPropagation();
+            }
+            graph.events.onNodeClick(node, d3.event);
         }
     };
 
     this.onNodeDblClick = function (node) {
         if (graph.events.onNodeDblClick && typeof (graph.events.onNodeDblClick === "function")) {
-            graph.events.onNodeDblClick(node, d3.event||window.event);
             if(d3.event)
                 d3.event.preventDefault();
             if(window.event) {
@@ -684,6 +688,7 @@ d3nodes = function (graph) {
                 window.event.stopPropagation();
             }
 
+            graph.events.onNodeDblClick(node, d3.event||window.event);
             return true;
         }
     };

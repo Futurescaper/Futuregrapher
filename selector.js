@@ -121,7 +121,7 @@ if(Meteor.isClient)
                     //.transition()
                     //.duration(50)
                     .style('fill', graph.d3styles().colors.nodeSelected || '#ff0000')
-                    .style('stroke', '#800000');
+                    .style('stroke', function(d) { return graph.d3nodes().getNodeBorderColor(d); });
             }
         };
     }
