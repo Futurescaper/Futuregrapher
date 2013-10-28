@@ -667,7 +667,9 @@ d3nodes = function (graph) {
             return graph.events.onNodeTooltip(node, d3.event);
     };
 
+    var doubleclick = false;
     this.onNodeClick = function (node) {
+        doubleclick = false;
         if (graph.events.onNodeClick && typeof (graph.events.onNodeClick === "function")) {
             d3.event.preventDefault();
 
@@ -675,12 +677,16 @@ d3nodes = function (graph) {
                 window.event.preventDefault();
                 window.event.stopPropagation();
             }
-            graph.events.onNodeClick(node, d3.event);
+            setTimeout(function() {
+                if(!doubleclick)
+                    graph.events.onNodeClick(node, d3.event);
+            }, 150);
         }
     };
 
     this.onNodeDblClick = function (node) {
         if (graph.events.onNodeDblClick && typeof (graph.events.onNodeDblClick === "function")) {
+            doubleclick = true;
             if(d3.event)
                 d3.event.preventDefault();
             if(window.event) {

@@ -111,13 +111,21 @@
         this.scale = this.settings.initialZoom || 1.0;
         this.trans = [(w / 2) - (w * this.scale / 2), (h / 2) - (h * this.scale / 2)];
 
+        var doubleclick = false;
         this.el.on('click', function (evt) {
-            if (self.events.onGraphClick && typeof (self.events.onGraphClick) === "function")
-                self.events.onGraphClick(evt);
+            doubleclick = false;
+            if (self.events.onGraphClick && typeof (self.events.onGraphClick) === "function") {
+                // set a timer and run the event after it expires - to allow for a possible double-click event instead
+                setTimeout(function() {
+                    if(!doubleclick)
+                        self.events.onGraphClick(evt);
+                }, 150);
+            }
         });
 
         this.el.on('dblclick', function (evt) {
             if (self.events.onGraphDoubleClick && typeof (self.events.onGraphDoubleClick) === "function") {
+                doubleclick = true;
                 if(evt.preventDefault) evt.preventDefault();
                 if(evt.stopPropagation) evt.stopPropagation();
                 self.events.onGraphDoubleClick(evt);
