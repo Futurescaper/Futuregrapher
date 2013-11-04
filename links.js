@@ -120,6 +120,8 @@
                     graph.events.onNodeChanged(source);
                     graph.events.onNodeChanged(target);
                 }
+                source.to.push(link);
+                target.from.push(link);
 
                 graph.links.push(link);
             }
