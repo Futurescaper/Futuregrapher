@@ -84,6 +84,7 @@
 
             if (link) {
                 link.value += weight;
+
                 if (data)
                     link.data.push(data);
 
@@ -115,9 +116,6 @@
                     marker: linkSettings.marker
                 };
 
-                source.to.push(link);
-                target.from.push(link);
-
                 if (graph.events.onNodeChanged && typeof (graph.events.onNodeChanged) === 'function') {
                     graph.events.onNodeChanged(source);
                     graph.events.onNodeChanged(target);
@@ -125,6 +123,9 @@
 
                 graph.links.push(link);
             }
+
+            source.count++;
+            target.count++;
 
             if (update)
                 graph.update();
@@ -170,6 +171,9 @@
 
                         link.value -= 1;
                         if (link.value <= 0 || forceRemove) {
+                            link.source.count--;
+                            link.target.count--;
+
                             // remove links from source and target nodes
                             for(var j = 0; j < graph.links[i].source.to.length; j++) {
                                 if(graph.links[i].source.to[j].target.id == graph.links[i].target.id) {
@@ -206,35 +210,35 @@
                 return "Unable to find the specified link.";
             else if(!dontUpdate)
                 graph.update();
-        },
+        };
 
-            this.calculateLinks = function () {
-                var max = 0,
-                    min = Infinity,
-                    i,
-                    w;
+        this.calculateLinks = function () {
+            var max = 0,
+                min = Infinity,
+                i,
+                w;
 
-                for (i = 0; i < graph.links.length; i++) {
-                    w = graph.links[i].value;
-                    if (w < min)
-                        min = w;
-                    if (w > max)
-                        max = w;
+            for (i = 0; i < graph.links.length; i++) {
+                w = graph.links[i].value;
+                if (w < min)
+                    min = w;
+                if (w > max)
+                    max = w;
+            }
+            //if (min == max)
+            //    min--;
+
+            for (i = 0; i < graph.links.length; i++) {
+                if(max == min)
+                    graph.links[i].normalized = graph.links[i].ratio = 0;
+                else {
+                    w = (graph.links[i].value - min) / (max - min);
+                    graph.links[i].normalized = w;
+                    graph.links[i].ratio = graph.links[i].value / max;
                 }
-                //if (min == max)
-                //    min--;
-
-                for (i = 0; i < graph.links.length; i++) {
-                    if(max == min)
-                        graph.links[i].normalized = graph.links[i].ratio = 0;
-                    else {
-                        w = (graph.links[i].value - min) / (max - min);
-                        graph.links[i].normalized = w;
-                        graph.links[i].ratio = graph.links[i].value / max;
-                    }
-                    graph.links[i].tooltip = this.getLinkTooltip(graph.links[i]);
-                }
-            };
+                graph.links[i].tooltip = this.getLinkTooltip(graph.links[i]);
+            }
+        };
 
         this.calculatePath = function (d) {
             if(graph.settings.taperedLinks) {
