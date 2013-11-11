@@ -551,8 +551,8 @@
 
         /* Node methods */
 
-        this.animateNodeClick = function(node, callback, settings) {
-            return _nodelib.animateNodeClick(node, callback, settings);
+        this.animateNodeClick = function(node, callback) {
+            return _nodelib.animateNodeClick(node, 100, callback);
         };
 
         this.addNode = function (settings) {
