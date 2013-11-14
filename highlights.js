@@ -113,7 +113,9 @@ d3highlights = function (graph) {
                 .style('opacity', options.opacity||0);
 
         if(options.highlight && options.highlight.node)
-            graph.d3().selectAll('g.node[id="' + options.highlight.node.id + '"] circle').style('fill', options.highlight.color);
+            graph.d3().selectAll('g.node[id="' + options.highlight.node.id + '"] circle')
+                .style('fill', options.highlight.color)
+                .style('stroke', d3colors.darken(new d3color(options.highlight.color),.8).hex());
     };
 
     this.isArray = function(obj) {
