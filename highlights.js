@@ -36,6 +36,7 @@ d3highlights = function (graph) {
             //.transition()
             //.duration(time || 0)
             .style('fill', function(d) { return d.color; })
+            .style('stroke', function(d) { return graph.d3nodes().getNodeBorderColor(d); })
             .style('opacity', function(d) { return d.visible ? 1 : 0 });
 
         graph.d3().selectAll('g.links path')
