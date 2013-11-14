@@ -35,6 +35,7 @@ d3highlights = function (graph) {
         graph.d3().selectAll('g.node circle')
             //.transition()
             //.duration(time || 0)
+            .style('fill', function(d) { return d.color; })
             .style('opacity', function(d) { return d.visible ? 1 : 0 });
 
         graph.d3().selectAll('g.links path')
@@ -110,6 +111,9 @@ d3highlights = function (graph) {
                 //.transition()
                 //.duration(options.time||0)
                 .style('opacity', options.opacity||0);
+
+        if(options.highlight && options.highlight.node)
+            graph.d3().selectAll('g.node[id="' + options.highlight.node.id + '"] circle').style('fill', options.highlight.color);
     };
 
     this.isArray = function(obj) {
