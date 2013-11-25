@@ -461,8 +461,8 @@
                 if (self.fixedMode)
                     return;
 
-                // FIX FOR IE10 WHERE THE MARKERS DON'T GET MOVED WITH THE LINES
-                if(navigator.appVersion.indexOf("MSIE 10") != -1)
+                // FIX FOR IE10/11 WHERE THE MARKERS DON'T GET MOVED WITH THE LINES
+                if(navigator.appVersion.indexOf("MSIE 10") != -1 || ($.browser.mozilla && parseInt($.browser.version, 10) == 11))
                     link.each(function() { this.parentNode.insertBefore(this, this); });
 
                 // calculate graph center
