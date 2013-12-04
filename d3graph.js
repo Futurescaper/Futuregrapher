@@ -42,6 +42,7 @@
             linkStrength: this.options.linkStrength === undefined ?.2 : this.options.linkStrength,
             minRadius: this.options.minRadius || 3,
             maxRadius: this.options.maxRadius || 20,
+            jenks: 0,
             minNodeRatio: .01,
             nodeBorderSize: this.options.nodeBorderSize||0,
             sizeFalloffPower: 1,
@@ -392,8 +393,6 @@
                 });
             }
             catch(e) { }
-
-
 
             if (this.settings.embedLabels) {
                 labels.append('text')

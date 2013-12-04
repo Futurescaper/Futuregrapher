@@ -163,6 +163,8 @@ d3nodes = function (graph) {
             ratio,
             i;
 
+        // first generate jenks values, if necessary
+
         sorted.sort(function (a, b) {
             return b.getValue(filterKey) - a.getValue(filterKey);
         });
