@@ -574,6 +574,10 @@
             return _nodelib.getNode(id);
         };
 
+        this.getNodeByTitle = function(title) {
+            return _nodelib.getNodeByTitle(title);
+        };
+
         this.viewClusters = function (pct) {
             return _nodelib.viewClusters(pct);
         };

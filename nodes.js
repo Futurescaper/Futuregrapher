@@ -44,6 +44,12 @@ d3nodes = function (graph) {
         return graph.nodeDictionary.get(name);
     };
 
+    this.getNodeByTitle = function(title) {
+        var nodes = $.grep(graph.nodes, function(n) { return n.title == title; });
+        if(nodes.length)
+            return nodes[0];
+    }
+
     this.addNode = function (nodeDefinition) {
         if (!nodeDefinition)
             return null;
