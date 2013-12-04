@@ -163,17 +163,39 @@ d3nodes = function (graph) {
             ratio,
             i;
 
-        // first generate jenks values, if necessary
-
         sorted.sort(function (a, b) {
-            return b.getValue(filterKey) - a.getValue(filterKey);
+            return (b.value = b.getValue(filterKey)) - (a.value = a.getValue(filterKey));
         });
 
-        max = sorted[0].getValue(filterKey);
-        min = sorted[sorted.length - 1].getValue(filterKey);
+        if(graph.settings.jenks > 0) {
+            // generate jenks values
+            var stats = new geostats($.map(sorted, $.proxy(function(n) { return n.value; }, this)));
+            try
+            {
+                var jenks = stats.getJenks(graph.settings.jenks);
+
+                Helper.debug("Jenks values:");
+                Helper.debug(jenks);
+
+                // re-score each node as value = [1, x] based on its value
+                $.each(sorted, $.proxy(function(i, node) {
+                    var assigned = 0;
+                    for(var j = 1; j < jenks.length; j++) {
+                        if(node.value >= jenks[j])
+                            assigned = j;
+                    }
+                    Helper.debug("Setting: " + node.title + " (score=" + node.value + ") = " + assigned);
+                    node.value = assigned;
+                }, this));
+            }
+            catch(e) { }
+        }
+
+        max = sorted[0].value;
+        min = sorted[sorted.length - 1].value;
 
         for (i = 0; i < sorted.length; i++) {
-            var val = sorted[i].value = sorted[i].getValue(filterKey);
+            var val = sorted[i].value;
             ratio = max < 0 ? 0 : (max == min) ? 0 : (val - min) / (max - min);
 
             if (isNaN(ratio))

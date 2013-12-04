@@ -8,6 +8,8 @@ Package.on_use(function(api, where) {
         'canvg/rgbcolor.js',
         'canvg/StackColor.js',
         'canvg/canvg.js',
+        'geostats/geostats.min.js',
+        'geostats/jenks.util.js',
         'dictionary.js',
         'colors.js',
         'nodes.js',
