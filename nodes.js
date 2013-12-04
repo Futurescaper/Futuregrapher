@@ -164,7 +164,7 @@ d3nodes = function (graph) {
             i;
 
         $.each(sorted, function(i, node) {
-            node._value = node.getValue(filterKey);
+            node._value = node.value = node.getValue(filterKey);
         });
 
         sorted.sort(function (a, b) {
@@ -204,6 +204,7 @@ d3nodes = function (graph) {
 
             if (isNaN(ratio))
                 ratio = 0.5;
+
             if (ratio < graph.settings.minRatio)
                 ratio = graph.settings.minRatio;
 
