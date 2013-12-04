@@ -163,8 +163,12 @@ d3nodes = function (graph) {
             ratio,
             i;
 
+        $.each(sorted, function(i, node) {
+            node.value = node.getValue(filterKey);
+        });
+
         sorted.sort(function (a, b) {
-            return (b.value = b.getValue(filterKey)) - (a.value = a.getValue(filterKey));
+            return b.value - a.value;
         });
 
         if(graph.settings.jenks > 0) {
