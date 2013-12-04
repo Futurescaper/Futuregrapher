@@ -172,7 +172,7 @@ d3nodes = function (graph) {
             var stats = new geostats($.map(sorted, $.proxy(function(n) { return n.value; }, this)));
             try
             {
-                var jenks = stats.getJenks(graph.settings.jenks);
+                var jenks = stats.getJenks(parseInt(graph.settings.jenks));
 
                 Helper.debug("Jenks values:");
                 Helper.debug(jenks);
