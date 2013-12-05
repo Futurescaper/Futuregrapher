@@ -192,7 +192,7 @@ d3nodes = function (graph) {
                     var assigned = 0;
                     for(var j = 1; j < jenks.length; j++) {
                         if(node._value >= jenks[j])
-                            assigned = j;
+                            assigned = j + 1;
                     }
                     Helper.debug("Setting: " + node.title + " (score=" + node._value + ") = " + assigned);
                     node._value = assigned;
