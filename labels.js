@@ -54,7 +54,7 @@ d3labels = function (graph) {
             var cutoff = nodes[top][property||'value'];
             var count = 0;
             graph.d3().selectAll('g.label text').text(function(d) {
-                if(d[property||'value'] >= cutoff) { //} && count <= top) {
+                if(d[property||'value'] >= cutoff && count <= top) {
                     count++;
                     d.hideLabel = false;
                     return d.title;
