@@ -49,12 +49,13 @@ d3labels = function (graph) {
     };
 
     this.showTop = function(top, property) {
-        var nodes = graph.nodes.slice(0).sort(function(a, b) { return b[property||'value'] - a[property||'value']; });
+        var nodes = graph.nodes.slice(0).sort(function(a, b) { return b[property||'_value'] - a[property||'_value']; });
         if(top && nodes.length > top) {
-            var cutoff = nodes[top][property||'value'];
+            var cutoff = nodes[top][property||'_value'];
             var count = 0;
             graph.d3().selectAll('g.label text').text(function(d) {
-                if(d[property||'value'] >= cutoff && count <= top) {
+                console.log("Node: " + d.title + ": " + d._value);
+                if(d[property||'_value'] >= cutoff && count <= top) {
                     count++;
                     d.hideLabel = false;
                     return d.title;
