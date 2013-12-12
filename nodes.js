@@ -534,7 +534,7 @@ d3nodes = function (graph) {
                 .delay(function (d, i) { return i * 2; })
                 .duration(time / 3)
                 .style('fill', c)
-                .stroke(function(d) { return graph.d3nodes().getNodeBorderColor(d); })
+                .style('stroke', function(d) { return graph.d3nodes().getNodeBorderColor(d); })
                 .attr('r', r);
         }, 80);
 
