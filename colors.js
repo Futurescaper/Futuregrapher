@@ -1,9 +1,12 @@
 ﻿// A basic color object
 d3color = function(hexOrRgba) {
-    if(hexOrRgba && typeof(hexOrRgba) === "string" &&
-        ((hexOrRgba.toLowerCase().indexOf('rgb') == 0) ||
-            (hexOrRgba.length == 6 || (hexOrRgba.length == 7 && hexOrRgba[0] == '#')))) {
+    if(hexOrRgba && typeof(hexOrRgba) === "string" && hexOrRgba.toLowerCase().indexOf('rgb') == 0) {
         var rgba = d3colors.getColorFromRgbText(hexOrRgba);
+        this.color = { r: rgba ? rgba[0] : 0, g: rgba ? rgba[1] : 0, b: rgba ? rgba[2] : 0, a: rgba ? rgba[3] : 0 };
+    }
+    // if hex, then grab the colors as rgba
+    else if(hexOrRgba && typeof hexOrRgba == "string" && (hexOrRgba.length == 6 || (hexOrRgba.length == 7 && hexOrRgba[0] == '#'))) {
+        var rgba = d3colors.getRgbaFromHex(hexOrRgba);
         this.color = { r: rgba ? rgba[0] : 0, g: rgba ? rgba[1] : 0, b: rgba ? rgba[2] : 0, a: rgba ? rgba[3] : 0 };
     }
     else
@@ -142,7 +145,7 @@ d3colors = {
         if(!text)
             return;
 
-        var match = text.match(/\d+/g);
+        var match = text[0] == '#' ? text.substr(1).match(/\d+/g) : text.match(/\d+/g);
         if(match && match.length >= 3)
             return [ parseInt(match[0]), parseInt(match[1]), parseInt(match[2]), 1 ];
     },

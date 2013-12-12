@@ -4,8 +4,11 @@
             if(node.selected && !window.inCauseEffectView)
                 return new d3color(d3colors.getRgbaFromHex('ff0000')).rgbastr();
 
-            if(node._color)
-                return new d3color(colors.getRgbaFromHex(node._color)).rgbastr();
+            //if(node._color)
+            //    return new d3color(node._color).rgbastr();
+
+            if(typeof(node.value.color) === "string")
+                return node.color = new d3color(node.value.color).rgbastr();
 
             var color = d3colors.blend(d3colors.getRgbaFromHex(minColor || graph.d3styles().colors.nodeMin), d3colors.getRgbaFromHex(maxColor || graph.d3styles().colors.nodeMax), node.ratio.color);
             var fill = color.rgbastr();
@@ -13,6 +16,17 @@
                 node.color = fill;
 
             return fill;
+        };
+
+        this.updateColors = function() {
+            graph._nodes.select('svg g.node circle')
+                .style('fill', function (d) {
+                    d._color = null;
+                    return (d._color = graph.d3nodes().getNodeColor(d));
+                })
+                .style('stroke', function(d) {
+                    return graph.d3nodes().getNodeBorderColor(d);
+                });
         };
 
         this.getNodeBorderColor = function(node, darkening) {
@@ -216,6 +230,12 @@
             var dimensions = ['size', 'color'];
             $.each(dimensions, $.proxy(function(i, dimension) {
                 var list = sorted[dimension];
+
+                if(dimension == 'color' && typeof(list[0].value.color) === "string") {
+                    list[i].color = new d3color(list[0].value.color).rgbastr();
+                    return;
+                }
+
                 var max = list[0].jenks[dimension] || list[0].value[dimension];
                 var min = list[list.length - 1].jenks[dimension] || list[list.length - 1].value[dimension];
 
