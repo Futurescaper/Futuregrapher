@@ -1,19 +1,16 @@
 ﻿// A basic color object
 d3color = function(hexOrRgba) {
-    if(hexOrRgba && typeof(hexOrRgba) === "string" && hexOrRgba.toLowerCase().indexOf('rgb') == 0) {
+    if(hexOrRgba && typeof(hexOrRgba) === "string" &&
+        ((hexOrRgba.toLowerCase().indexOf('rgb') == 0) ||
+            (hexOrRgba.length == 6 || (hexOrRgba.length == 7 && hexOrRgba[0] == '#')))) {
         var rgba = d3colors.getColorFromRgbText(hexOrRgba);
-        this.color = { r: rgba[0], g: rgba[1], b: rgba[2], a: rgba[3] };
-    }
-    // if hex, then grab the colors as rgba
-    else if(hexOrRgba && typeof hexOrRgba == "string" && (hexOrRgba.length == 6 || (hexOrRgba.length == 7 && hexOrRgba[0] == '#'))) {
-        var rgba = d3colors.getRgbaFromHex(hexOrRgba);
-        this.color = { r: rgba[0], g: rgba[1], b: rgba[2], a: rgba[3] };
+        this.color = { r: rgba ? rgba[0] : 0, g: rgba ? rgba[1] : 0, b: rgba ? rgba[2] : 0, a: rgba ? rgba[3] : 0 };
     }
     else
-        // just assign the values
+    // just assign the values
         this.color = (!hexOrRgba || hexOrRgba.length < 3) ?
-                        { r: 0, g: 0, b: 0, a: 1 } :
-                        { r: hexOrRgba[0], g: hexOrRgba[1], b: hexOrRgba[2], a: (hexOrRgba.length > 3) ? hexOrRgba[3] : 1 };
+        { r: 0, g: 0, b: 0, a: 1 } :
+        { r: hexOrRgba[0], g: hexOrRgba[1], b: hexOrRgba[2], a: (hexOrRgba.length > 3) ? hexOrRgba[3] : 1 };
 
     // Get or set the color's hex value
     this.hex = function(val) {
@@ -60,9 +57,9 @@ d3colors = {
         var rgb2 = col2.rgba();
 
         return new d3color([Math.round(rgb1[0] + (rgb2[0] - rgb1[0]) * blend),
-                Math.round(rgb1[1] + (rgb2[1] - rgb1[1]) * blend),
-                Math.round(rgb1[2] + (rgb2[2] - rgb1[2]) * blend),
-                rgb1[3] + (rgb2[3] - rgb1[3]) * blend]);
+            Math.round(rgb1[1] + (rgb2[1] - rgb1[1]) * blend),
+            Math.round(rgb1[2] + (rgb2[2] - rgb1[2]) * blend),
+            rgb1[3] + (rgb2[3] - rgb1[3]) * blend]);
     },
 
     // Takes an array of d3colors and returns the average of all of them
@@ -121,10 +118,10 @@ d3colors = {
     // Private methods
     getRgbaFromHex: function(hexColor) {
         return [
-                parseInt(this._cutHex(hexColor).substring(0, 2), 16),
-                parseInt(this._cutHex(hexColor).substring(2, 4), 16),
-                parseInt(this._cutHex(hexColor).substring(4, 6), 16),
-                1 ];
+            parseInt(this._cutHex(hexColor).substring(0, 2), 16),
+            parseInt(this._cutHex(hexColor).substring(2, 4), 16),
+            parseInt(this._cutHex(hexColor).substring(4, 6), 16),
+            1 ];
     },
 
     _cutHex: function(h) {
@@ -137,8 +134,8 @@ d3colors = {
 
     getHexFromRgb: function(r, g, b) {
         return '#' + this._2digit(parseInt(r).toString(16))
-                + this._2digit(parseInt(g).toString(16))
-                + this._2digit(parseInt(b).toString(16));
+            + this._2digit(parseInt(g).toString(16))
+            + this._2digit(parseInt(b).toString(16));
     },
 
     getColorFromRgbText: function(text) {
