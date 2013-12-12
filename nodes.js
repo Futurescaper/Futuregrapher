@@ -526,7 +526,7 @@ d3nodes = function (graph) {
             .delay(function (d, i) { return i * 2; })
             .duration(time / 3)
             .style('fill', '#FFFF00')
-            .style('stroke', '#CC6600')
+            .style('stroke', '#FFFF00')
             .attr('r', r * 1.25);
         setTimeout(function() {
             graph.d3().selectAll('g.node[id="' + node.id + '"] circle')
