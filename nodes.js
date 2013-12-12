@@ -7,7 +7,7 @@ d3nodes = function (graph) {
         if(node._color)
             return new d3color(colors.getRgbaFromHex(node._color)).rgbastr();
 
-        var color = d3colors.blend(d3colors.getRgbaFromHex(minColor || graph.d3styles().colors.nodeMin), d3colors.getRgbaFromHex(maxColor || graph.d3styles().colors.nodeMax), node.ratio);
+        var color = d3colors.blend(d3colors.getRgbaFromHex(minColor || graph.d3styles().colors.nodeMin), d3colors.getRgbaFromHex(maxColor || graph.d3styles().colors.nodeMax), node.ratio.color);
         var fill = color.rgbastr();
         if (node.color != fill)
             node.color = fill;
@@ -48,7 +48,7 @@ d3nodes = function (graph) {
         var nodes = $.grep(graph.nodes, function(n) { return n.title == title; });
         if(nodes.length)
             return nodes[0];
-    }
+    };
 
     this.addNode = function (nodeDefinition) {
         if (!nodeDefinition)
@@ -63,8 +63,9 @@ d3nodes = function (graph) {
 
         var node = this.getNode(id);
         if (node) {
-            node.value += (weight || 1);
-            node.count++;
+            node.value.size += (weight || 1);
+            node.value.color += (weight || 1);
+
             if (data)
                 node.data.push(data);
 
@@ -92,7 +93,7 @@ d3nodes = function (graph) {
             tags: [],
             data: [],
             quality: quality,
-            value: weight || 1,
+            value: { size: weight || 1, color: weight || 1 },
             filterValues: {},
             clusterTitles: {},
             rank: graph.nodes.length,
@@ -102,8 +103,6 @@ d3nodes = function (graph) {
             centrality: nodeDefinition.centrality,
             showFullLabel: nodeDefinition.showFullLabel,
             dom: {},
-            count: weight || 1,
-            frequency: 1,
             visible: true,
             visibility: {},
             getValue: function (id) {
@@ -159,72 +158,86 @@ d3nodes = function (graph) {
         return node;
     };
 
-    this.calculateNodes = function (filterKey) {
+    this.calculateNodes = function () {
         if (graph.nodes.length <= 0)
             return;
 
-        var sorted = graph.nodes.slice(0),
-            min,
-            max,
-            ratio,
-            i;
+        var sorted = { size: graph.nodes.slice(0), color: graph.nodes.slice(0) };
 
-        $.each(sorted, function(i, node) {
-            node._value = node.value = node.getValue(filterKey);
+        sorted.size.sort(function (a, b) {
+            return b.value.size - a.value.size;
         });
-
-        sorted.sort(function (a, b) {
-            return b._value - a._value;
+        sorted.color.sort(function (a, b) {
+            return b.value.color - a.value.color;
         });
 
         if(graph.settings.jenks > 0) {
             // generate jenks values
-            var stats = new geostats($.map(sorted, $.proxy(function(n) { return n._value; }, this)));
+            var stats = {
+                size: new geostats($.map(sorted.size, function(n) { return n.value.size; })),
+                color: new geostats($.map(sorted.color, function(n) { return n.value.color; }))
+            };
             try
             {
-                var jenks = stats.getJenks(parseInt(graph.settings.jenks));
+                var jenks = {
+                    size: stats.size.getJenks(parseInt(graph.settings.jenks)),
+                    color: stats.color.getJenks(parseInt(graph.settings.jenks))
+                };
 
-                Helper.debug("Jenks values:");
-                Helper.debug(jenks);
+                if(Helper) {
+                    Helper.debug("Jenks size values:");
+                    Helper.debug(jenks.size);
+                    Helper.debug("Jenks color values:");
+                    Helper.debug(jenks.color);
+                }
 
-                // re-score each node as value = [1, x] based on its value
-                $.each(sorted, $.proxy(function(i, node) {
-                    var assigned = 0;
-                    for(var j = 1; j < jenks.length; j++) {
-                        if(node._value >= jenks[j])
-                            assigned = j + 1;
-                    }
-                    Helper.debug("Setting: " + node.title + " (score=" + node._value + ") = " + assigned);
-                    node._value = assigned;
-                }, this));
+                // re-score each node as value = [1, x] based on its size and color values
+                var dimensions = ['size', 'color'];
+                $.each(dimensions, function(i, dimension) {
+                    $.each(sorted[dimension], function(i, node) {
+                        var assigned = 0;
+                        for(var j = 1; j < jenks[dimension].length; j++) {
+                            if(node.value[dimension] >= jenks[dimension][j])
+                                assigned = j + 1;
+                        }
+                        Helper.debug("Setting: " + node.title + " (score=" + node._value + ") = " + assigned);
+                        node.value[dimension] = assigned;
+                    });
+                });
             }
             catch(e) { }
         }
 
-        max = sorted[0]._value;
-        min = sorted[sorted.length - 1]._value;
+        var dimensions = ['size', 'color'];
+        $.each(dimensions, function(i, dimension) {
+            var list = sorted[dimension];
+            var max = list[0].value[dimension];
+            var min = list[list.length - 1].value[dimension];
 
-        for (i = 0; i < sorted.length; i++) {
-            var val = sorted[i]._value;
-            ratio = max < 0 ? 0 : (max == min) ? 0 : (val - min) / (max - min);
+            for (var i = 0; i < list.length; i++) {
+                var val = list[i].value[dimension];
+                var ratio = max < 0 ? 0 : (max == min) ? 0 : (val - min) / (max - min);
 
-            if (isNaN(ratio))
-                ratio = 0.5;
+                if (isNaN(ratio))
+                    ratio = 0.5;
 
-            if (ratio < graph.settings.minRatio)
-                ratio = graph.settings.minRatio;
+                if (ratio < graph.settings.minRatio)
+                    ratio = graph.settings.minRatio;
 
-            sorted[i].rank = i;
-            sorted[i].ratio = ratio;
-            sorted[i].radius = sorted[i]._radius = graph.settings.minRadius + ((graph.settings.maxRadius - graph.settings.minRadius) * ratio);
+                list[i].rank = i;
+                list[i].ratio[dimension] = ratio;
 
-            if (sorted[i].radius < graph.settings.minRadius)
-                sorted[i].radius = graph.settings.minRadius;
-            if (sorted[i].radius > graph.settings.maxRadius)
-                sorted[i].radius = graph.settings.maxRadius;
+                if(dimension == 'size') {
+                    list[i].radius = graph.settings.minRadius + ((graph.settings.maxRadius - graph.settings.minRadius) * ratio);
+                    if (list[i].radius < graph.settings.minRadius)
+                        list[i].radius = graph.settings.minRadius;
+                    if (list[i].radius > graph.settings.maxRadius)
+                        list[i].radius = graph.settings.maxRadius;
 
-            sorted[i].tooltip = this.getNodeTooltip(sorted[i]);
-        }
+                    list[i].tooltip = this.getNodeTooltip(list[i]);
+                }
+            }
+        });
     };
 
     /// Public Method: removeNode(id, tag, forceRemove)
@@ -238,7 +251,7 @@ d3nodes = function (graph) {
     /// <returns>If successful, undefined, otherwise an error message.
     this.removeNode = function (id, tag, forceRemove) {
         var t = tag;
-        node = graph.nodeDictionary.get(id);
+        var node = graph.nodeDictionary.get(id);
         if (node) {
             var nodes = graph.nodes;
             var self = this;
