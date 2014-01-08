@@ -10,7 +10,7 @@ d3color = function(hexOrRgba) {
         this.color = { r: rgba ? rgba[0] : 0, g: rgba ? rgba[1] : 0, b: rgba ? rgba[2] : 0, a: rgba ? rgba[3] : 0 };
     }
     else
-    // just assign the values
+        // just assign the values
         this.color = (!hexOrRgba || hexOrRgba.length < 3) ?
         { r: 0, g: 0, b: 0, a: 1 } :
         { r: hexOrRgba[0], g: hexOrRgba[1], b: hexOrRgba[2], a: (hexOrRgba.length > 3) ? hexOrRgba[3] : 1 };

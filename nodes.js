@@ -199,13 +199,6 @@
                         color: stats.color.getJenks(parseInt(graph.settings.jenks))
                     };
 
-                    if(Helper) {
-                        Helper.debug("Jenks size values:");
-                        Helper.debug(jenks.size);
-                        Helper.debug("Jenks color values:");
-                        Helper.debug(jenks.color);
-                    }
-
                     // re-score each node as value = [1, x] based on its size and color values
                     var dimensions = ['size', 'color'];
                     $.each(dimensions, function(i, dimension) {
@@ -215,7 +208,7 @@
                                 if(node.value[dimension] >= jenks[dimension][j])
                                     assigned = j + 1;
                             }
-                            Helper.debug("Setting: " + node.title + " (score=" + node._value + ") = " + assigned);
+
                             node.jenks[dimension] = assigned;
                         });
                     });
