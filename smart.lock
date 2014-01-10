@@ -2,12 +2,12 @@
   "meteor": {},
   "dependencies": {
     "basePackages": {
-      "d3-force-graph": {
+      "d3graph": {
         "path": "."
       }
     },
     "packages": {
-      "d3-force-graph": {
+      "d3graph": {
         "path": "."
       }
     }
