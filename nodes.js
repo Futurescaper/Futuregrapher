@@ -750,10 +750,11 @@
             if (graph.events.onNodeClick && typeof (graph.events.onNodeClick === "function")) {
                 d3.event.preventDefault();
 
-                if(window.event) {
+                if(window.event.preventDefault)
                     window.event.preventDefault();
+                if(window.event.stopPropagation)
                     window.event.stopPropagation();
-                }
+
                 setTimeout(function() {
                     clicking = false;
                     if(!doubleclick)
