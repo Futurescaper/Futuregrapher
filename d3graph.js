@@ -173,9 +173,9 @@
         }
 
         this.vis
-            .on('mousemove', function(e) {
+            .on('mousemove', function() {
                 if(self.events.onGraphMousemove)
-                    self.events.onGraphMousemove(e);
+                    self.events.onGraphMousemove(d3.event);
             })
             .on('mousedown', function(e) { if(self.events.onGraphMousedown) self.events.onGraphMousedown(e); })
             .on('mouseup', function(e) { if(self.events.onGraphMouseup) self.events.onGraphMouseup(e); });
