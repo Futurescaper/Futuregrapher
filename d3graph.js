@@ -58,6 +58,7 @@
             fisheye: this.options.fisheye,
             nodeSizeType: 'linear',
             zoom: (this.options.zoom != false),
+            pan: this.options.pan,
             initialZoom: this.options.initialZoom,
             linkWeightThreshold: 0,
             draggable: this.options.draggable||false,
