@@ -87,7 +87,7 @@ d3colors = {
     // Gets a darker shade of the specified color, with val=0 being completely black and val=1 being no darker.  Defaults to .5
     darken: function(color, val) {
         if(!color)
-            return;
+            return new d3color([0,0,0]);
 
         var color = this.getRgbaFromHex(color.hex ? color.hex() : new d3color(color).hex());
         var r = color[0] * (val||.5);
@@ -100,7 +100,7 @@ d3colors = {
     // Gets a lighter shade of the specified color, with val=0 being no lighter and val=1 being completely white.  Defaults to .5
     lighten: function(color, val) {
         if(!color)
-            return;
+            return new d3color([0,0,0]);
 
         var color = this.getRgbaFromHex(color.hex ? color.hex() : new d3color(color).hex());
         var r = color[0] + (255 - color[0]) * (val||.5);
