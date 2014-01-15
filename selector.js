@@ -17,16 +17,16 @@ if(Meteor.isClient)
             if(on) {
                 node.originalColor = graph._nodes.select('g.node[id="' + node.id + '"] circle').style('fill');
                 graph._nodes.select('g.node[id="' + node.id + '"] circle')
-                    .transition()
-                    .duration(50)
+                    //.transition()
+                    //.duration(50)
                     .style('fill', graph.d3styles().colors.nodeSelected || '#ff0000')
                     .style('stroke', '#800000');
                 nodes.push(node);
             }
             else {
                 graph._nodes.select('g.node[id="' + node.id + '"] circle')
-                    .transition()
-                    .duration(50)
+                    //.transition()
+                    //.duration(50)
                     .style('fill', node.originalColor)
                     .style('stroke', function(d) { return graph.d3nodes().getNodeBorderColor(d); });
 
@@ -38,19 +38,29 @@ if(Meteor.isClient)
             }
         };
 
-        this.setLink = function(link, on) {
+        this.setLink = function(link, on, color) {
             if(on) {
-                graph.visLinks.select('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
-                    .transition()
-                    .duration(50)
+                link._strokeWidth = graph.visLinks.select('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]').style('stroke-width');
+
+                var l = graph.visLinks.select('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
+                    //.transition()
+                    //.duration(50)
                     .style("stroke-width", function (d) { return 4 * graph.d3links().getLinkWidth(d) / graph.scale; });
+                if(color) {
+                    if(!graph.d3links().hasMarkerDefinition(color))
+                        graph.d3links().addMarkerDefinition(color, color);
+                    l.style('stroke', color)
+                        .attr('marker-end', 'url(#' + graph.settings.markerId + '_' + color + ')');
+                }
                 links.push(link);
             }
             else {
                 graph.visLinks.select('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
-                    .transition()
-                    .duration(50)
-                    .style('stroke-width', function (d) { return graph.d3links().getLinkWidth(d) / graph.scale; });
+                    //.transition()
+                    //.duration(50)
+                    .style('stroke-width', function (d) { return link._strokeWidth || graph.d3links().getLinkWidth(d) / graph.scale; })
+                    .style('stroke', function(l) { return graph.d3links().getLinkColor(l, graph.d3styles().colors.linkMin, graph.d3styles().colors.linkMax); })
+                    .attr('marker-end', 'url(#' + graph.settings.markerId + '_default)');
 
                 for(var i = 0; i < links.length; i++)
                     if(links[i].id == link.id) {
@@ -105,10 +115,12 @@ if(Meteor.isClient)
         this.clearLinks = function() {
             for(var i = 0; i < links.length; i++) {
                 var link = links[i];
-                graph.visLinks.select('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
+                var l = graph.visLinks.select('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
                     //.transition()
                     //.duration(50)
-                    .style('stroke-width', function(d) { return 1; });
+                    .style('stroke-width', function(d) { return link._strokeWidth || graph.d3links().getLinkWidth(d) / graph.scale; })
+                    .style('stroke', function(l) { return graph.d3links().getLinkColor(l, graph.d3styles().colors.linkMin, graph.d3styles().colors.linkMax); })
+                    .attr('marker-end', 'url(#' + graph.settings.markerId + '_default)');
             }
 
             links = [];

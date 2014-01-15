@@ -103,6 +103,7 @@
             }
             else {
                 link = {
+                    id: source.id + target.id,
                     source: source,
                     target: target,
                     tags: tag ? [{ tag: tag, weight: weight}] : [],
