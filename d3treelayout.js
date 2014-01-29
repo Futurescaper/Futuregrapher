@@ -165,17 +165,37 @@ if(Meteor.isClient) {
             }
             //[cf]
         
+            //[of]:    function updateNodePositions(nodeToExclude) {
+            function updateNodePositions(nodeToExclude) {
+                var node = vis.selectAll("g.timeline-node");
+            
+                if(nodeToExclude)
+                    node = node.filter(function (d) { return d !== nodeToExclude; });
+                
+                node.transition(500)
+                    .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+            
+                var linkSelector = "path.timeline-link";
+                
+                if(nodeToExclude)   // Exclude links to and from our node...
+                    linkSelector += ":not([data-link-source='" + nodeToExclude.id + "']):not([data-link-target='" + nodeToExclude.id + "'])";
+            
+                var link = d3.selectAll(linkSelector)
+                    .transition(500)
+                    .attr("d", diagonal);
+            }
+            //[cf]
+        
             //[of]:    function dragStart(d) {
             function dragStart(d) {
                 if(!options.enableDragging)
                     return;
             
-                var nodeElement = d3.select(this.parentNode);
-                var node = nodeElement.datum();
-                node.__origin__ = [node.x, node.y];
-            
-                if(options.dragStartHandler)
+                if(options.dragStartHandler) {
+                    var nodeElement = d3.select(this);
+                    var node = nodeElement.datum();
                     options.dragStartHandler(node, nodeElement);
+                }
             }
             
             //[cf]
@@ -184,19 +204,22 @@ if(Meteor.isClient) {
                 if(!options.enableDragging)
                     return;
             
-                var nodeElement = d3.select(this.parentNode);
+                var nodeElement = d3.select(this);
                 var node = nodeElement.datum();
             
-                var newX = node.__origin__[1] += d3.event.x;
-                var newY = node.__origin__[0] += d3.event.y;
+                var newX = d3.event.x;
+                var newY = d3.event.y;
                 
                 var oldX = node.y;
                 var oldY = node.x;
             
                 if (options.dragMoveHandler) {
-                    var coords = options.dragMoveHandler(node, nodeElement, newX, newY, oldX, oldY);
-                    newX = coords[0];
-                    newY = coords[1];
+                    var result = options.dragMoveHandler(node, nodeElement, newX, newY, oldX, oldY);
+                    newX = result.x;
+                    newY = result.y;
+                    
+                    if(result.update)
+                        updateNodePositions(node);
                 }
             
                 node.y = newX;
@@ -214,10 +237,8 @@ if(Meteor.isClient) {
                 if(!options.enableDragging)
                     return;
                     
-                var nodeElement = d3.select(this.parentNode);
+                var nodeElement = d3.select(this);
                 var node = nodeElement.datum();
-            
-                delete node.__origin__;
             
                 if (options.dragEndHandler) {
                     var finalCoords = options.dragEndHandler(node, nodeElement);
@@ -225,21 +246,15 @@ if(Meteor.isClient) {
                     node.x = finalCoords[1];
                 }
             
-                nodeElement.transition(300)
-                    .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
-            
-                var link = d3.selectAll("[data-link-source='" + node.id + "'], [data-link-target='" + node.id + "']");
-                link.transition(300)
-                    .attr("d", diagonal);
+                updateNodePositions();
             }
             
             //[cf]
             //[of]:    var drag = d3.behavior.drag()
             var drag = d3.behavior.drag()
                 .origin(function() {
-                    // We're really dragging the parent element.
-                    // See: http://stackoverflow.com/a/16744790/1417293
-                    return {x: 0, y: 0};
+                    var d = d3.select(this).datum();
+                    return {x: d.y, y: d.x};
                 })
                 .on("dragstart", dragStart)
                 .on("drag", dragMove)
@@ -273,8 +288,8 @@ if(Meteor.isClient) {
                 }
             
                 // If a normalize position-function was given, apply it to every node
-                if (options.normalizePosition)
-                    _(this.nodes).each(options.normalizePosition);
+                if (options.normalizePositions)
+                    options.normalizePositions();
             
                 // Update the nodes
                 var node = vis.selectAll("g." + options.nodeClass)
@@ -283,11 +298,7 @@ if(Meteor.isClient) {
                 // Enter any new nodes at the parent's previous position.
                 var nodeEnter = node.enter().append("svg:g")
                     .attr("class", function (d) { return options.nodeClass + " " + (d.selected ? options.nodeClassSelected : options.nodeClassUnselected); })
-                    .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; });
-            
-                nodeEnter.append("svg:circle")
-                    .attr("r", 1e-6)
-                    .style("fill", function(d) { return d._children ? options.nodeColorUnexpanded : options.nodeColorExpanded; })
+                    .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
                     .on("click", function(d) {
                         if(options.clickHandler) {
                             options.clickHandler.call(this, d);
@@ -298,6 +309,10 @@ if(Meteor.isClient) {
                         }
                     })
                     .call(drag);
+            
+                nodeEnter.append("svg:circle")
+                    .attr("r", 1e-6)
+                    .style("fill", function(d) { return d._children ? options.nodeColorUnexpanded : options.nodeColorExpanded; });
             
                 // Switch between -1 and 1
                 function alternate(row) { return (row % 2) * 2 - 1; }
