@@ -2,12 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="38669fd4-b00a-4a63-9793-cad27c24e242" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/smart.json" afterPath="$PROJECT_DIR$/smart.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="" />
     </list>
     <ignored path="d3graph.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1391018296099" ignored="false" />
+    <file path="/Dummy.txt" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1391018314168" ignored="false" />
     <file path="$PROJECT_DIR$/../Futurescaper3/client/graphs/template/graph.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411316958" ignored="false" />
     <file path="$PROJECT_DIR$/../Futurescaper3/client/graphs/template/graph.templates.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411246502" ignored="false" />
     <file path="$PROJECT_DIR$/../Futurescaper3/client/admin/factors/factors.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390397485570" ignored="false" />
@@ -122,7 +121,7 @@
       <file leaf-file-name="smart.json" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/smart.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="23" selection-start="244" selection-end="244" vertical-scroll-proportion="0.07447865">
+            <state line="8" column="1" selection-start="332" selection-end="332" vertical-scroll-proportion="0.11916584">
               <folding />
             </state>
           </provider>
@@ -319,7 +318,11 @@
       <created>1391018299654</created>
       <updated>1391018299654</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="d3treelayout merge">
+      <created>1391018315254</created>
+      <updated>1391018315254</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -516,7 +519,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/smart.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="23" selection-start="244" selection-end="244" vertical-scroll-proportion="0.07447865">
+        <state line="8" column="1" selection-start="332" selection-end="332" vertical-scroll-proportion="0.11916584">
           <folding />
         </state>
       </provider>
