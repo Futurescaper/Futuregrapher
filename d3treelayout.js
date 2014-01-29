@@ -3,7 +3,6 @@ if(Meteor.isClient) {
     d3treelayout = (function() {
         return {
             create: function (el, treeData, domain, options) {
-                //[of]:                var defaultOptions = {
                 var defaultOptions = {
                     hideRootNode: true,
                     nodeClass: "node",
@@ -17,7 +16,6 @@ if(Meteor.isClient) {
                     hideAxis: false,
                     margins: [120, 220, 120, 220]
                 };
-                //[cf]
                 options = $.extend({}, defaultOptions, options);
                 var result = new d3treelayout(el, options);
                 result.create(treeData, domain);
@@ -30,7 +28,6 @@ if(Meteor.isClient) {
             }
         };
 
-        //[of]:        function d3treelayout(el) {
         function d3treelayout(el, options) {
             this.el = el;
         
@@ -58,7 +55,6 @@ if(Meteor.isClient) {
             if(options.hideAxis)
                 axisLayer.style("opacity", "0");
         
-            //[of]:    function createAxis(domain) {
             function createAxis(domain) {
                 var scale = d3.scale.ordinal()
                     .domain(domain)
@@ -85,14 +81,12 @@ if(Meteor.isClient) {
                     .attr("transform", "translate(0, " + (h + 80) + ")")
                     .call(axis);
             }
-            //[cf]
         
             // If we're hiding the root node, level 1 is the left-most
             var shallowestLevel = options.hideRootNode ? 1 : 0;
         
             var root;
         
-            //[of]:    this.create = function (treeData, domain, options) {
             this.create = function (treeData, domain) {
                 this.treeData = treeData;
             
@@ -100,7 +94,6 @@ if(Meteor.isClient) {
                 root.x0 = h / 2;
                 root.y0 = 0;
             
-                //[of]:    function initializeData() {
                 function initializeData() {
                     var idCounter = 0;
                     root.id = idCounter++;
@@ -116,21 +109,16 @@ if(Meteor.isClient) {
                 
                     root.children.forEach(initializeBranch);
                 }
-                //[cf]
                 initializeData();
             
                 createAxis(domain);
             }
-            //[cf]
-            //[of]:    this.loadFromState = function (savedState) {
             this.loadFromState = function (savedState) {
                 this.treeData = savedState.treeData;
                 root = this.treeData;
             
                 createAxis(savedState.domain);
             }
-            //[cf]
-            //[of]:    this.saveState = function () {
             this.saveState = function () {
                 return {
                     options: options,
@@ -138,34 +126,24 @@ if(Meteor.isClient) {
                     domain: domain
                 };        
             }
-            //[cf]
                 
-            //[of]:    this.update = function () {
             this.update = function () {
                 update();
             }
-            //[cf]
         
-            //[of]:    this.setOption = function (key, value) {
             this.setOption = function (key, value) {
                 options[key] = value;
             }
-            //[cf]
         
-            //[of]:    this.showAxis = function() {
             this.showAxis = function() {
                 options.hideAxis = false;
                 axisLayer.transition(500).style("opacity", "1");
             }
-            //[cf]
-            //[of]:    this.hideAxis = function() {
             this.hideAxis = function() {
                 options.hideAxis = true;
                 axisLayer.transition(500).style("opacity", "0");
             }
-            //[cf]
         
-            //[of]:    function updateNodePositions(nodeToExclude) {
             function updateNodePositions(nodeToExclude) {
                 var node = vis.selectAll("g.timeline-node");
             
@@ -184,9 +162,7 @@ if(Meteor.isClient) {
                     .transition(500)
                     .attr("d", diagonal);
             }
-            //[cf]
         
-            //[of]:    function dragStart(d) {
             function dragStart(d) {
                 if(!options.enableDragging)
                     return;
@@ -198,8 +174,6 @@ if(Meteor.isClient) {
                 }
             }
             
-            //[cf]
-            //[of]:    function dragMove(d) {
             function dragMove(d) {
                 if(!options.enableDragging)
                     return;
@@ -231,8 +205,6 @@ if(Meteor.isClient) {
                 link.attr("d", diagonal);
             }
             
-            //[cf]
-            //[of]:    function dragEnd(d) {
             function dragEnd(d) {
                 if(!options.enableDragging)
                     return;
@@ -249,8 +221,6 @@ if(Meteor.isClient) {
                 updateNodePositions();
             }
             
-            //[cf]
-            //[of]:    var drag = d3.behavior.drag()
             var drag = d3.behavior.drag()
                 .origin(function() {
                     var d = d3.select(this).datum();
@@ -259,10 +229,8 @@ if(Meteor.isClient) {
                 .on("dragstart", dragStart)
                 .on("drag", dragMove)
                 .on("dragend", dragEnd);
-            //[cf]
         
             // Toggle children of a given node
-            //[of]:    function toggle(node) {
             function toggle(node) {
                 node.selected = !node.selected;
             
@@ -274,9 +242,7 @@ if(Meteor.isClient) {
                     node._children = null;
                 }
             }
-            //[cf]
             
-            //[of]:    function update(source) {
             function update(source) {
                 source = source || root;
                 var duration = 500;
@@ -393,8 +359,6 @@ if(Meteor.isClient) {
                     d.y0 = d.y;
                 });
             }
-            //[cf]
         }
-        //[cf]
     })();
 }
