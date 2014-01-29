@@ -1,20 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e900414c-449e-4a00-a95f-e2ec2a23f2cd" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/colors.js" afterPath="$PROJECT_DIR$/colors.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/d3graph.js" afterPath="$PROJECT_DIR$/d3graph.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/d3treelayout.js" afterPath="$PROJECT_DIR$/d3treelayout.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/highlights.js" afterPath="$PROJECT_DIR$/highlights.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/labels.js" afterPath="$PROJECT_DIR$/labels.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/links.js" afterPath="$PROJECT_DIR$/links.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nodes.js" afterPath="$PROJECT_DIR$/nodes.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.js" afterPath="$PROJECT_DIR$/package.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/styles.js" afterPath="$PROJECT_DIR$/styles.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tags.js" afterPath="$PROJECT_DIR$/tags.js" />
+    <list default="true" id="38669fd4-b00a-4a63-9793-cad27c24e242" name="Default" comment="d3treelayout merge">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/smart.json" afterPath="$PROJECT_DIR$/smart.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
-    <ignored path="meteor-d3graph.iws" />
+    <ignored path="d3graph.iws" />
     <ignored path=".idea/workspace.xml" />
+    <file path="/Dummy.txt" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1391018067500" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/graphs/template/graph.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411316958" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/graphs/template/graph.templates.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411246502" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/admin/factors/factors.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390397485570" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/views/entry/subgraphs/oecd_wizard/9-graph.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411246502" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/admin/subgraphs/subgraphs.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411246502" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/helpers/handlebar_helpers.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411246502" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/main.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390387375965" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/admin/subgraphs/subgraph.admin.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411246502" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/graphs/fsgraph.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390387375966" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/admin/factors/factor.admin.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390387375966" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/graphs/template/graph.timelineconstructor.less" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390387380597" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/graphs/template/graph.timelineconstructor.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411224718" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/lib/helpers.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390387446194" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/views/entry/subgraphs/sweden_wizard/4-picker1.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390388211440" ignored="false" />
+    <file path="/4-picker1.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390388242916" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/views/entry/subgraphs/sweden_wizard/1-picker1.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390388242519" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/views/entry/subgraphs/sweden_wizard/1-picker1.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390388266908" ignored="false" />
+    <file path="/1-picker1.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390388540424" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/views/entry/subgraphs/sweden_wizard/0-landing.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390388334274" ignored="false" />
+    <file path="/0-landing.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390388325446" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/views/entry/subgraphs/sweden_wizard/0-landing.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390388667377" ignored="false" />
+    <file path="/0-landing.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390388350604" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/views/entry/subgraphs/sweden_wizard/1-picker.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390392132833" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/views/entry/subgraphs/sweden_wizard/header.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390388626376" ignored="false" />
+    <file path="/header.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390388623598" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/views/entry/subgraphs/sweden_wizard/header.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390388660012" ignored="false" />
+    <file path="/header.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390388650130" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/views/entry/subgraphs/sweden_wizard/routing.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390389029275" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/languages/swedish.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390403836813" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/views/entry/subgraphs/sweden_wizard/2-timeline.html.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390391108145" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/views/entry/subgraphs/sweden_wizard/2-timeline.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390393662442" ignored="false" />
+    <file path="/2-timeline.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390393662024" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/views/entry/subgraphs/sweden_wizard/2-timeline.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390391173829" ignored="false" />
+    <file path="/2-timeline.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390391162932" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/views/entry/subgraphs/sweden_wizard/1-picker.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390393399010" ignored="false" />
+    <file path="/wizard.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390393557545" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/views/entry/subgraphs/_wizard/wizard.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411246502" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/admin/project_roles/project_roles.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411246502" ignored="false" />
+    <file path="/project_roles.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390395045086" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/languages/english.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390403874438" ignored="false" />
+    <file path="/english.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390403853719" ignored="false" />
+    <file path="/roles.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390395774835" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/models/roles.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411246502" ignored="false" />
+    <file path="/project_users.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390399353205" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/admin/project_users/project_users.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411246502" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/helpers/ui.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411246502" ignored="false" />
+    <file path="/ui.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390399855032" ignored="false" />
+    <file path="/project_users.base.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390400175601" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/admin/project_users/project_users.base.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411246502" ignored="false" />
+    <file path="/swedish.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390400072561" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/admin/project_invites/project_invites.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411246502" ignored="false" />
+    <file path="/project_invites.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390401426167" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/views/includes/breadcrumbs.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411246502" ignored="false" />
+    <file path="/breadcrumbs.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390401718483" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/admin/metadata/metadata.base.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411246502" ignored="false" />
+    <file path="/metadata.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390403787437" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/client/admin/metadata/metadata.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411246502" ignored="false" />
+    <file path="/subgraphs.html" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390409944588" ignored="false" />
+    <file path="/graph.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411312558" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/smart.lock" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411439900" ignored="false" />
+    <file path="/a.dummy" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390411496795" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/src/Futurescaper3/client/graphs/template/graph.subgraph_view.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390576705317" ignored="false" />
+    <file path="$PROJECT_DIR$/../Futurescaper3/src/Futurescaper3/client/graphs/template/graph.node_view.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390576578432" ignored="false" />
+    <file path="/graph.node_view.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390576520478" ignored="false" />
+    <file path="/graph.subgraph_view.js" changelist="38669fd4-b00a-4a63-9793-cad27c24e242" time="1390576642802" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,14 +88,41 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
-    <favorites_list name="meteor-d3graph" />
+    <favorites_list name="d3graph" />
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="d3treelayout.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="d3graph.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/d3graph.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="106" column="59" selection-start="4931" selection-end="4931" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="colors.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/colors.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="d3treelayout.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/d3treelayout.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="30" selection-start="437" selection-end="437" vertical-scroll-proportion="0.36834532" vertical-offset="0" max-vertical-offset="5040">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="smart.json" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/smart.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="8" column="1" selection-start="332" selection-end="332" vertical-scroll-proportion="0.18209408">
               <folding />
             </state>
           </provider>
@@ -46,7 +131,16 @@
       <file leaf-file-name="package.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/package.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="31" column="31" selection-start="779" selection-end="779" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="656">
+            <state line="22" column="21" selection-start="568" selection-end="568" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="highlights.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/highlights.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="141" column="28" selection-start="5680" selection-end="5680" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -61,20 +155,30 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="treeview" />
+      </map>
+    </option>
+  </component>
+  <component name="GitLogSettings">
+    <option name="myDateState">
+      <MyDateState />
+    </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/package.js" />
-        <option value="$PROJECT_DIR$/d3treelayout.js" />
+        <option value="$PROJECT_DIR$/highlights.js" />
+        <option value="$PROJECT_DIR$/smart.json" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1456" />
-    <option name="height" value="828" />
+    <option name="x" value="48" />
+    <option name="y" value="-4" />
+    <option name="width" value="1873" />
+    <option name="height" value="1205" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -90,11 +194,11 @@
     <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+    <navigator currentView="Scope" currentSubView="All" proportions="" version="1" splitterProportion="0.5">
       <flattenPackages />
       <showMembers />
       <showModules />
-      <showLibraryContents />
+      <showLibraryContents ProjectPane="true" />
       <hideEmptyPackages />
       <abbreviatePackageNames />
       <autoscrollToSource />
@@ -102,23 +206,68 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="meteor-d3graph" />
+              <option name="myItemId" value="d3graph" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="meteor-d3graph" />
+              <option name="myItemId" value="d3graph" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="meteor-d3graph" />
+              <option name="myItemId" value="d3graph" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope">
+        <subPane subId="All">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="d3graph">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="d3graph">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT=".idea">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="d3graph">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT=".idea">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="scopes">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -126,8 +275,8 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunManager">
     <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
@@ -138,95 +287,242 @@
       <option name="testName" />
       <method />
     </configuration>
-    <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
-      <option name="VMOptions" />
-      <option name="arguments" />
-      <option name="filePath" />
-      <option name="name" value="Dart" />
-      <option name="saveOutputToFile" value="false" />
-      <option name="showConsoleOnStdErr" value="false" />
-      <option name="showConsoleOnStdOut" value="false" />
-      <method />
-    </configuration>
-    <configuration default="true" type="JSTestDriver:ConfigurationType" factoryName="JsTestDriver">
-      <setting name="configLocationType" value="CONFIG_FILE" />
-      <setting name="settingsFile" value="" />
-      <setting name="serverType" value="INTERNAL" />
-      <setting name="preferredDebugBrowser" value="CHROME" />
-      <method />
-    </configuration>
-    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" singleton="true" config-file="">
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug" singleton="true">
-      <method />
-    </configuration>
-    <configuration default="true" type="NodeJSConfigurationType" factoryName="Node.js" working-dir="">
-      <browser start="false" url="" with-js-debugger="false" />
-      <method />
-    </configuration>
     <list size="0" />
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false" SSL_PROTOCOLS="all">
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="mySSHConnectionTimeout" value="30000" />
+    <option name="mySSHReadTimeout" value="30000" />
+    <option name="LAST_MERGED_REVISION" />
+    <option name="MERGE_DRY_RUN" value="false" />
+    <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
+    <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
+    <option name="IGNORE_SPACES_IN_MERGE" value="false" />
+    <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
+    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
+    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
+    <option name="FORCE_UPDATE" value="false" />
+    <option name="IGNORE_EXTERNALS" value="false" />
+    <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="e900414c-449e-4a00-a95f-e2ec2a23f2cd" name="Default" comment="" />
-      <created>1390322508928</created>
-      <updated>1390322508928</updated>
+      <changelist id="38669fd4-b00a-4a63-9793-cad27c24e242" name="Default" comment="" />
+      <created>1390386246420</created>
+      <updated>1390386246420</updated>
     </task>
+    <task id="LOCAL-00001" summary="treeview merge">
+      <created>1390386416088</created>
+      <updated>1390386416088</updated>
+    </task>
+    <task id="LOCAL-00002" summary="highlights">
+      <created>1391017963841</created>
+      <updated>1391017963841</updated>
+    </task>
+    <task id="LOCAL-00003" summary="d3treelayout merge">
+      <created>1391018040444</created>
+      <updated>1391018040444</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1456" height="828" extended-state="6" />
+    <frame x="48" y="-4" width="1873" height="1205" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32923368" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.6707663" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
-  </component>
-  <component name="Vcs.Log.UiProperties">
-    <option name="RECENTLY_FILTERED_USERS">
-      <collection />
-    </option>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT" value="true" />
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
     <option name="myTodoPanelSettings">
-      <TodoPanelSettings />
+      <value>
+        <are-packages-shown value="false" />
+        <are-modules-shown value="false" />
+        <flatten-packages value="false" />
+        <is-autoscroll-to-source value="false" />
+      </value>
     </option>
+    <option name="PERFORM_UPDATE_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_COMMIT_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_EDIT_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_CHECKOUT_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_ADD_REMOVE_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_ROLLBACK_IN_BACKGROUND" value="false" />
+    <option name="CHECK_LOCALLY_CHANGED_CONFLICTS_IN_BACKGROUND" value="false" />
+    <option name="CHANGED_ON_SERVER_INTERVAL" value="60" />
+    <option name="SHOW_ONLY_CHANGED_IN_SELECTION_DIFF" value="true" />
+    <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
+    <option name="DEFAULT_PATCH_EXTENSION" value="patch" />
+    <option name="SHORT_DIFF_HORIZONTALLY" value="true" />
+    <option name="SHORT_DIFF_EXTRA_LINES" value="2" />
+    <option name="SOFT_WRAPS_IN_SHORT_DIFF" value="true" />
+    <option name="INCLUDE_TEXT_INTO_PATCH" value="false" />
+    <option name="INCLUDE_TEXT_INTO_SHELF" value="false" />
+    <option name="SHOW_FILE_HISTORY_DETAILS" value="true" />
+    <option name="SHOW_VCS_ERROR_NOTIFICATIONS" value="true" />
+    <option name="SHOW_DIRTY_RECURSIVELY" value="false" />
+    <option name="LIMIT_HISTORY" value="true" />
+    <option name="MAXIMUM_HISTORY_ROWS" value="1000" />
+    <option name="UPDATE_FILTER_SCOPE_NAME" />
+    <option name="USE_COMMIT_MESSAGE_MARGIN" value="false" />
+    <option name="COMMIT_MESSAGE_MARGIN_SIZE" value="72" />
+    <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
+    <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
+    <option name="LAST_COMMIT_MESSAGE" value="d3treelayout merge" />
+    <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
+    <option name="FILE_HISTORY_DIALOG_COMMENTS_SPLITTER_PROPORTION" value="0.8" />
+    <option name="FILE_HISTORY_DIALOG_SPLITTER_PROPORTION" value="0.5" />
+    <option name="ACTIVE_VCS_NAME" />
+    <option name="UPDATE_GROUP_BY_PACKAGES" value="false" />
+    <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
+    <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
+    <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
+    <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
+    <MESSAGE value="treeview merge" />
+    <MESSAGE value="highlights" />
+    <MESSAGE value="d3treelayout merge" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/package.js">
+    <entry file="file://$PROJECT_DIR$/d3graph.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="31" selection-start="779" selection-end="779" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="656">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/colors.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/d3treelayout.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="30" selection-start="437" selection-end="437" vertical-scroll-proportion="0.36834532" vertical-offset="0" max-vertical-offset="5040">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/smart.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="23" selection-start="244" selection-end="244" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="21" selection-start="568" selection-end="568" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/d3graph.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/colors.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/d3treelayout.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/smart.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="23" selection-start="244" selection-end="244" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="21" selection-start="568" selection-end="568" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/d3graph.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="106" column="59" selection-start="4931" selection-end="4931" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/colors.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/d3treelayout.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="21" selection-start="568" selection-end="568" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/highlights.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="141" column="28" selection-start="5680" selection-end="5680" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/smart.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="1" selection-start="332" selection-end="332" vertical-scroll-proportion="0.18209408">
           <folding />
         </state>
       </provider>
