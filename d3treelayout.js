@@ -114,13 +114,15 @@ if(Meteor.isClient) {
 
                 createAxis(domain);
             }
-            this.loadFromState = function (savedState) {
+
+            this.load = function (savedState) {
                 this.treeData = savedState.treeData;
                 root = this.treeData;
 
                 createAxis(savedState.domain);
             }
-            this.saveState = function () {
+
+            this.getState = function () {
                 return {
                     options: options,
                     treeData: this.treeData,
@@ -140,6 +142,7 @@ if(Meteor.isClient) {
                 options.hideAxis = false;
                 axisLayer.transition(500).style("opacity", "1");
             }
+
             this.hideAxis = function() {
                 options.hideAxis = true;
                 axisLayer.transition(500).style("opacity", "0");
