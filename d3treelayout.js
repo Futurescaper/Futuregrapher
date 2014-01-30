@@ -116,10 +116,10 @@ if(Meteor.isClient) {
             }
 
             this.load = function (savedState) {
-                this.treeData = savedState.treeData;
-                root = this.treeData;
+                root = this.treeData = savedState.treeData;
+                this.domain = savedState.domain;
 
-                createAxis(savedState.domain);
+                createAxis(this.domain);
             }
 
             this.getState = function () {
