@@ -14,7 +14,8 @@ if(Meteor.isClient) {
                     nodeColorUnexpanded: "lightsteelblue",
                     nodeColorExpanded: "#fff",
                     hideAxis: false,
-                    margins: [120, 220, 120, 220]
+                    margins: [120, 220, 120, 220],
+                    dynamicHeight: false
                 };
                 options = $.extend({}, defaultOptions, options);
                 var result = new d3treelayout(el, options);
@@ -33,34 +34,48 @@ if(Meteor.isClient) {
 
             var m = options.margins;
             w = el.width() - m[1] - m[3],
-                h = el.height() - m[0] - m[2];
+            h = el.height() - m[0] - m[2];
 
             this.width = w;
             this.height = h;
 
-            var vis = d3.select('#' + this.el.attr('id')).append("svg:svg")
-                .attr("width", w + m[1] + m[3])
-                .attr("height", h + m[0] + m[2])
-                .append("svg:g")
+            var originalWidth = w;
+            var originalHeight = h;
+
+            var svg  = d3.select('#' + this.el.attr('id')).append("svg:svg")
+//                .attr("width", w + m[1] + m[3])
+//                .attr("height", h + m[0] + m[2])
+
+            var container = svg.append("svg:g")
                 .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
-            var axisLayer = vis.append("svg:g");
+            var axisLayer = container.append("svg:g");
+            if(options.hideAxis)
+                axisLayer.style("opacity", "0");
 
+            var axis;
+
+            var vis = container.append("svg:g");
+
+            function zoom() {
+                vis.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+                axisLayer.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+            }
+            var zoomBehavior = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
+            svg.call(zoomBehavior);
+            
             var tree = d3.layout.tree()
                 .size([h, w]);
 
             var diagonal = d3.svg.diagonal()
                 .projection(function(d) { return [d.y, d.x]; });
 
-            if(options.hideAxis)
-                axisLayer.style("opacity", "0");
-
             function createAxis(domain) {
                 var scale = d3.scale.ordinal()
                     .domain(domain)
                     .rangePoints([0, w]);
 
-                var axis = d3.svg.axis()
+                axis = d3.svg.axis()
                     .scale(scale)
                     .orient("bottom")
                     .tickSize(-h - 80);
@@ -95,6 +110,33 @@ if(Meteor.isClient) {
                 root.x0 = h / 2;
                 root.y0 = 0;
 
+                // Now, figure out the maximum label length. From this, we determine the necessary width of our g-element by multiplying
+                // by potential number of levels. Finally, pan the screen to show the entire first level of labels.
+
+                var levelWidth = 0;
+                var level1Width = 0;
+                var levelCount = 0;
+
+                function traverse(depth, node) {
+                    var nodeLabelWidth = measureLabelWidth(node.name);
+                    levelWidth = Math.max(levelWidth, nodeLabelWidth);
+                    
+                    if(depth == 1)
+                        level1Width = Math.max(level1Width, nodeLabelWidth);
+                    
+                    levelCount = Math.max(levelCount, depth);
+                    _(node.children).each(traverse.bind(null, depth + 1));
+                }
+                
+                traverse(0, root);
+                w = levelWidth * (levelCount - 1);
+                this.width = w;
+                tree.size([h, w]);
+                
+                zoomBehavior.translate([level1Width, 0]);
+                vis.attr("transform", "translate(" + level1Width + ", 0)scale(1)");
+                axisLayer.attr("transform", "translate(" + level1Width + ", 0)scale(1)");
+
                 function initializeData() {
                     var idCounter = 0;
                     root.id = idCounter++;
@@ -113,6 +155,18 @@ if(Meteor.isClient) {
                 initializeData();
 
                 createAxis(domain);
+            }
+            
+            function measureLabelWidth(labelText) {
+                var container = vis.append("svg:g")
+                    .attr("class", "timeline-node")
+                var tempLabel = container.append("svg:text")
+                    .style("opacity", 0)
+                    .text(labelText);
+                
+                var result = tempLabel[0][0].getComputedTextLength();
+                container.remove();
+                return result;
             }
 
             this.load = function (savedState) {
@@ -247,6 +301,25 @@ if(Meteor.isClient) {
                 }
             }
 
+            function updateDynamicHeight() {
+                var levelSizes = new Array(100);
+                function traverse (depth, node) {
+                    if(!levelSizes[depth]) levelSizes[depth] = 0;
+                    levelSizes[depth]++;
+                    
+                    _(node.children).each(traverse.bind(null, depth + 1));
+                }
+                
+                traverse(0, root);
+                
+                var maxLevelSize = d3.max(levelSizes);
+                var calculatedHeight = maxLevelSize * 40;
+                
+                h = Math.max(originalHeight, calculatedHeight);
+                
+                tree.size([h, w]);
+            }
+            
             function update(source) {
                 source = source || root;
                 var duration = 500;
@@ -275,6 +348,10 @@ if(Meteor.isClient) {
                         }
                         else {
                             toggle(d);
+                            
+                            if(options.dynamicHeight)
+                                updateDynamicHeight();
+                            
                             update(d);
                         }
                     })
@@ -294,7 +371,7 @@ if(Meteor.isClient) {
                     })
                     .attr("dy", ".35em")
                     .attr("text-anchor", function(d) { return d.children || d._children || d.depth === shallowestLevel ? "end" : "start"; })
-                    .text(function(d) { return Helper.getWords(d.name, 5); })
+                    .text(function(d) { return d.name; })
                     .style("fill-opacity", 1e-6);
 
                 nodeEnter.append("svg:title")
