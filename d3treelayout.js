@@ -78,7 +78,7 @@ if(Meteor.isClient) {
                 axis = d3.svg.axis()
                     .scale(scale)
                     .orient("bottom")
-                    .tickSize(-h - 80);
+                    .tickSize(-h);
 
                 if(domain.length > 20) {
                     var tickValues = [];
@@ -93,7 +93,7 @@ if(Meteor.isClient) {
 
                 axisLayer.append("svg:g")
                     .attr("class", "timeline-axis")
-                    .attr("transform", "translate(0, " + (h + 80) + ")")
+                    .attr("transform", "translate(0, " + h + ")")
                     .call(axis);
             }
 
@@ -170,10 +170,10 @@ if(Meteor.isClient) {
             }
 
             this.load = function (savedState) {
-                root = this.treeData = savedState.treeData;
-                this.domain = savedState.domain;
+                this.treeData = savedState.treeData;
+                root = this.treeData;
 
-                createAxis(this.domain);
+                createAxis(savedState.domain);
             }
 
             this.getState = function () {
@@ -318,6 +318,11 @@ if(Meteor.isClient) {
                 h = Math.max(originalHeight, calculatedHeight);
                 
                 tree.size([h, w]);
+                axis.tickSize(-h);
+                axisLayer.select("g")
+                    .transition(500)
+                    .attr("transform", "translate(0, " + h + ")")
+                    .call(axis);                
             }
             
             function update(source) {
