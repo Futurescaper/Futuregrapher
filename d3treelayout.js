@@ -43,8 +43,6 @@ if(Meteor.isClient) {
             var originalHeight = h;
 
             var svg  = d3.select('#' + this.el.attr('id')).append("svg:svg")
-//                .attr("width", w + m[1] + m[3])
-//                .attr("height", h + m[0] + m[2])
 
             var container = svg.append("svg:g")
                 .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
@@ -57,11 +55,13 @@ if(Meteor.isClient) {
 
             var vis = container.append("svg:g");
 
+            var zoomBehavior = d3.behavior.zoom().scaleExtent([0.5, 2]).on("zoom", zoom);
             function zoom() {
-                vis.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-                axisLayer.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+                var translate = zoomBehavior.translate()[0] + ", " + zoomBehavior.translate()[1];
+                var scale = zoomBehavior.scale();
+                vis.attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+                axisLayer.attr("transform", "translate(" + translate + ")scale(" + scale + ")");
             }
-            var zoomBehavior = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
             svg.call(zoomBehavior);
             
             var tree = d3.layout.tree()
@@ -134,8 +134,7 @@ if(Meteor.isClient) {
                 tree.size([h, w]);
                 
                 zoomBehavior.translate([level1Width, 0]);
-                vis.attr("transform", "translate(" + level1Width + ", 0)scale(1)");
-                axisLayer.attr("transform", "translate(" + level1Width + ", 0)scale(1)");
+                zoom();
 
                 function initializeData() {
                     var idCounter = 0;
@@ -172,15 +171,33 @@ if(Meteor.isClient) {
             this.load = function (savedState) {
                 this.treeData = savedState.treeData;
                 root = this.treeData;
+                this.domain = savedState.domain;
+                this.width = w = savedState.width;
+                this.height = h = savedState.height;
 
                 createAxis(savedState.domain);
+
+                tree.size([h, w]);
+                axis.tickSize(-h);
+                axisLayer.select("g")
+                    .transition(500)
+                    .attr("transform", "translate(0, " + h + ")")
+                    .call(axis);
+
+                zoomBehavior.translate(savedState.zoomTranslate);
+                zoomBehavior.scale(savedState.zoomScale);
+                zoom();
             }
 
             this.getState = function () {
                 return {
                     options: options,
                     treeData: this.treeData,
-                    domain: this.domain
+                    domain: this.domain,
+                    width: w,
+                    height: h,
+                    zoomTranslate: zoomBehavior.translate(),
+                    zoomScale: zoomBehavior.scale()
                 };
             }
 
