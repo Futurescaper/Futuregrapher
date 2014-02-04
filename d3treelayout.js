@@ -42,6 +42,8 @@ if(Meteor.isClient) {
             var originalWidth = w;
             var originalHeight = h;
 
+            var levelWidth = 0;
+
             var svg  = d3.select('#' + this.el.attr('id')).append("svg:svg")
 
             var container = svg.append("svg:g")
@@ -57,10 +59,22 @@ if(Meteor.isClient) {
 
             var zoomBehavior = d3.behavior.zoom().scaleExtent([0.5, 2]).on("zoom", zoom);
             function zoom() {
-                var translate = zoomBehavior.translate()[0] + ", " + zoomBehavior.translate()[1];
-                var scale = zoomBehavior.scale();
-                vis.attr("transform", "translate(" + translate + ")scale(" + scale + ")");
-                axisLayer.attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+                var tx = zoomBehavior.translate()[0];
+                var ty = zoomBehavior.translate()[1];
+
+                // Make sure we're within the bounding box, and if zoomed out too far, center the viz.                
+                tx = Math.min(levelWidth * zoomBehavior.scale(), Math.max(tx, originalWidth - (w + levelWidth * 2) * zoomBehavior.scale()));
+                if ((w + levelWidth * 2)  * zoomBehavior.scale() < originalWidth)
+                    tx = (originalWidth - w * zoomBehavior.scale()) / 2;
+
+                ty = Math.min(0, Math.max(ty, originalHeight - h * zoomBehavior.scale()));
+                if (h * zoomBehavior.scale() < originalHeight)
+                    ty = (originalHeight - h * zoomBehavior.scale()) / 2;
+                
+                zoomBehavior.translate([tx, ty]);
+                
+                vis.attr("transform", "translate(" + zoomBehavior.translate() + ")scale(" + zoomBehavior.scale() + ")");
+                axisLayer.attr("transform", "translate(" + zoomBehavior.translate() + ")scale(" + zoomBehavior.scale() + ")");
             }
             svg.call(zoomBehavior);
             
@@ -113,7 +127,6 @@ if(Meteor.isClient) {
                 // Now, figure out the maximum label length. From this, we determine the necessary width of our g-element by multiplying
                 // by potential number of levels. Finally, pan the screen to show the entire first level of labels.
 
-                var levelWidth = 0;
                 var level1Width = 0;
                 var levelCount = 0;
 
@@ -132,7 +145,6 @@ if(Meteor.isClient) {
                 w = levelWidth * (levelCount - 1);
                 this.width = w;
                 tree.size([h, w]);
-                
                 zoomBehavior.translate([level1Width, 0]);
                 zoom();
 
