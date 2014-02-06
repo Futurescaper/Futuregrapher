@@ -80,6 +80,7 @@
             onGraphDoubleClick: options.onGraphDoubleClick,
             onNodeTooltip: options.onNodeTooltip,
             onLinkTooltip: options.onLinkTooltip,
+            onLabelTooltip: options.onLabelTooltip,
             onNodeClick: options.onNodeClick,
             onNodeRightClick: options.onNodeRightClick,
             onNodeMouseover: options.onNodeMouseover,
@@ -425,6 +426,19 @@
                 title: function () {
                     var d = this.__data__;
                     return _nodelib.getNodeTooltip(d);
+                },
+                gravity: $.fn.tipsy.autoWE
+            });
+
+            $('#' + this.el.attr('id') + ' svg g.label').tipsy({
+                html: true,
+                fade: false,
+                hoverlock: true,
+                delayIn: _stylelib.settings.tooltipDelay,
+                tipsyClass: _stylelib.settings.nodeTooltipClass,
+                title: function () {
+                    var d = this.__data__;
+                    return _labellib.getLabelTooltip(d);
                 },
                 gravity: $.fn.tipsy.autoWE
             });

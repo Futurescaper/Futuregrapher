@@ -20,6 +20,11 @@
                 graph.events.onLabelMouseout(node);
         };
 
+        this.getLabelTooltip = function (label) {
+            if (graph.events.onLabelTooltip && typeof (graph.events.onLabelTooltip === "function"))
+                return graph.events.onLabelTooltip(label, d3.event);
+        };
+
         this.updateLabelSizesForZoom = function(scale) {
             if(!graph.d3zoomer())
                 return;
