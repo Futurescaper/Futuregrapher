@@ -61,15 +61,21 @@ if(Meteor.isClient) {
             function zoom() {
                 var tx = zoomBehavior.translate()[0];
                 var ty = zoomBehavior.translate()[1];
+                var s = zoomBehavior.scale();
 
-                // Make sure we're within the bounding box, and if zoomed out too far, center the viz.                
-                tx = Math.min(levelWidth * zoomBehavior.scale(), Math.max(tx, originalWidth - (w + levelWidth * 2) * zoomBehavior.scale()));
-                if ((w + levelWidth * 2)  * zoomBehavior.scale() < originalWidth)
-                    tx = (originalWidth - w * zoomBehavior.scale()) / 2;
+                // Make sure we're within the bounding box
+                if (tx > levelWidth * s) tx = levelWidth * s;
+                if (tx < originalWidth - (w + levelWidth) * s) tx = originalWidth - (w + levelWidth) * s;
 
-                ty = Math.min(0, Math.max(ty, originalHeight - h * zoomBehavior.scale()));
-                if (h * zoomBehavior.scale() < originalHeight)
-                    ty = (originalHeight - h * zoomBehavior.scale()) / 2;
+                if (ty > 0) ty = 0;
+                if (ty < originalHeight - h * s) ty = originalHeight - h * s;
+
+                // And if we've zoomed out so all is visible, center the viz
+                if (w * s < originalWidth)
+                    tx = (originalWidth - w * s) / 2;
+
+                if (h * s < originalHeight)
+                    ty = (originalHeight - h * s) / 2;
                 
                 zoomBehavior.translate([tx, ty]);
                 
@@ -77,7 +83,20 @@ if(Meteor.isClient) {
                 axisLayer.attr("transform", "translate(" + zoomBehavior.translate() + ")scale(" + zoomBehavior.scale() + ")");
             }
             svg.call(zoomBehavior);
-            
+
+            function interpolateZoom (translate, scale, duration) {
+                return d3.transition().duration(duration).tween("zoom", function () {
+                    var iTranslate = d3.interpolate(zoomBehavior.translate(), translate);
+                    var iScale = d3.interpolate(zoomBehavior.scale(), scale);
+                    
+                    return function (t) {
+                        zoomBehavior.scale(iScale(t)).translate(iTranslate(t));
+                        vis.attr("transform", "translate(" + zoomBehavior.translate() + ")scale(" + zoomBehavior.scale() + ")");
+                        axisLayer.attr("transform", "translate(" + zoomBehavior.translate() + ")scale(" + zoomBehavior.scale() + ")");
+                    };
+                });
+            }
+                        
             var tree = d3.layout.tree()
                 .size([h, w]);
 
@@ -229,6 +248,18 @@ if(Meteor.isClient) {
             this.hideAxis = function() {
                 options.hideAxis = true;
                 axisLayer.transition(500).style("opacity", "0");
+            }
+            
+            this.zoomToFit = function () {
+                var horizontalScale = originalWidth / w;
+                var verticalScale = originalHeight / h;
+            
+                var scale = Math.min(horizontalScale, verticalScale);
+            
+                var tx = (originalWidth - w * scale) / 2;
+                var ty = (originalHeight - h * scale) / 2;
+                
+                interpolateZoom([tx, ty], scale, 500);
             }
 
             function updateNodePositions(nodeToExclude) {
