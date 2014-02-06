@@ -45,8 +45,9 @@ d3highlights = function (graph) {
             .style('opacity', function(d) { return d.source.visible && d.target.visible ? 1 : 0 });
 
         graph.d3().selectAll('g.label text')
-            .style('opacity', 1.0)
-            .text(function(d) { return d.hideLabel || !d.visible ? '' : d.title; });
+            .style('opacity', 1.0);
+
+        graph.d3labels().showLabels();
     };
 
     this.displayNodes = function(options, time) {

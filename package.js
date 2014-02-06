@@ -21,14 +21,12 @@ Package.on_use(function(api, where) {
         'tags.js',
         'zoomer.js',
         'd3graph.js',
-        'd3treelayout.js',
-        'filters.js'
+        'd3treelayout.js'
     ]);
 
     if (api.export) {
         api.export('d3graph');
         api.export('d3treelayout');
-        api.export('d3filters');
         api.export('d3colors');
         api.export('d3color');
         api.export('d3selector');

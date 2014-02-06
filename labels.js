@@ -54,8 +54,13 @@
         };
 
         this.setMaxLength = function(words) {
+            graph.settings.labelLength = words;
+            this.showLabels();
+        };
+
+        this.showLabels = function() {
             graph.d3().selectAll('g.label text').text(function(d) {
-                return d.hideLabel ? '' : (!words ? d.title : getWords(d.title, words));
+                return d.hideLabel ? '' : (!graph.settings.labelLength ? d.title : getWords(d.title, graph.settings.labelLength));
             });
 
             function getWords(text, count) {
@@ -74,9 +79,7 @@
                 node.hideLabel = i >= top;
             });
 
-            graph.d3().selectAll('g.label text').text(function(d) {
-                return d.hideLabel ? '' : d.title;
-            });
+            this.showLabels();
         };
 
         this.transformLabel = function (d, center, scale) {
