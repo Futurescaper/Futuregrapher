@@ -48,6 +48,19 @@
             });
         };
 
+        this.setMaxLength = function(words) {
+            graph.d3().selectAll('g.label text').text(function(d) {
+                return d.hideLabel ? '' : (!words ? d.title : getWords(d.title, words));
+            });
+
+            function getWords(text, count) {
+                var arr = text.split(' ');
+                return arr.length > count ?
+                    arr.slice(0, count).join(' ') + '...' :
+                    text;
+            }
+        };
+
         this.showTop = function(top, property) {
             var nodes = graph.nodes.slice(0).sort(function(a, b) { return property ? b[property] - a[property] : b.value.size - a.value.size; });
 

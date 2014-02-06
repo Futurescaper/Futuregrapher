@@ -27,6 +27,7 @@
 
         this.settings = {
             maxLabels: this.options.maxLabels||7,
+            labelLength: this.options.labelLength||8,
             constrainNodes: (this.options.constrainNodes == true),
             embedLabels: (this.options.embedLabels == true),
             hideLabels: (this.options.hideLabels == true),
