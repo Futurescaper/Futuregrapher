@@ -69,7 +69,8 @@
             taperedLinkMinSize: this.options.taperedLinkMinSize,
             taperedLinkMaxSize: this.options.taperedLinkMaxSize,
             reverseLabelPosition: this.options.reverseLabelPosition,
-            constrainNodes: this.options.constrainNodes
+            constrainNodes: this.options.constrainNodes,
+            preventCollisions: true
         };
 
         this.events = {
@@ -260,6 +261,38 @@
             _nodelib.calculateNodes(filterKey);
             _linklib.calculateLinks(filterKey);
         };
+        
+        var padding = 1.5; // separation between nodes 
+        var maxRadius = 12;
+        
+        // Resolves collisions between d and all other circles.
+        function collide(alpha) {
+            var quadtree = d3.geom.quadtree(nodes);
+            return function(d) {
+                var r = d.radius + maxRadius + padding,
+                    nx1 = d.x - r,
+                    nx2 = d.x + r,
+                    ny1 = d.y - r,
+                    ny2 = d.y + r;
+                
+                quadtree.visit(function(quad, x1, y1, x2, y2) {
+                    if (quad.point && (quad.point !== d)) {
+                        var x = d.x - quad.point.x,
+                        y = d.y - quad.point.y,
+                        l = Math.sqrt(x * x + y * y),
+                        r = d.radius + quad.point.radius + padding;
+                        if (l < r) {
+                            l = (l - r) / l * alpha;
+                            d.x -= x *= l;
+                            d.y -= y *= l;
+                            quad.point.x += x;
+                            quad.point.y += y;
+                        }
+                    }
+                    return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+                });
+            };
+        }
 
         this.update = function () {
             w = this.width;
@@ -486,6 +519,9 @@
                 // Update links
                 link
                     .attr('d', function (d) { return _linklib.calculatePath(d); });
+
+                if (self.settings.preventCollisions) 
+                    node.each(collide(0.5));
 
                 // Update nodes
                 node
