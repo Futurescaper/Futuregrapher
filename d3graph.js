@@ -186,7 +186,7 @@
         this.markers = this.vis
             .append("svg:defs");
 
-        _linklib.addMarkerDefinition('default', _stylelib.colors.linkMax);
+        _linklib.updateMarkers();
 
         this.visLinks = this.vis
             .append('svg:g')
@@ -312,6 +312,8 @@
                 .gravity(this.settings.gravity)
                 .size([this.width, this.height]);
 
+            _linklib.updateMarkers();
+
             var link = this._links = this.visLinks.selectAll("path.link")
                 .data(this.links);
 
@@ -336,7 +338,7 @@
             else {
                 l.style('fill', 'none');
                 l.attr('marker-end', function(link) {
-                    return link.directional ? 'url(#' + (self.id||'') + self.settings.markerId + '_' + (link.marker ? link.marker : 'default') + ')' : '';
+                    return link.directional ? 'url(#' + _linklib.getMarkerUrl(link) + ')' : '';
                 });
             }
 

@@ -4,54 +4,6 @@
 
         this.d3LineBasis = d3.svg.line().interpolate("basis");
 
-        this.addMarkerDefinition = function(name, color) {
-            var size = (graph.settings.minMarkerSize + graph.settings.maxMarkerSize) / 2;
-            graph.markers
-                .append('svg:marker')
-                .attr('id', (graph.id||'') + graph.settings.markerId + "_" + name)
-                .attr("viewBox", "0 0 " + (10 * size) + " " + (10 * size))
-                .attr('preserveAspectRatio', 'xMinYMin')
-                .attr("refX", 10 * size)
-                .attr("refY", 10 * size)
-                .attr('markerUnits', 'strokeWidth')
-                .attr("markerWidth", 5 * size)
-                .attr("markerHeight", 3 * size)
-                .attr("fill", color)
-                .attr("orient", "auto")
-                .append("svg:path")
-                .attr("d", "M0,0L" + (10 * size) + "," + (10 * size) + "L0," + (10 * size) + "z");
-        };
-
-        this.hasMarkerDefinition = function(name) {
-            return graph.vis.selectAll('svg defs marker[id="' + (graph.id||'') + graph.settings.markerId + '_' + name + '"]')[0].length > 0;
-        };
-
-        this.updateMarkerSizes = function(scale) {
-            // TODO: MARKER SIZE
-            var normalized = (graph.settings.minMarkerSize + graph.settings.maxMarkerSize) / 2;
-
-            var size = normalized * (scale > 1 ? 1 : (scale||1.0));
-            if(size < graph.settings.minMarkerSize)
-                size = graph.settings.minMarkerSize;
-            if(size > graph.settings.maxMarkerSize)
-                size = graph.settings.maxMarkerSize;
-
-            graph.vis.selectAll('svg defs marker')
-                .attr('viewBox', '0 0 ' + (10 * size) + ' ' + (10 * size))
-                .attr("refX", 10 * size)
-                .attr("refY", 10 * size)
-                .attr("markerWidth", 5 * size)
-                .attr("markerHeight", 3 * size)
-                .attr("d", "M0,0L" + (10 * size) + "," + (10 * size) + "L0," + (10 * size) + "z");
-
-            graph.vis.selectAll('svg defs marker path')
-                .attr("d", "M0,0L" + (10 * size) + "," + (10 * size) + "L0," + (10 * size) + "z");
-        };
-
-        this.setMarkerColor = function(name, color) {
-            graph.vis.select('svg defs marker[id="' + (graph.id||'') + graph.settings.markerId + '_' + name + '"]').attr('fill', color);
-        };
-
         this.addLink = function (linkSettings) {
             var from = linkSettings.from;
             var to = linkSettings.to;
@@ -149,7 +101,7 @@
             graph._links
                 .style("stroke-width", function (d) { return /*Math.max(.25,*/ self.getLinkWidth(d) / scale; /*);*/ })
                 .attr('d', function(d) { return self.calculatePath(d); });
-            this.updateMarkerSizes(scale);
+            this.updateMarkers();
         };
 
         /// Public Method: removeLink(from, to, tag)
@@ -403,6 +355,80 @@
 
             return d.linkThickness||1;
         };
+
+        // Create an array of marker combinations (colors and size indices).
+        // This is then mapped to <marker>'s in the dom
+        function createMarkerCombinations(colors, sizeRange) {
+            var markerCombinations = [];
+            _(colors).each(function (color) {
+                _(sizeRange).each(function (sizeIndex) {
+                    var id = "marker-" + sizeIndex + "-" + color.substr(1);
+                    markerCombinations.push({ id: id, color: color, sizeIndex: sizeIndex });
+                });
+            });
+            
+            return markerCombinations;
+        }
+
+        this.updateMarkers = function () {
+            var linkColorSet = {};
+            var minLinkWidth;
+            var maxLinkWidth;
+             
+            _(graph.links).each(function (d) {
+                var color = d3.rgb(self.getLinkColor(d)).toString();
+                linkColorSet[color] = null; // Just add the key to the object. The value is not important.
+                
+                var width = self.getLinkWidth(d);
+                minLinkWidth = minLinkWidth ? Math.min(minLinkWidth, width) : width;
+                maxLinkWidth = maxLinkWidth ? Math.max(maxLinkWidth, width) : width;
+            });
+
+            var linkColors = _(linkColorSet).keys();
+
+            this.linkWidthToMarkerSizeIndexScale = d3.scale.quantile()
+                .domain([minLinkWidth, maxLinkWidth])
+                .range([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+            
+            var markerCombinations = createMarkerCombinations(linkColors, this.linkWidthToMarkerSizeIndexScale.range());
+            
+            var markerSizeIndexToSizeScale = d3.scale.ordinal()
+                .domain(this.linkWidthToMarkerSizeIndexScale.range())
+                .rangePoints([graph.settings.minMarkerSize, graph.settings.maxMarkerSize]);
+
+            var markerElements = graph.markers.selectAll("marker")
+                .data(markerCombinations, function (d) { return d.id; });
+                
+            markerElements.enter()
+                .append('svg:marker')
+                    .attr("id", function (d) { return d.id; })
+                    .attr('preserveAspectRatio', 'xMinYMin')
+                    .attr('markerUnits', 'userSpaceOnUse')
+                    .attr("orient", "auto")
+                .append("svg:path");
+            
+            markerElements
+                    .attr("markerWidth", function (d) { return 5 * markerSizeIndexToSizeScale(d.sizeIndex); })
+                    .attr("markerHeight", function (d) { return 3 * markerSizeIndexToSizeScale(d.sizeIndex); })
+                    .attr("viewBox", function (d) { return  "0 0 " + (10 * markerSizeIndexToSizeScale(d.sizeIndex)) + " " + (10 * markerSizeIndexToSizeScale(d.sizeIndex)); })
+                    .attr("refX", function (d) { return 10 * markerSizeIndexToSizeScale(d.sizeIndex); })
+                    .attr("refY", function (d) { return 10 * markerSizeIndexToSizeScale(d.sizeIndex); })
+                    .attr("fill", function (d) { return d.color; })
+                .select("path")
+                    .attr("d", function (d) { return "M0,0L" + (10 * markerSizeIndexToSizeScale(d.sizeIndex)) + "," + (10 * markerSizeIndexToSizeScale(d.sizeIndex)) + "L0," + (10 * markerSizeIndexToSizeScale(d.sizeIndex)) + "z"});
+
+            markerElements.exit()
+                .remove();
+        }
+
+        this.getMarkerUrl = function (link) {
+            var linkWidth = this.getLinkWidth(link);
+            var sizeIndex = this.linkWidthToMarkerSizeIndexScale(linkWidth);
+
+            var linkColor = d3.rgb(this.getLinkColor(link));
+
+            return "marker-" + sizeIndex + "-" + linkColor.toString().substr(1);
+        }
 
         this.updateLinkColors = function() {
             // calculate link positions
