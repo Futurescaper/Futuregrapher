@@ -13,8 +13,8 @@
             var type = linkSettings.type||0;
             var update = linkSettings.update == false ? false : true;
 
-            var source = graph.d3nodes().getNode(from),
-                target = graph.d3nodes().getNode(to),
+            var source = graph.getNode(from),
+                target = graph.getNode(to),
                 link;
 
             if (!source) {

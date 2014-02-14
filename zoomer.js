@@ -26,8 +26,7 @@ if(Meteor.isClient)
 
                 // update labels
                 graph.d3labels().updateLabelSizesForZoom(graph.scale);
-                graph.d3nodes().updateNodeSizesForZoom(graph.scale);
-                graph.d3links().updateLinkSizesForZoom(graph.scale);
+                graph.updateSizesForZoom(graph.scale);
 
                 if(widget) {
                     doZoom = false;
@@ -90,8 +89,7 @@ if(Meteor.isClient)
                     graph.zoom.translate(graph.trans).scale(graph.scale);
 
                     graph.d3labels().updateLabelSizesForZoom(y);
-                    graph.d3nodes().updateNodeSizesForZoom(y);
-                    graph.d3links().updateLinkSizesForZoom(y);
+                    graph.updateSizesForZoom(y);
                 }, this)
             });
 

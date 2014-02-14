@@ -16,8 +16,8 @@
         // set up private variables
         var fisheye = false; //(d3.fisheye && this.settings.fisheye) ? new d3.fisheye() : null;
 
-        var _nodelib = new d3nodes(this);
-        var _linklib = new d3links(this);
+        var _clusteringNodeProvider = new ClusteringNodeProvider(this);
+
         var _highlightlib = new d3highlights(this);
         var _taglib = new d3tags(this);
         var _stylelib = new d3styles(this);
@@ -101,8 +101,7 @@
 
         this.d3 = function() { return d3.select('#' + el.attr('id')); };
 
-        this.d3nodes = function () { return _nodelib; };
-        this.d3links = function () { return _linklib; };
+        this.clusteringNodeProvider = function () { return _clusteringNodeProvider; }
         this.d3tags = function () { return _taglib; };
         this.d3highlights = function () { return _highlightlib; };
         this.d3styles = function () { return _stylelib; };
@@ -186,7 +185,7 @@
         this.markers = this.vis
             .append("svg:defs");
 
-        _linklib.updateMarkers();
+        _clusteringNodeProvider.updateMarkers();
 
         this.visLinks = this.vis
             .append('svg:g')
@@ -258,8 +257,7 @@
         this.getNodes = function () { return nodes; };
 
         this.calculate = function(filterKey) {
-            _nodelib.calculateNodes(filterKey);
-            _linklib.calculateLinks(filterKey);
+            _clusteringNodeProvider.calculate(filterKey);
         };
         
         var padding = 1.5; // separation between nodes 
@@ -312,8 +310,8 @@
                 .gravity(this.settings.gravity)
                 .size([this.width, this.height]);
 
-            _linklib.updateMarkers();
-
+            _clusteringNodeProvider.updateMarkers();
+            
             var link = this._links = this.visLinks.selectAll("path.link")
                 .data(this.links);
 
@@ -326,9 +324,9 @@
             var l = link.enter().append("svg:path")
                 .attr('source', function (link) { return link.source.id; })
                 .attr('target', function (link) { return link.target.id; })
-                .on('mouseover', function (d) { _linklib.onLinkMouseover(d); })
-                .on('mouseout', function (d) { _linklib.onLinkMouseout(d); })
-                .on('click', function(d) { _linklib.onLinkClick(d); })
+                .on('mouseover', function (d) { _clusteringNodeProvider.onLinkMouseover(d); })
+                .on('mouseout', function (d) { _clusteringNodeProvider.onLinkMouseout(d); })
+                .on('click', function(d) { _clusteringNodeProvider.onLinkClick(d); })
                 .attr('class', 'link');
 
             if(this.settings.taperedLinks)
@@ -338,19 +336,19 @@
             else {
                 l.style('fill', 'none');
                 l.attr('marker-end', function(link) {
-                    return link.directional ? 'url(#' + _linklib.getMarkerUrl(link) + ')' : '';
+                    return link.directional ? 'url(#' + _clusteringNodeProvider.getMarkerUrl(link) + ')' : '';
                 });
             }
 
             link.exit().remove();
 
             link
-                .style("stroke-width", function (d) { return _linklib.getLinkWidth(d); })
+                .style("stroke-width", function (d) { return _clusteringNodeProvider.getLinkWidth(d); })
                 .style("stroke", function (d) {
                     if(self.settings.taperedLinks)
                         return self.settings.taperedLinkBorders ? d3colors.darken(d3color(color_scale(d.ratio))).hex() : 'rgb(255,255,255,.5)';
 
-                    return _linklib.getLinkColor(d);
+                    return _clusteringNodeProvider.getLinkColor(d);
                 });
 
             var node = this._nodes = this.visNodes.selectAll("g.node")
@@ -359,12 +357,12 @@
             var nodeEnter = node.enter().append("g")
                 .attr("class", "node")
                 .attr('id', function (d) { return d.id; })
-                .on('mouseover', function (d) { return _nodelib.onNodeMouseover(d); })
-                .on('mouseout', function (d) { return _nodelib.onNodeMouseout(d); })
-                .on('mousedown', function(d) { return _nodelib.onNodeMousedown(d); })
-                .on('mouseup', function(d) { return _nodelib.onNodeMouseup(d); })
-                .on('click', function (d) { return _nodelib.onNodeClick(d); })
-                .on('dblclick', function(d) { return _nodelib.onNodeDblClick(d); });
+                .on('mouseover', function (d) { return _clusteringNodeProvider.onNodeMouseover(d); })
+                .on('mouseout', function (d) { return _clusteringNodeProvider.onNodeMouseout(d); })
+                .on('mousedown', function(d) { return _clusteringNodeProvider.onNodeMousedown(d); })
+                .on('mouseup', function(d) { return _clusteringNodeProvider.onNodeMouseup(d); })
+                .on('click', function (d) { return _clusteringNodeProvider.onNodeClick(d); })
+                .on('dblclick', function(d) { return _clusteringNodeProvider.onNodeDblClick(d); });
 
             if(this.options.nodeSorting)
                 nodeEnter.sort(function(a, b) {
@@ -376,18 +374,18 @@
 
             if ($.browser.msie) {
                 this.visNodes.selectAll("g.node")
-                    .on("mousedown", function(d) { _nodelib.onNodeClick(d); });
+                    .on("mousedown", function(d) { _clusteringNodeProvider.onNodeClick(d); });
             }
 
             if (_stylelib.settings.nodeBorderSize > 0)
                 nodeEnter.append("circle")
                     .style('stroke-width', _stylelib.settings.nodeBorderSize)
                     .style('cursor', 'pointer')
-                    .style('fill', function (d) { d.color = _nodelib.getNodeColor(d); return d.color; })
-                    .style('stroke', function(d) { return _nodelib.getNodeBorderColor(d); });
+                    .style('fill', function (d) { d.color = _clusteringNodeProvider.getNodeColor(d); return d.color; })
+                    .style('stroke', function(d) { return _clusteringNodeProvider.getNodeBorderColor(d); });
             else
                 nodeEnter.append("circle")
-                    .style('fill', function (d) { d.color = _nodelib.getNodeColor(d); return d.color; })
+                    .style('fill', function (d) { d.color = _clusteringNodeProvider.getNodeColor(d); return d.color; })
                     .style('cursor', 'pointer');
 
             // make sure we update all of the radii to their current values - we do this with a smooth animation
@@ -395,7 +393,7 @@
             this.visNodes.selectAll('g.node circle')
                 //.transition()
                 //.duration(200)
-                .attr('r', function (d) { return _nodelib.getNodeRadius(d) / scale; });
+                .attr('r', function (d) { return _clusteringNodeProvider.getNodeRadius(d) / scale; });
 
             node.exit().remove();
 
@@ -404,7 +402,7 @@
                     //if(!self.currentNode)
                     //    return settings.debug;
 
-                    return _nodelib.onNodeRightClick(self.currentNode);
+                    return _clusteringNodeProvider.onNodeRightClick(self.currentNode);
                 };
             }
 
@@ -446,7 +444,7 @@
                 labels.append('text')
                     .attr('baseline', 'middle')
                     .style('font-size', function (d) { return _labellib.getLabelSize(d); })
-                    .attr('fill', function (d) { return _nodelib.getNodeBorderColor(d); /*LABEL FIX:_labellib.getLabelColor(d);*/ })
+                    .attr('fill', function (d) { return _clusteringNodeProvider.getNodeBorderColor(d); /*LABEL FIX:_labellib.getLabelColor(d);*/ })
                     //.style('text-shadow', '-1px -1px 2px #FFF, 1px -1px 2px #FFF, -1px 1px 2px #FFF, 1px 1px 2px #FFF')
                     .style('opacity', function(d) { return _labellib.getLabelOpacity(d); })
                     .text(function (d) { return d.hideLabel ? '' : d.title; });
@@ -460,7 +458,7 @@
                 tipsyClass: _stylelib.settings.nodeTooltipClass,
                 title: function () {
                     var d = this.__data__;
-                    return _nodelib.getNodeTooltip(d);
+                    return _clusteringNodeProvider.getNodeTooltip(d);
                 },
                 gravity: $.fn.tipsy.autoWE
             });
@@ -501,9 +499,9 @@
                             return "translate(" + d.display.x + "," + d.display.y + ")";
                         });
 
-                    this.vis.selectAll("g.node circle").attr('r', function (d) { return _nodelib.getNodeRadius(d); });
+                    this.vis.selectAll("g.node circle").attr('r', function (d) { return _clusteringNodeProvider.getNodeRadius(d); });
 
-                    link.attr("d", function (d) { return _linklib.calculatePath(d, true); });
+                    link.attr("d", function (d) { return _clusteringNodeProvider.calculatePath(d, true); });
                 });
             }
 
@@ -520,7 +518,7 @@
 
                 // Update links
                 link
-                    .attr('d', function (d) { return _linklib.calculatePath(d); });
+                    .attr('d', function (d) { return _clusteringNodeProvider.calculatePath(d); });
 
                 if (self.settings.preventCollisions) 
                     node.each(collide(0.5));
@@ -556,13 +554,21 @@
             force.start();
 
             this.updateLabels();
-            _nodelib.updateNodeSizesForZoom(this.scale);
-            _linklib.updateLinkSizesForZoom(this.scale);
-            _labellib.updateLabelSizesForZoom(this.scale);
+            
+            this.updateSizesForZoom(this.scale);
         };
 
+        this.updateSizesForZoom = function (scale) {
+            _clusteringNodeProvider.updateSizesForZoom(scale);
+            _labellib.updateLabelSizesForZoom(scale);
+        }
+        
+        this.updateLinkColors = function () {
+            _clusteringNodeProvider.updateLinkColors();
+        }
+
         this.updateTooltips = function () {
-            this.d3().selectAll('g.nodes circle').each(function (d) { d.tooltip = _nodelib.getNodeTooltip(d); });
+            this.d3().selectAll('g.nodes circle').each(function (d) { d.tooltip = _clusteringNodeProvider.getNodeTooltip(d); });
         };
 
         this.updateLabels = function() {
@@ -570,7 +576,7 @@
             var center = this.getCenter();
             this.d3()
                 .selectAll('g.label text')
-                .attr('fill', function (d) { return _nodelib.getNodeBorderColor(d); /*LABEL FIX:_labellib.getLabelColor(d);*/ })
+                .attr('fill', function (d) { return _clusteringNodeProvider.getNodeBorderColor(d); /*LABEL FIX:_labellib.getLabelColor(d);*/ })
                 .attr('text-anchor', function (node) { return self.settings.embedLabels ? 'middle' : (node.x < center.x ? 'end' : 'start'); });
         };
 
@@ -605,35 +611,47 @@
         /* Node methods */
 
         this.animateNodeClick = function(node, callback) {
-            return _nodelib.animateNodeClick(node, 100, callback);
+            return _clusteringNodeProvider.animateNodeClick(node, 100, callback);
         };
 
         this.addNode = function (settings) {
-            return _nodelib.addNode(settings);
+            return _clusteringNodeProvider.addNode(settings);
         };
 
         this.removeNode = function (id, tag, fade, forceRemove) {
-            return _nodelib.removeNode(id, tag, fade, forceRemove);
+            return _clusteringNodeProvider.removeNode(id, tag, fade, forceRemove);
         };
+        
+        this.removeNodeByIndex = function (index) {
+            return _clusteringNodeProvider.removeNodeByIndex(index);
+        }
 
         this.setNodeTitle = function (node, title) {
-            return _nodelib.setNodeTitle(node, title);
+            return _clusteringNodeProvider.setNodeTitle(node, title);
         };
+        
+        this.updateNodeColors = function () {
+            return _clusteringNodeProvider.updateNodeColors();
+        }
 
         this.moveNodes = function (positions, time, ignoreLinks) {
-            return _nodelib.moveNodes(positions, time, ignoreLinks);
+            return _clusteringNodeProvider.moveNodes(positions, time, ignoreLinks);
         };
 
         this.getNode = function (id) {
-            return _nodelib.getNode(id);
+            return _clusteringNodeProvider.getNode(id);
         };
 
         this.getNodeByTitle = function(title) {
-            return _nodelib.getNodeByTitle(title);
+            return _clusteringNodeProvider.getNodeByTitle(title);
         };
 
+        this.getNodeBorderColor = function (d, opacity) {
+            return _clusteringNodeProvider.getNodeBorderColor(d, opacity);
+        }
+
         this.viewClusters = function (pct) {
-            return _nodelib.viewClusters(pct);
+            return _clusteringNodeProvider.viewClusters(pct);
         };
 
         /* End node methods */
@@ -641,16 +659,20 @@
         /* Link methods */
 
         this.addLink = function (options) {
-            return _linklib.addLink(options);
+            return _clusteringNodeProvider.addLink(options);
         };
 
         this.removeLink = function (from, to) {
-            return _linklib.removeLink(from, to);
+            return _clusteringNodeProvider.removeLink(from, to);
         };
 
         this.getSharedLinks = function (nodes) {
-            return _linklib.getSharedLinks(nodes);
+            return _clusteringNodeProvider.getSharedLinks(nodes);
         };
+
+        this.calculatePath = function (d, b) {
+            return _clusteringNodeProvider.calculatePath(d, b);
+        }
 
         /* End link methods */
 

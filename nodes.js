@@ -1,98 +1,113 @@
 ﻿if(Meteor.isClient)
     d3nodes = function (graph) {
+        //[of]:        this.getNodeColor = function (node, minColor, maxColor) {
         this.getNodeColor = function (node, minColor, maxColor) {
             if(node.selected && !window.inCauseEffectView)
                 return new d3color(d3colors.getRgbaFromHex('ff0000')).rgbastr();
-
+        
             //if(node._color)
             //    return new d3color(node._color).rgbastr();
-
+        
             if(typeof(node.value.color) === "string")
                 return node.color = new d3color(node.value.color).rgbastr();
-
+        
             var color = d3colors.blend(d3colors.getRgbaFromHex(minColor || graph.d3styles().colors.nodeMin), d3colors.getRgbaFromHex(maxColor || graph.d3styles().colors.nodeMax), node.ratio.color);
             var fill = color.rgbastr();
             if (node.color != fill)
                 node.color = fill;
-
+        
             return fill;
         };
+        //[cf]
 
+        //[of]:        this.updateColors = function() {
         this.updateColors = function() {
             graph._nodes.select('svg g.node circle')
                 .style('fill', function (d) {
                     d._color = null;
-                    return (d._color = graph.d3nodes().getNodeColor(d));
+                    return (d._color = graph.getNodeColor(d));
                 })
                 .style('stroke', function(d) {
-                    return graph.d3nodes().getNodeBorderColor(d);
+                    return graph.getNodeBorderColor(d);
                 });
         };
+        //[cf]
 
+        //[of]:        this.getNodeBorderColor = function(node, darkening) {
         this.getNodeBorderColor = function(node, darkening) {
             if (!graph.d3styles().settings.nodeBorderSize)
                 return '';
-
+        
             var color = (node.color && node.color.indexOf('#') == 0) ? d3colors.getRgbaFromHex(node.color) : d3colors.getColorFromRgbText(node.color);
             if (!color)
                 return '';
-
+        
             return d3colors.darken(new d3color(color), darkening||graph.d3styles().settings.nodeBorderDarkening||.8).hex();
         };
+        //[cf]
 
+        //[of]:        this.getNodeRadius = function (node) {
         this.getNodeRadius = function (node) {
             var r = node._radius || node.radius;
             if(isNaN(r))
                 return graph.settings.minRadius;
-
+        
             return parseInt(r);
         };
+        //[cf]
 
+        //[of]:        this.getNodeBorderWidth = function (node) {
         this.getNodeBorderWidth = function (node) {
             return graph.d3styles().settings.nodeBorderSize;
         };
+        //[cf]
 
+        //[of]:        this.getNode = function (name) {
         this.getNode = function (name) {
             if (!graph.nodeDictionary)
                 return;
             return graph.nodeDictionary.get(name);
         };
+        //[cf]
 
+        //[of]:        this.getNodeByTitle = function(title) {
         this.getNodeByTitle = function(title) {
             var nodes = $.grep(graph.nodes, function(n) { return n.title == title; });
             if(nodes.length)
                 return nodes[0];
         };
+        //[cf]
 
+        //[of]:        this.addNode = function (nodeDefinition) {
         this.addNode = function (nodeDefinition) {
             if (!nodeDefinition)
                 return null;
-
+        
             var id = nodeDefinition.id;
             var title = nodeDefinition.title;
             var weight = nodeDefinition.weight || 1;
             var data = nodeDefinition.data;
             var update = nodeDefinition.update == false ? false : true;
             var quality = nodeDefinition.quality;
-
+        
             var node = this.getNode(id);
             if (node) {
                 node.value.size += (weight || 1);
                 node.value.color += (weight || 1);
-
+        
                 if (data)
                     node.data.push(data);
-
+        
                 if (typeof this.nodeChanged === 'function')
                     this.nodeChanged(node);
-
+        
                 // re-calculate
                 if (update)
                     graph.update();
-
+        
                 return node;
             }
-
+        
             node = {
                 id: id,
                 title: title,
@@ -155,37 +170,39 @@
                     }
                 }
             };
-
+        
             if (data)
                 node.data.push(data);
-
+        
             node.tooltip = this.getNodeTooltip(node);
-
+        
             graph.nodes.push(node);
             graph.nodeDictionary.set(id, node);
-
+        
             if (typeof this.nodeAdded === 'function')
                 this.nodeAdded(node);
-
+        
             if (update)
                 graph.update();
-
+        
             return node;
         };
+        //[cf]
 
+        //[of]:        this.calculateNodes = function () {
         this.calculateNodes = function () {
             if (graph.nodes.length <= 0)
                 return;
-
+        
             var sorted = { size: graph.nodes.slice(0), color: graph.nodes.slice(0) };
-
+        
             sorted.size.sort(function (a, b) {
                 return b.value.size - a.value.size;
             });
             sorted.color.sort(function (a, b) {
                 return b.value.color - a.value.color;
             });
-
+        
             if(graph.settings.jenks > 0) {
                 // generate jenks values
                 var stats = {
@@ -198,7 +215,7 @@
                         size: stats.size.getJenks(parseInt(graph.settings.jenks)),
                         color: stats.color.getJenks(parseInt(graph.settings.jenks))
                     };
-
+        
                     // re-score each node as value = [1, x] based on its size and color values
                     var dimensions = ['size', 'color'];
                     $.each(dimensions, function(i, dimension) {
@@ -208,7 +225,7 @@
                                 if(node.value[dimension] >= jenks[dimension][j])
                                     assigned = j + 1;
                             }
-
+        
                             node.jenks[dimension] = assigned;
                         });
                     });
@@ -219,39 +236,39 @@
                 $.each(sorted.size, function(i, node) { node.jenks.size = 0; });
                 $.each(sorted.color, function(i, node) { node.jenks.color = 0; });
             }
-
+        
             var dimensions = ['size', 'color'];
             $.each(dimensions, $.proxy(function(i, dimension) {
                 var list = sorted[dimension];
-
+        
                 if(dimension == 'color' && typeof(list[0].value.color) === "string") {
                     list[i].color = new d3color(list[0].value.color).rgbastr();
                     return;
                 }
-
+        
                 var max = list[0].jenks[dimension] || list[0].value[dimension];
                 var min = list[list.length - 1].jenks[dimension] || list[list.length - 1].value[dimension];
-
+        
                 for (var i = 0; i < list.length; i++) {
                     var val = list[i].jenks[dimension] || list[i].value[dimension];
                     var ratio = max < 0 ? 0 : (max == min) ? 0 : (val - min) / (max - min);
-
+        
                     if (isNaN(ratio))
                         ratio = 0.5;
-
+        
                     if (ratio < graph.settings.minRatio)
                         ratio = graph.settings.minRatio;
-
+        
                     list[i].rank = i;
                     list[i].ratio[dimension] = ratio;
-
+        
                     if(dimension == 'size') {
                         list[i].radius = graph.settings.minRadius + ((graph.settings.maxRadius - graph.settings.minRadius) * ratio);
                         if (list[i].radius < graph.settings.minRadius)
                             list[i].radius = graph.settings.minRadius;
                         if (list[i].radius > graph.settings.maxRadius)
                             list[i].radius = graph.settings.maxRadius;
-
+        
                         list[i].tooltip = this.getNodeTooltip(list[i]);
                     }
                     else
@@ -262,6 +279,7 @@
                 }
             }, this));
         };
+        //[cf]
 
         /// Public Method: removeNode(id, tag, forceRemove)
         ///
@@ -272,6 +290,7 @@
         /// <param name="id">The node id</param>
         /// <param name="tag">The tag to be removed from this node.</param>
         /// <returns>If successful, undefined, otherwise an error message.
+        //[of]:        this.removeNode = function (id, tag, forceRemove) {
         this.removeNode = function (id, tag, forceRemove) {
             var t = tag;
             var node = graph.nodeDictionary.get(id);
@@ -289,16 +308,16 @@
                             self.removeNodeByIndex(i);
                             return;
                         }
-
+        
                         // if we're removing a tag as well, find the tag
                         if (t) {
                             var index = $.inArray(t, graph.d3tags().getTagNames(n));
                             if (index >= 0) {
                                 var _tag = n.tags[index];
-
+        
                                 // and drop the tag weight
                                 _tag.weight -= 1;
-
+        
                                 // if the tag weight is zeroed, delete it
                                 if (_tag.weight <= 0)
                                     n.tags.splice(index, 1);
@@ -312,40 +331,44 @@
             else
                 return "That node could not be found in the dictionary.";
         };
+        //[cf]
 
+        //[of]:        this.getShortestPath = function(nodes, from, to) {
         this.getShortestPath = function(nodes, from, to) {
             var path = this.calculateShortestPaths(nodes, from.index);
             var i = to.index;
             var p = path.parents[i];
-
+        
             var links = [];
-
+        
             //_DEBUG("Node: " + to.title);
             while(p >= 0) {
                 //_DEBUG("Node: " + nodes[p].title);
-
+        
                 // add the link from nodes[p] to nodes[i]
                 var l = this.getLinkToIndex(nodes[p], i);
                 if(l)
                     links.push(l);
-
+        
                 i = p;
                 p = path.parents[nodes[p].index];
-
+        
                 if(p == from.index)
                     break;
             }
-
+        
             //_DEBUG("Node: " + from.title);
-
+        
             // add the link from 'from' to nodes[i]
             var l = this.getLinkToIndex(from, i);
             if(l)
                 links.push(l);
-
+        
             return links;
         };
+        //[cf]
 
+        //[of]:        this.getLinkToIndex = function(node, index) {
         this.getLinkToIndex = function(node, index) {
             for(var i = 0; i < node.to.length; i++)
                 if(node.to[i].target.index == index)
@@ -354,67 +377,73 @@
                 if(node.from[i].source.index == index)
                     return node.from[i];
         };
+        //[cf]
 
+        //[of]:        this.calculateShortestPaths = function (nodes, index, directional) {
         this.calculateShortestPaths = function (nodes, index, directional) {
             // Taken from: http://vasir.net/blog/game_development/dijkstras_algorithm_shortest_path/
-
+        
             // Step 0
             var costs = [];
             var temporary = [];
             var parents = [];
-
+        
             $.each(nodes, function (i, node) {
                 costs[i] = i == index ? 0 : Infinity;
                 temporary[i] = true;
                 parents[i] = -1;
             });
-
+        
             var finished = false;
             do {
                 finished = this.calculateShortestPaths_iterate(nodes, costs, temporary, parents, directional);
             }
             while (!finished);
-
+        
             return { costs: costs, parents: parents };
         };
+        //[cf]
 
+        //[of]:        this.calculateShortestPaths_iterate = function (nodes, costs, temporary, parents, directional) {
         this.calculateShortestPaths_iterate = function (nodes, costs, temporary, parents, directional) {
             // Find the node x with the smallest cost
             var x = this.getTemporaryMinimumIndex(costs, temporary);
             if (x < 0)
                 return true;
-
+        
             temporary[x] = false;
-
+        
             // step 2 - find all connected nodes that are temporary
             var node = nodes[x];
             for (var i = 0; i < node.to.length; i++) {
                 var y = node.to[i].target.index;
                 if (!temporary[y])
                     continue;
-
+        
                 if (costs[x] + 1 /* FIX: all weights are 1 */ < costs[y]) {
                     costs[y] = costs[x] + 1;
                     parents[y] = x;
                 }
             }
-
+        
             if(!directional) {
                 for (var i = 0; i < node.from.length; i++) {
                     var y = node.from[i].source.index;
                     if (!temporary[y])
                         continue;
-
+        
                     if (costs[x] + 1 /* FIX: all weights are 1 */ < costs[y]) {
                         costs[y] = costs[x] + 1;
                         parents[y] = x;
                     }
                 }
             }
-
+        
             return false;
         };
+        //[cf]
 
+        //[of]:        this.getTemporaryMinimumIndex = function (costs, temporary) {
         this.getTemporaryMinimumIndex = function (costs, temporary) {
             var min = Infinity;
             var index = -1;
@@ -424,9 +453,10 @@
                     index = i;
                 }
             }
-
+        
             return index;
         };
+        //[cf]
 
         /// Private Method: _removeNodeByIndex(index)
         ///
@@ -434,6 +464,7 @@
         /// Deletes a specified node and all associated links.
         /// </summary>
         /// <param name="index">The 0-based index of the node to be deleted.</param>
+        //[of]:        this.removeNodeByIndex = function (index, fade) {
         this.removeNodeByIndex = function (index, fade) {
             // remove the node
             var nodes = graph.nodes.splice(index, 1);
@@ -450,14 +481,14 @@
                                 if (n.to[k] && (n.to[k].source.id == node.id || n.to[k].target.id == node.id))
                                     n.to.splice(k, 1);
                         });
-
+        
                         // and remove the link itself
                         graph.links.splice(i, 1);
                     }
                 }
-
+        
                 /* FIX: When trying to use transitions here (even with duration=0), it breaks */
-
+        
                 // remove the label
                 if (fade)
                     graph.d3().select('g.label[id="' + node.id + '"]')
@@ -467,7 +498,7 @@
                         .each('end', function () { graph.d3().select('g.label[id="' + node.id + '"]').remove(); });
                 else
                     graph.d3().select('g.label[id="' + node.id + '"]').remove();
-
+        
                 // remove the node
                 if (fade)
                     graph.d3().select('g.node[id="' + node.id + '"] circle')
@@ -477,7 +508,7 @@
                         .each('end', function () { graph.d3().select('g.node[id="' + node.id + '"]').remove(); });
                 else
                     graph.d3().select('g.node[id="' + node.id + '"]').remove();
-
+        
                 // remove any links to/from it
                 if (fade)
                     graph.d3().selectAll('path.link[source="' + node.id + '"], path.link[target="' + node.id + '"]')
@@ -487,15 +518,17 @@
                         .each('end', function () { graph.d3().selectAll('path.link[source="' + node.id + '"], path.link[target="' + node.id + '"]').remove(); });
                 else
                     graph.d3().selectAll('path.link[source="' + node.id + '"], path.link[target="' + node.id + '"]').remove();
-
+        
                 // remove from our internal dictionary
                 graph.nodeDictionary.remove(node.id);
-
+        
                 if (graph.events.onNodeRemoved && typeof (graph.events.onNodeRemoved) === 'function')
                     graph.events.onNodeRemoved(node);
             }
         };
+        //[cf]
 
+        //[of]:        this.setNodeTitle = function (node, title, showFull) {
         this.setNodeTitle = function (node, title, showFull) {
             if (node) {
                 var self = this;
@@ -513,15 +546,17 @@
                         .style('font-size', function (d) { return d.fontSize + 'em'; /*return graph.labellib().getLabelSize(d);*/ });
             }
         };
+        //[cf]
 
+        //[of]:        this.setNodeTitleHtml = function(node, html, ratio) {
         this.setNodeTitleHtml = function(node, html, ratio) {
             var r = ratio;
             if(!r)
                 r = .75;
-
+        
             graph.d3().selectAll('g.label[id="' + node.id + '"] text').remove();
             $('g.node[id="' + node.id + '"] body').parent().remove();
-
+        
             var fo = graph.d3().selectAll('g.node[id="' + node.id + '"]')
                 .append('svg:foreignObject')
                 .attr('x', function(d) { return -1.0 * r * (d._radius || d.radius); })
@@ -535,11 +570,13 @@
                 .style('cursor', 'pointer')
                 .html(html);
         };
+        //[cf]
 
+        //[of]:        this.updateNodeSizesForZoom = function(scale) {
         this.updateNodeSizesForZoom = function(scale) {
             if(!graph.d3zoomer())
                 return;
-
+        
             var s = scale;
             if(s < 1)
                 s = 1;
@@ -547,13 +584,15 @@
                 s = 8;
             else if(!s)
                 s = 1;
-
+        
             graph.d3().selectAll('g.node circle')
                 .attr('r', function(d) { d._radius = d.radius / s; return d._radius; })
-                .style('stroke', function(d) { return graph.d3nodes().getNodeBorderColor(d); })
+                .style('stroke', function(d) { return graph.getNodeBorderColor(d); })
                 .style('stroke-width', (parseInt(graph.d3styles().settings.nodeBorderSize) / s)||1);
         };
+        //[cf]
 
+        //[of]:        this.animateNodeClick = function(node, time, callback) {
         this.animateNodeClick = function(node, time, callback) {
             var r = graph.d3().selectAll('g.node[id="' + node.id + '"] circle').attr('r');
             var c = graph.d3().selectAll('g.node[id="' + node.id + '"] circle').style('fill');
@@ -570,17 +609,19 @@
                     .delay(function (d, i) { return i * 2; })
                     .duration(time / 3)
                     .style('fill', c)
-                    .style('stroke', function(d) { return graph.d3nodes().getNodeBorderColor(d); })
+                    .style('stroke', function(d) { return graph.getNodeBorderColor(d); })
                     .attr('r', r);
             }, 80);
-
+        
             setTimeout(function() { if(callback) callback(); }, time + 20);
         };
+        //[cf]
 
+        //[of]:        this.moveNodes = function (positions, time, ignoreLinks) {
         this.moveNodes = function (positions, time, ignoreLinks) {
             graph.force.stop();
             graph.fixedMode = true;
-
+        
             var center = graph.getCenter();
             var node = null;
             $.each(positions, function (i, position) {
@@ -600,17 +641,17 @@
                             n.fontSize = position.labelSize;
                         if (position.labelOpacity)
                             n.labelOpacity = position.labelOpacity;
-
+        
                         var r = n._radius || n.radius;
                         if (position.x)
                             n.x = position.x; // Math.max(n.radius, Math.min(position.x, graph.width - r));
                         if (position.y)
                             n.y = position.y; // Math.max(n.radius, Math.min(position.y, graph.height - r));
-
+        
                         return false;
                     }
                 });
-
+        
                 if (node) {
                     graph.d3().selectAll('g.node[id="' + position.id + '"]')
                         .each(function (d) { d.fixed = true; })
@@ -619,12 +660,12 @@
                         .duration(time || 500)
                         .attr('cx', function(d) { return d.x; }).attr('cy', function(d) { return d.y; })
                         .attr('transform', function (d) { return 'translate(' + d.x + ',' + d.y + ')'; });
-
+        
                     var x = graph.d3().selectAll('g.node[id="' + position.id + '"] circle')
                         .transition()
                         .delay(function (d, i) { return i * 2; })
                         .duration(time || 500);
-
+        
                     if(position.radius)
                         x = x.attr('r', node._radius || node.radius);
                     if(position.opacity >= 0.0)
@@ -635,14 +676,14 @@
                         x.style('stroke', position.stroke);
                     else if(position.color) {
                         node.color = position.color;
-                        x.style('stroke', graph.d3nodes().getNodeBorderColor(node));
+                        x.style('stroke', graph.getNodeBorderColor(node));
                     }
                     var opacity = (node.labelOpacity || node.opacity || 1.0);
                     graph.d3().selectAll('g.label[id="' + position.id + '"]')
                         //.transition()
                         //.duration(time || 500)
                         .style('opacity', opacity);
-
+        
                     graph.d3().selectAll('g.label[id="' + position.id + '"] text')
                         //.transition()
                         //.duration(time || 500)
@@ -650,10 +691,10 @@
                         .text(function(d) { return opacity > 0 ? d.title : ''; })
                         //.style('font-size', function(d) { return jQuery.isNumeric(d.fontSize) ? d.fontSize + 'em' : d.fontSize })
                         .attr('text-anchor', function(d) { return position.anchor||(d.x < center.x ? 'end' : 'start') })
-                        .attr('fill', function(d) { return position.labelColor||graph.d3nodes().getNodeBorderColor(d); } /*LABEL FIX:node.labelColor*/);
+                        .attr('fill', function(d) { return position.labelColor || graph.getNodeBorderColor(d); } /*LABEL FIX:node.labelColor*/);
                 }
             });
-
+        
             if (ignoreLinks)
                 graph._links
                     .transition()
@@ -725,7 +766,7 @@
                         return parseInt(width||1);
                     })
                     .attrTween('d', graph.d3links().calculatePathTween);
-
+        
             // Update labels
             graph.d3()
                 .selectAll('g.label')
@@ -734,12 +775,12 @@
                 .duration(time || 500)
                 .attr('transform', function (node) { return graph.d3labels().transformLabel(node, center); });
         };
-
+        
         this.getNodeTooltip = function (node) {
             if (graph.events.onNodeTooltip && typeof (graph.events.onNodeTooltip === "function"))
                 return graph.events.onNodeTooltip(node, d3.event);
         };
-
+        
         var doubleclick = false;
         var clicking = false;
         this.onNodeClick = function (node) {
@@ -749,12 +790,12 @@
             clicking = true;
             if (graph.events.onNodeClick && typeof (graph.events.onNodeClick === "function")) {
                 d3.event.preventDefault();
-
+        
                 if(window.event.preventDefault)
                     window.event.preventDefault();
                 if(window.event.stopPropagation)
                     window.event.stopPropagation();
-
+        
                 setTimeout(function() {
                     clicking = false;
                     if(!doubleclick)
@@ -762,12 +803,14 @@
                 }, 150);
             }
         };
+        //[cf]
 
+        //[of]:        this.onNodeDblClick = function (node) {
         this.onNodeDblClick = function (node) {
             if (graph.events.onNodeDblClick && typeof (graph.events.onNodeDblClick === "function")) {
                 doubleclick = true;
                 clicking = false;
-
+        
                 if(d3.event)
                     d3.event.preventDefault();
                 if(window.event) {
@@ -778,29 +821,39 @@
                 return true;
             }
         };
+        //[cf]
 
+        //[of]:        this.onNodeMouseover = function (node) {
         this.onNodeMouseover = function (node) {
             graph.currentNode = node;
             if (graph.events.onNodeMouseover && typeof (graph.events.onNodeMouseover === "function"))
                 graph.events.onNodeMouseover(node, d3.event);
         };
+        //[cf]
 
+        //[of]:        this.onNodeMouseout = function (node) {
         this.onNodeMouseout = function (node) {
             graph.currentNode = null;
             if (graph.events.onNodeMouseout && typeof (graph.events.onNodeMouseout === "function"))
                 graph.events.onNodeMouseout(node, d3.event);
         };
+        //[cf]
 
+        //[of]:        this.onNodeMousedown = function (node) {
         this.onNodeMousedown = function (node) {
             if (graph.events.onNodeMousedown && typeof (graph.events.onNodeMousedown === "function"))
                 graph.events.onNodeMousedown(node, d3.event);
         };
+        //[cf]
 
+        //[of]:        this.onNodeMouseup = function (node) {
         this.onNodeMouseup = function (node) {
             if (graph.events.onNodeMouseup && typeof (graph.events.onNodeMouseup === "function"))
                 graph.events.onNodeMouseup(node, d3.event);
         };
+        //[cf]
 
+        //[of]:        this.onNodeRightClick = function(node) {
         this.onNodeRightClick = function(node) {
             if(graph.events.onNodeRightClick && typeof (graph.events.onNodeRightClick === "function")) {
                 graph.events.onNodeRightClick(node, d3.event||window.event);
@@ -808,8 +861,9 @@
                     d3.event.preventDefault();
                 if(window.event)
                     window.event.preventDefault();
-
+        
                 return false;
             }
         };
+        //[cf]
     }

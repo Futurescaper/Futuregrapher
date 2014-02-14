@@ -12,6 +12,7 @@ Package.on_use(function(api, where) {
         'geostats/jenks.util.js',
         'dictionary.js',
         'colors.js',
+        'clusteringnodeprovider.js',
         'nodes.js',
         'highlights.js',
         'labels.js',

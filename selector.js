@@ -28,7 +28,7 @@ if(Meteor.isClient)
                     //.transition()
                     //.duration(50)
                     .style('fill', node.originalColor)
-                    .style('stroke', function(d) { return graph.d3nodes().getNodeBorderColor(d); });
+                    .style('stroke', function(d) { return graph.getNodeBorderColor(d); });
 
                 for(var i = 0; i < nodes.length; i++)
                     if(nodes[i].id == node.id) {
@@ -106,7 +106,7 @@ if(Meteor.isClient)
                     //.transition()
                     //.duration(50)
                     .style('fill', function(d) { return d.originalColor; })
-                    .style('stroke', function(d) { return graph.d3nodes().getNodeBorderColor(d); });
+                    .style('stroke', function(d) { return graph.getNodeBorderColor(d); });
             }
 
             nodes = [];
@@ -133,7 +133,7 @@ if(Meteor.isClient)
                     //.transition()
                     //.duration(50)
                     .style('fill', graph.d3styles().colors.nodeSelected || '#ff0000')
-                    .style('stroke', function(d) { return graph.d3nodes().getNodeBorderColor(d); });
+                    .style('stroke', function(d) { return graph.getNodeBorderColor(d); });
             }
         };
     }
