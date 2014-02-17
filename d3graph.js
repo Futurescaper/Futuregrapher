@@ -1,6 +1,5 @@
 ﻿if(Meteor.isClient)
     d3graph = function(el, options) {
-        this.links = [];
         this.el = el;
         this.options = options || {};
         this.id = this.options.id;
@@ -149,8 +148,6 @@
         this.clear = function () {
             _clusteringNodeProvider.clear();
 
-            links.splice(0, links.length);
-
             // clear labels
             self.visLabels.selectAll('g.label').remove();
 
@@ -247,9 +244,8 @@
                 this.dragging = false;
             }, this));
 
-        var links = this.links = force.links();
-
         this.getNodes = function () { return _clusteringNodeProvider.getVisNodes(); };
+        this.getLinks = function () { return _clusteringNodeProvider.getVisLinks(); }; 
 
         this.calculate = function(filterKey) {
             _clusteringNodeProvider.calculate(filterKey);
@@ -292,7 +288,7 @@
             h = this.height;
 
             force.nodes(_clusteringNodeProvider.getVisNodes());
-            //force.links(_clustringNodeProvider.getVisLinks());
+            force.links(_clusteringNodeProvider.getVisLinks());
 
             var nodeCount = _clusteringNodeProvider.getVisNodes().length;
             self.settings.linkConstant = (nodeCount > 1) ?
@@ -312,7 +308,7 @@
             _clusteringNodeProvider.updateMarkers();
             
             var link = this._links = this.visLinks.selectAll("path.link")
-                .data(this.links);
+                .data(_clusteringNodeProvider.getVisLinks());
 
             var d3color = d3.interpolateRgb(this.settings.taperedLinkMinColor, this.settings.taperedLinkMaxColor);
 

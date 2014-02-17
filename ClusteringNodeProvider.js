@@ -12,10 +12,11 @@
             return _nodelib.getNodes();
         }
         
-        this.getVizLinks = function () {
+        this.getVisLinks = function () {
+            return _linklib.getLinks();
         }
         
-        this.getVizClusters = function () {
+        this.getVisClusters = function () {
         }
 
         
@@ -161,7 +162,7 @@
         
         this.clear = function () {
             _nodelib.clear();
-            //_linklib.clear();
+            _linklib.clear();
         }
         
         

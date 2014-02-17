@@ -97,7 +97,7 @@ d3highlights = function (graph) {
         var isArray = this.isArray;
         if(options.links) {
             // and any connections that are not hooked up to a source and target node that are both visible
-            $.each(graph.links, function(i, link) {
+            $.each(graph.getLinks(), function(i, link) {
                 if((options.links == 'all' && (!$.grep(nodes, function(n) { return n.id == link.source.id; }).length || !$.grep(nodes, function(n) { return n.id == link.target.id; }).length)) ||
                     (options.links == 'node' && !$.grep(sourceNodes, function(n) { return n.id == link.source.id || n.id == link.target.id; }).length) ||
                     (options.links == 'connected' && (!$.grep(sourceNodes, function(n) { return n.id == link.source.id; }).length || !$.grep(sourceNodes, function(n) { return n.id == link.target.id; }).length)) ||
