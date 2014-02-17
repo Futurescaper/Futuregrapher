@@ -297,7 +297,7 @@
             var nodeCount = _clusteringNodeProvider.getVisNodes().length;
             self.settings.linkConstant = (nodeCount > 1) ?
                 this.settings.linkMultiplier * Math.min(w, h) / (3 * Math.sqrt(nodeCount - 1)) :
-                1;
+                1; 
 
             this.force
                 .theta(this.settings.theta)

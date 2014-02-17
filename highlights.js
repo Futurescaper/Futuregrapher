@@ -73,7 +73,7 @@ d3highlights = function (graph) {
         }
 
         // fade out all other nodes and labels
-        $.each(graph.nodes, function(i, node) {
+        $.each(graph.getNodes(), function(i, node) {
             if($.grep(nodes, function(n) { return /*n.visible &&*/ n.id == node.id; }).length > 0) {
                 // show the label
                 graph.d3()

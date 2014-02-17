@@ -92,8 +92,8 @@
         
         /* Node methods */
         
-        this.animateNodeClick = function(node, callback) {
-            return _nodelib.animateNodeClick(node, 100, callback);
+        this.animateNodeClick = function(node, time, callback) {
+            return _nodelib.animateNodeClick(node, time, callback);
         };
         
         this.addNode = function (settings) {
