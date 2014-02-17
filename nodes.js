@@ -1,5 +1,8 @@
 ﻿if(Meteor.isClient)
     d3nodes = function (graph) {
+        this.nodes = [];
+        this.nodeDictionary = new Dictionary();
+
         //[of]:        this.getNodeColor = function (node, minColor, maxColor) {
         this.getNodeColor = function (node, minColor, maxColor) {
             if(node.selected && !window.inCauseEffectView)
@@ -64,15 +67,21 @@
 
         //[of]:        this.getNode = function (name) {
         this.getNode = function (name) {
-            if (!graph.nodeDictionary)
+            if (!this.nodeDictionary)
                 return;
-            return graph.nodeDictionary.get(name);
+            return this.nodeDictionary.get(name);
         };
+        //[cf]
+
+        //[of]:        this.getNodes = function () {
+        this.getNodes = function () {
+            return this.nodes;
+        }
         //[cf]
 
         //[of]:        this.getNodeByTitle = function(title) {
         this.getNodeByTitle = function(title) {
-            var nodes = $.grep(graph.nodes, function(n) { return n.title == title; });
+            var nodes = $.grep(this.nodes, function(n) { return n.title == title; });
             if(nodes.length)
                 return nodes[0];
         };
@@ -113,7 +122,7 @@
                 title: title,
                 x: nodeDefinition.x,
                 y: nodeDefinition.y,
-                index: graph.nodes.length,
+                index: this.nodes.length,
                 _color: nodeDefinition.color,
                 _labelOpacity: nodeDefinition.labelOpacity,
                 _fontSize: nodeDefinition.fontSize,
@@ -126,7 +135,7 @@
                 jenks: { size: 0, color: 0 },
                 filterValues: {},
                 clusterTitles: {},
-                rank: graph.nodes.length,
+                rank: this.nodes.length,
                 normalized: 0,
                 ratio: { size: 0, color: 0 },
                 radius: nodeDefinition.radius || (graph.settings.minRadius + graph.settings.maxRadius / 2),
@@ -176,8 +185,8 @@
         
             node.tooltip = this.getNodeTooltip(node);
         
-            graph.nodes.push(node);
-            graph.nodeDictionary.set(id, node);
+            this.nodes.push(node);
+            this.nodeDictionary.set(id, node);
         
             if (typeof this.nodeAdded === 'function')
                 this.nodeAdded(node);
@@ -191,10 +200,10 @@
 
         //[of]:        this.calculateNodes = function () {
         this.calculateNodes = function () {
-            if (graph.nodes.length <= 0)
+            if (this.nodes.length <= 0)
                 return;
         
-            var sorted = { size: graph.nodes.slice(0), color: graph.nodes.slice(0) };
+            var sorted = { size: this.nodes.slice(0), color: this.nodes.slice(0) };
         
             sorted.size.sort(function (a, b) {
                 return b.value.size - a.value.size;
@@ -281,6 +290,21 @@
         };
         //[cf]
 
+        //[of]:        this.getCenter = function () {
+        this.getCenter = function () {
+            var x = $.map(this.nodes, function (n) { return n.x; });
+            var y = $.map(this.nodes, function (n) { return n.y; });
+            return { x: (Array.min(x) + Array.max(x)) / 2, y: (Array.min(y) + Array.max(y)) / 2 };
+        };
+        //[cf]
+
+        //[of]:        this.clear = function () {
+        this.clear = function () {
+            this.nodes.splice(0, this.nodes.length);
+            this.nodeDictionary = new Dictionary();
+        }
+        //[cf]
+
         /// Public Method: removeNode(id, tag, forceRemove)
         ///
         /// <summary>
@@ -293,9 +317,9 @@
         //[of]:        this.removeNode = function (id, tag, forceRemove) {
         this.removeNode = function (id, tag, forceRemove) {
             var t = tag;
-            var node = graph.nodeDictionary.get(id);
+            var node = this.nodeDictionary.get(id);
             if (node) {
-                var nodes = graph.nodes;
+                var nodes = this.nodes;
                 var self = this;
                 var found = false;
                 $.each(nodes, function (i, n) {
@@ -467,13 +491,13 @@
         //[of]:        this.removeNodeByIndex = function (index, fade) {
         this.removeNodeByIndex = function (index, fade) {
             // remove the node
-            var nodes = graph.nodes.splice(index, 1);
+            var nodes = this.nodes.splice(index, 1);
             if (nodes.length) {
                 var node = nodes[0];
                 for (var i = graph.links.length; i >= 0; i--) {
                     if (graph.links[i] && (graph.links[i].source == node || graph.links[i].target == node)) {
                         // remove the from/to for any nodes that reference this link
-                        $.each(graph.nodes, function (j, n) {
+                        $.each(this.nodes, function (j, n) {
                             for (var k = n.from.length; k >= 0; k--)
                                 if (n.from[k] && (n.from[k].source.id == node.id || n.from[k].target.id == node.id))
                                     n.from.splice(k, 1);
@@ -520,7 +544,7 @@
                     graph.d3().selectAll('path.link[source="' + node.id + '"], path.link[target="' + node.id + '"]').remove();
         
                 // remove from our internal dictionary
-                graph.nodeDictionary.remove(node.id);
+                this.nodeDictionary.remove(node.id);
         
                 if (graph.events.onNodeRemoved && typeof (graph.events.onNodeRemoved) === 'function')
                     graph.events.onNodeRemoved(node);
@@ -625,7 +649,7 @@
             var center = graph.getCenter();
             var node = null;
             $.each(positions, function (i, position) {
-                $.each(graph.nodes, function (j, n) {
+                $.each(this.nodes, function (j, n) {
                     if (position.id == n.id) {
                         node = n;
                         n.fixed = true;
@@ -775,14 +799,18 @@
                 .duration(time || 500)
                 .attr('transform', function (node) { return graph.d3labels().transformLabel(node, center); });
         };
+        //[cf]
         
+        //[of]:        this.getNodeTooltip = function (node) {
         this.getNodeTooltip = function (node) {
             if (graph.events.onNodeTooltip && typeof (graph.events.onNodeTooltip === "function"))
                 return graph.events.onNodeTooltip(node, d3.event);
         };
+        //[cf]
         
         var doubleclick = false;
         var clicking = false;
+        //[of]:        this.onNodeClick = function (node) {
         this.onNodeClick = function (node) {
             if(clicking)
                 return;

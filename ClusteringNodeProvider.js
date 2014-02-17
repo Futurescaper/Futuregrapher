@@ -2,7 +2,14 @@
 
     ClusteringNodeProvider = function (graph) {
 
-        this.getVizNodes = function () {
+        var _nodelib = new d3nodes(graph);
+        var _linklib = new d3links(graph);
+        
+        this.d3nodes = function () { return _nodelib; };
+        this.d3links = function () { return _linklib; };
+        
+        this.getVisNodes = function () {
+            return _nodelib.getNodes();
         }
         
         this.getVizLinks = function () {
@@ -41,12 +48,6 @@
 
         //[of]:        Compatibility stuff
         //[c]Compatibility stuff
-        
-        var _nodelib = new d3nodes(graph);
-        var _linklib = new d3links(graph);
-        
-        this.d3nodes = function () { return _nodelib; };
-        this.d3links = function () { return _linklib; };
         
         this.updateMarkers = function () { _linklib.updateMarkers(); }
         
@@ -152,6 +153,17 @@
         };
         
         /* End link methods */
+        
+        
+        this.getCenter = function () {
+            return _nodelib.getCenter();
+        };
+        
+        this.clear = function () {
+            _nodelib.clear();
+            //_linklib.clear();
+        }
+        
         
         //[cf]
 

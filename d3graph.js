@@ -1,8 +1,6 @@
 ﻿if(Meteor.isClient)
     d3graph = function(el, options) {
-        this.nodes = [];
         this.links = [];
-        this.nodeDictionary = new Dictionary();
         this.el = el;
         this.options = options || {};
         this.id = this.options.id;
@@ -145,15 +143,13 @@
         };
 
         this.getCenter = function () {
-            var x = $.map(this.nodes, function (n) { return n.x; });
-            var y = $.map(this.nodes, function (n) { return n.y; });
-            return { x: (Array.min(x) + Array.max(x)) / 2, y: (Array.min(y) + Array.max(y)) / 2 };
+            return _clusteringNodeProvider.getCenter();
         };
 
         this.clear = function () {
-            nodes.splice(0, nodes.length);
+            _clusteringNodeProvider.clear();
+
             links.splice(0, links.length);
-            this.nodeDictionary = new Dictionary();
 
             // clear labels
             self.visLabels.selectAll('g.label').remove();
@@ -251,10 +247,9 @@
                 this.dragging = false;
             }, this));
 
-        var nodes = this.nodes = force.nodes();
         var links = this.links = force.links();
 
-        this.getNodes = function () { return nodes; };
+        this.getNodes = function () { return _clusteringNodeProvider.getVisNodes(); };
 
         this.calculate = function(filterKey) {
             _clusteringNodeProvider.calculate(filterKey);
@@ -265,7 +260,7 @@
         
         // Resolves collisions between d and all other circles.
         function collide(alpha) {
-            var quadtree = d3.geom.quadtree(nodes);
+            var quadtree = d3.geom.quadtree(_clusteringNodeProvider.getVisNodes());
             return function(d) {
                 var r = d.radius + maxRadius + padding,
                     nx1 = d.x - r,
@@ -296,8 +291,12 @@
             w = this.width;
             h = this.height;
 
-            self.settings.linkConstant = (this.nodes.length > 1) ?
-                this.settings.linkMultiplier * Math.min(w, h) / (3 * Math.sqrt(this.nodes.length - 1)) :
+            force.nodes(_clusteringNodeProvider.getVisNodes());
+            //force.links(_clustringNodeProvider.getVisLinks());
+
+            var nodeCount = _clusteringNodeProvider.getVisNodes().length;
+            self.settings.linkConstant = (nodeCount > 1) ?
+                this.settings.linkMultiplier * Math.min(w, h) / (3 * Math.sqrt(nodeCount - 1)) :
                 1;
 
             this.force
@@ -352,7 +351,7 @@
                 });
 
             var node = this._nodes = this.visNodes.selectAll("g.node")
-                .data(this.nodes);
+                .data(_clusteringNodeProvider.getVisNodes());
 
             var nodeEnter = node.enter().append("g")
                 .attr("class", "node")
@@ -408,7 +407,7 @@
 
             var labels = this._labels = this.visLabels
                 .selectAll('g.label')
-                .data(nodes, function (node) { return node.id; });
+                .data(_clusteringNodeProvider.getVisNodes(), function (node) { return node.id; });
 
             labels = labels
                 .enter()

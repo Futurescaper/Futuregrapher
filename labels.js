@@ -72,7 +72,7 @@
         };
 
         this.showTop = function(top, property) {
-            var nodes = graph.nodes.slice(0).sort(function(a, b) { return property ? b[property] - a[property] : b.value.size - a.value.size; });
+            var nodes = graph.getNodes().slice(0).sort(function(a, b) { return property ? b[property] - a[property] : b.value.size - a.value.size; });
 
             // only show the labels of the 'top' nodes
             $.each(nodes, function(i, node) {
