@@ -180,6 +180,10 @@
 
         _clusteringNodeProvider.updateMarkers();
 
+        this.visClusters = this.vis
+            .append("svg:g")
+            .attr("class", "clusters");
+
         this.visLinks = this.vis
             .append('svg:g')
             .attr('class', 'links');
@@ -307,6 +311,23 @@
 
             _clusteringNodeProvider.updateMarkers();
             
+            var curve = d3.svg.line()
+                .interpolate("cardinal-closed")
+                .tension(.85);
+        
+            var cluster = this._clusters = this.visClusters.selectAll("path.hull")
+                .data(_clusteringNodeProvider.getVisClusters());
+            
+            var c = cluster.enter().append("svg:path")
+                .attr("class", "hull")
+                .attr("id", function (d) { return d.id; })
+                .style("fill", "red")
+                .on("click", function(d) {
+                    console.log("hull click", d);
+                });
+
+            c.attr("d", function (d) { curve(d.makeHull()); })
+
             var link = this._links = this.visLinks.selectAll("path.link")
                 .data(_clusteringNodeProvider.getVisLinks());
 
@@ -510,6 +531,8 @@
 
                 // calculate graph center
                 var center = self.getCenter();
+
+                c.attr("d", function (d) { return curve(d.makeHull()); })
 
                 // Update links
                 link

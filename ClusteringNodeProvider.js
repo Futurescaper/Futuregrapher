@@ -1,94 +1,74 @@
-﻿if(Meteor.isClient)
-
+﻿if(Meteor.isClient) {
     ClusteringNodeProvider = function (graph) {
+
         var _nodelib = new d3nodes(graph);
+        var visNodes = [];
+        this.getVisNodes = function () { return visNodes; }
+        this.getAllNodes = function () { return _nodelib.getNodes(); }
+
         var _linklib = new d3links(graph);
+        var visLinks = [];
+        this.getVisLinks = function () { return visLinks; }
+        this.getAllLinks = function () { return _linklib.getLinks(); }
 
         var clusters = {};
-
-        var visNodes = [];
-        var visLinks = [];
-        
-        this.getVisNodes = function () {
-            return visNodes;
-        }
-        
-        this.getAllNodes = function () {
-            return _nodelib.getNodes();
-        }
-        
-        this.getVisLinks = function () {
-            return visLinks;
-        }
-        
-        this.getAllLinks = function () {
-            return _linklib.getLinks();
-        }
-        
-        this.getVisClusters = function () {
-            
-        }
-
-        //[of]:        function convexHulls(nodes, index, offset) {
-        function convexHulls(nodes, index, offset) {
-            var hulls = {};
-            
-            // create point sets
-            for (var k=0; k<nodes.length; ++k) {
-                var n = nodes[k];
-                if (n.size) continue;
-        
-                var i = index(n),
-                l = hulls[i] || (hulls[i] = []);
-                l.push([n.x - offset, n.y - offset]);
-                l.push([n.x - offset, n.y + offset]);
-                l.push([n.x + offset, n.y - offset]);
-                l.push([n.x + offset, n.y + offset]);
-            }
-            
-            // create convex hulls
-            var hullset = [];
-            for (i in hulls) {
-                hullset.push({group: i, path: d3.geom.hull(hulls[i])});
-            }
-            
-            return hullset;
-        }
-        //[cf]
-
+        var visClusters = [];
+        this.getVisClusters = function () { return visClusters; }
 
         //[of]:        this.addNode = function (settings) {
         this.addNode = function (settings) {
             // Temporary hard-coded cluster:
             if(settings.title.indexOf("social") !== -1)
-                settings.cluster = "social";
+                settings.clusterId = "social";
             else
-                settings.cluster = null;
+                settings.clusterId = null;
             
             var node = _nodelib.addNode(settings);
         
-            if(settings.cluster) {
-                if(!clusters.hasOwnProperty(settings.cluster)) {
+            if(settings.clusterId) {
+                if(!clusters.hasOwnProperty(settings.clusterId)) {
+                    var nodes = [node];
+                    
+                    function makeHull() {
+                        var nodePoints = [];
+                        
+                        _(nodes).each(function (n) {
+                            var offset = n.radius || 5;
+                            var x = n.x || 0;
+                            var y = n.y || 0;
+                            nodePoints.push([x - offset, y - offset]);
+                            nodePoints.push([x - offset, y + offset]);
+                            nodePoints.push([x + offset, y - offset]);
+                            nodePoints.push([x + offset, y + offset]);
+                         });
+                        
+                        return d3.geom.hull(nodePoints);
+                    }
+                    
                     var cluster = {
-                        id: settings.cluster,
+                        id: settings.clusterId,
                         collapsed: true,
-                        placeholderNode: placeholderNode,
-                        nodes: [node]
+                        nodes: nodes,
+                        makeHull: makeHull
                     };
-                    clusters[settings.cluster] = cluster;
+                    clusters[settings.clusterId] = cluster;
         
                     var placeholderNode = {
                         id: "cluster-" + cluster.id,
                         title: cluster.id + " [cluster]",
                         value: { size: 1, color: 1 },
                         ratio: { size: 0, color: 0 },
-                        radius: (graph.settings.minRadius + graph.settings.maxRadius / 2)
+                        radius: graph.settings.maxRadius,
+                        isClusterPlaceholder: true,
+                        clusterId: settings.clusterId,
+                        cluster: cluster
                     };
-                                
+                    
+                    cluster.placeholderNode = placeholderNode;
                     visNodes.push(placeholderNode);
                 }
                 else {
-                    clusters[settings.cluster].nodes.push(node);
+                    clusters[settings.clusterId].nodes.push(node);
                 }
             }
             else {
@@ -113,7 +93,7 @@
         this.addLink = function (options) {
             var link = _linklib.addLink(options);
             
-            if(!(link.source.cluster || link.target.cluster))
+            if(!(link.source.clusterId || link.target.clusterId))
                 visLinks.push(link);
             
             return link;
@@ -125,6 +105,60 @@
         };
         //[cf]
 
+
+        this.onNodeMouseover = function (d) { 
+            if(d.isClusterPlaceholder) {
+                console.log("Console placeholder hovered!");
+                return;
+            }
+
+            return _nodelib.onNodeMouseover(d); 
+        }
+        
+        this.onNodeMouseout = function (d) { 
+            if(d.isClusterPlaceholder) {
+                console.log("Console placeholder unhovered!");
+                return;
+            }
+
+            return _nodelib.onNodeMouseout(d); 
+        }
+        
+        this.onNodeMousedown = function (d) { 
+            return _nodelib.onNodeMousedown(d); 
+        }
+        
+        this.onNodeMouseup = function (d) { 
+            return _nodelib.onNodeMouseup(d); 
+        }
+        
+        this.onNodeClick = function (d) { 
+            if(d.isClusterPlaceholder) {
+                // Expand the cluster
+                
+                // Add all the contained nodes to vis
+                _(d.cluster.nodes).each(function (n) {
+                    visNodes.push(n);
+                });
+                
+                // remove the placeholder
+                var placeholderIndex = visNodes.indexOf(d);
+                visNodes.splice(placeholderIndex, 1);
+                
+                // Add cluster to vis
+                visClusters.push(d.cluster);
+                
+                d.cluster.collapsed = false;
+                graph.update();
+                return;
+            }
+            else {            
+                return _nodelib.onNodeClick(d); 
+            }
+        }
+        
+        this.onNodeDblClick = function (d) { return _nodelib.onNodeDblClick(d); }
+        this.onNodeRightClick = function (d) { return _nodelib.onNodeRightClick(d); }
 
 
         //[of]:        Compatibility stuff
@@ -152,13 +186,6 @@
         this.updateLinkColors = function () { _linklib.updateLinkColors(); }
         
         
-        this.onNodeMouseover = function (d) { return _nodelib.onNodeMouseover(d); }
-        this.onNodeMouseout = function (d) { return _nodelib.onNodeMouseout(d); }
-        this.onNodeMousedown = function (d) { return _nodelib.onNodeMousedown(d); }
-        this.onNodeMouseup = function (d) { return _nodelib.onNodeMouseup(d); }
-        this.onNodeClick = function (d) { return _nodelib.onNodeClick(d); }
-        this.onNodeDblClick = function (d) { return _nodelib.onNodeDblClick(d); }
-        this.onNodeRightClick = function (d) { return _nodelib.onNodeRightClick(d); }
         
         this.getNodeColor = function (d) { return _nodelib.getNodeColor(d); }
         this.getNodeBorderColor = function (d) { return _nodelib.getNodeBorderColor(d); }
@@ -230,3 +257,4 @@
         //[cf]
 
     }
+}
