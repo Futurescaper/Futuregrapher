@@ -1,25 +1,34 @@
 ﻿if(Meteor.isClient)
 
     ClusteringNodeProvider = function (graph) {
-
         var _nodelib = new d3nodes(graph);
         var _linklib = new d3links(graph);
-        
-        this.d3nodes = function () { return _nodelib; };
-        this.d3links = function () { return _linklib; };
+
+        var clusters = {};
+
+        var visNodes = [];
+        var visLinks = [];
         
         this.getVisNodes = function () {
+            return visNodes;
+        }
+        
+        this.getAllNodes = function () {
             return _nodelib.getNodes();
         }
         
         this.getVisLinks = function () {
+            return visLinks;
+        }
+        
+        this.getAllLinks = function () {
             return _linklib.getLinks();
         }
         
         this.getVisClusters = function () {
+            
         }
 
-        
         //[of]:        function convexHulls(nodes, index, offset) {
         function convexHulls(nodes, index, offset) {
             var hulls = {};
@@ -31,10 +40,10 @@
         
                 var i = index(n),
                 l = hulls[i] || (hulls[i] = []);
-                l.push([n.x-offset, n.y-offset]);
-                l.push([n.x-offset, n.y+offset]);
-                l.push([n.x+offset, n.y-offset]);
-                l.push([n.x+offset, n.y+offset]);
+                l.push([n.x - offset, n.y - offset]);
+                l.push([n.x - offset, n.y + offset]);
+                l.push([n.x + offset, n.y - offset]);
+                l.push([n.x + offset, n.y + offset]);
             }
             
             // create convex hulls
@@ -46,6 +55,77 @@
             return hullset;
         }
         //[cf]
+
+
+        //[of]:        this.addNode = function (settings) {
+        this.addNode = function (settings) {
+            // Temporary hard-coded cluster:
+            if(settings.title.indexOf("social") !== -1)
+                settings.cluster = "social";
+            else
+                settings.cluster = null;
+            
+            var node = _nodelib.addNode(settings);
+        
+            if(settings.cluster) {
+                if(!clusters.hasOwnProperty(settings.cluster)) {
+                    var cluster = {
+                        id: settings.cluster,
+                        collapsed: true,
+                        placeholderNode: placeholderNode,
+                        nodes: [node]
+                    };
+                    clusters[settings.cluster] = cluster;
+        
+                    var placeholderNode = {
+                        id: "cluster-" + cluster.id,
+                        title: cluster.id + " [cluster]",
+                        value: { size: 1, color: 1 },
+                        ratio: { size: 0, color: 0 },
+                        radius: (graph.settings.minRadius + graph.settings.maxRadius / 2)
+                    };
+                                
+                    visNodes.push(placeholderNode);
+                }
+                else {
+                    clusters[settings.cluster].nodes.push(node);
+                }
+            }
+            else {
+                visNodes.push(node);
+            }
+            
+            return node;
+        };
+        //[cf]
+        //[of]:        this.removeNode = function (id, tag, fade, forceRemove) {
+        this.removeNode = function (id, tag, fade, forceRemove) {
+            return _nodelib.removeNode(id, tag, fade, forceRemove);
+        };
+        //[cf]
+        //[of]:        this.removeNodeByIndex = function (index) {
+        this.removeNodeByIndex = function (index) {
+            return _nodelib.removeNodeByIndex(index);
+        }
+        //[cf]
+        
+        //[of]:        this.addLink = function (options) {
+        this.addLink = function (options) {
+            var link = _linklib.addLink(options);
+            
+            if(!(link.source.cluster || link.target.cluster))
+                visLinks.push(link);
+            
+            return link;
+        };
+        //[cf]
+        //[of]:        this.removeLink = function (from, to) {
+        this.removeLink = function (from, to) {
+            return _linklib.removeLink(from, to);
+        };
+        //[cf]
+
+
 
         //[of]:        Compatibility stuff
         //[c]Compatibility stuff
@@ -97,18 +177,6 @@
             return _nodelib.animateNodeClick(node, time, callback);
         };
         
-        this.addNode = function (settings) {
-            return _nodelib.addNode(settings);
-        };
-        
-        this.removeNode = function (id, tag, fade, forceRemove) {
-            return _nodelib.removeNode(id, tag, fade, forceRemove);
-        };
-        
-        this.removeNodeByIndex = function (index) {
-            return _nodelib.removeNodeByIndex(index);
-        }
-        
         this.setNodeTitle = function (node, title) {
             return _nodelib.setNodeTitle(node, title);
         };
@@ -141,13 +209,6 @@
         
         /* Link methods */
         
-        this.addLink = function (options) {
-            return _linklib.addLink(options);
-        };
-        
-        this.removeLink = function (from, to) {
-            return _linklib.removeLink(from, to);
-        };
         
         this.getSharedLinks = function (nodes) {
             return _linklib.getSharedLinks(nodes);

@@ -123,6 +123,7 @@
                 x: nodeDefinition.x,
                 y: nodeDefinition.y,
                 index: this.nodes.length,
+                cluster: nodeDefinition.cluster,
                 _color: nodeDefinition.color,
                 _labelOpacity: nodeDefinition.labelOpacity,
                 _fontSize: nodeDefinition.fontSize,
