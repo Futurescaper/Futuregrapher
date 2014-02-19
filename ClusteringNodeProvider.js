@@ -15,13 +15,16 @@
         var visClusters = [];
         this.getVisClusters = function () { return visClusters; }
 
+        
+
         //[of]:        this.addNode = function (settings) {
         this.addNode = function (settings) {
             // Temporary hard-coded cluster:
             if(settings.title.indexOf("social") !== -1)
                 settings.clusterId = "social";
-            else
-                settings.clusterId = null;
+        
+            if(settings.title.indexOf("innovation") !== -1)
+                settings.clusterId = "innovation";
             
             var node = _nodelib.addNode(settings);
         
@@ -55,10 +58,11 @@
         
                     var placeholderNode = {
                         id: "cluster-" + cluster.id,
-                        title: cluster.id + " [cluster]",
+                        title: cluster.id,
                         value: { size: 1, color: 1 },
                         ratio: { size: 0, color: 0 },
                         radius: graph.settings.maxRadius,
+                        visible: true,
                         isClusterPlaceholder: true,
                         clusterId: settings.clusterId,
                         cluster: cluster
@@ -93,9 +97,22 @@
         this.addLink = function (options) {
             var link = _linklib.addLink(options);
             
-            if(!(link.source.clusterId || link.target.clusterId))
-                visLinks.push(link);
+            if (link.source.clusterId) {
+                if (link.target.clusterId && link.source.clusterId === link.target.clusterId) {
+                    // Same cluster. Don't add this link to vis.
+                    return link;
+                }
+        
+                link.sourceNode = link.source;
+                link.source = clusters[link.source.clusterId].placeholderNode;
+            }  
             
+            if (link.target.clusterId) {
+                link.targetNode = link.target;
+                link.target = clusters[link.target.clusterId].placeholderNode;
+            }
+        
+            visLinks.push(link);
             return link;
         };
         //[cf]
@@ -105,30 +122,44 @@
         };
         //[cf]
 
+        this.getCluster = function (clusterId) {
+            return clusters[clusterId];
+        }
+
+        this.getNodeColor = function (d) { 
+            if(d.isClusterPlaceholder) {
+                return "red";
+            }
+            else
+                return _nodelib.getNodeColor(d); 
+        }
+        
+        this.getNodeBorderColor = function (d) { return _nodelib.getNodeBorderColor(d); }
+        this.getNodeRadius = function (d) { return _nodelib.getNodeRadius(d); }
+        
+        this.getNodeTooltip = function (d) { return _nodelib.getNodeTooltip(d); }
 
         this.onNodeMouseover = function (d) { 
-            if(d.isClusterPlaceholder) {
-                console.log("Console placeholder hovered!");
-                return;
-            }
+            if(d.isClusterPlaceholder) return;
 
             return _nodelib.onNodeMouseover(d); 
         }
         
         this.onNodeMouseout = function (d) { 
-            if(d.isClusterPlaceholder) {
-                console.log("Console placeholder unhovered!");
-                return;
-            }
+            if(d.isClusterPlaceholder) return;
 
             return _nodelib.onNodeMouseout(d); 
         }
         
         this.onNodeMousedown = function (d) { 
+            if(d.isClusterPlaceholder) return;
+
             return _nodelib.onNodeMousedown(d); 
         }
         
         this.onNodeMouseup = function (d) { 
+            if(d.isClusterPlaceholder) return;
+
             return _nodelib.onNodeMouseup(d); 
         }
         
@@ -187,11 +218,6 @@
         
         
         
-        this.getNodeColor = function (d) { return _nodelib.getNodeColor(d); }
-        this.getNodeBorderColor = function (d) { return _nodelib.getNodeBorderColor(d); }
-        this.getNodeRadius = function (d) { return _nodelib.getNodeRadius(d); }
-        
-        this.getNodeTooltip = function (d) { return _nodelib.getNodeTooltip(d); }
         
         this.updateSizesForZoom = function (scale) {
             _nodelib.updateNodeSizesForZoom(scale);
@@ -255,6 +281,5 @@
         
         
         //[cf]
-
     }
 }
