@@ -609,6 +609,10 @@
             _labellib.updateLabelSizesForZoom(scale);
         }
         
+        this.updateNodeColors = function () {
+            _clusteringNodeProvider.updateNodeColors();
+        }
+        
         this.updateLinkColors = function () {
             _clusteringNodeProvider.updateLinkColors();
         }
