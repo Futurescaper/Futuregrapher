@@ -70,7 +70,6 @@
             cluster.placeholderNode.color = color;
         }
         
-
         this.addNode = function (settings) {
             // Temporary hard-coded cluster:
             
@@ -86,9 +85,11 @@
             
             return node;
         };
+        
         this.removeNode = function (id, tag, fade, forceRemove) {
             return _nodelib.removeNode(id, tag, fade, forceRemove);
         };
+        
         this.removeNodeByIndex = function (index) {
             return _nodelib.removeNodeByIndex(index);
         }
@@ -114,6 +115,7 @@
             visLinks.push(link);
             return link;
         };
+        
         this.removeLink = function (from, to) {
             return _linklib.removeLink(from, to);
         };
@@ -361,7 +363,7 @@
         this.getMarkerUrl = function (d) { return _linklib.getMarkerUrl(d); }
         
         this.getLinkWidth = function (d) { return _linklib.getLinkWidth(d); }
-        this.getLinkColor = function (d) { return _linklib.getLinkColor(d); }
+        this.getLinkColor = function (d, minColor, maxColor) { return _linklib.getLinkColor(d, minColor, maxColor); }
         
         this.calculatePath = function (d, b) { return _linklib.calculatePath(d, b); }
         

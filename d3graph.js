@@ -727,6 +727,10 @@
         this.calculatePath = function (d, b) {
             return _clusteringNodeProvider.calculatePath(d, b);
         }
+        
+        this.getLinkColor = function (d, minColor, maxColor) {
+            return _clusteringNodeProvider.getLinkColor(d, minColor, maxColor);
+        }
 
         /* End link methods */
 
