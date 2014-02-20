@@ -652,8 +652,11 @@
         };
 
         this.start = function () {
-            // turn off fixed mode and resume the forces
+            // turn off fixed mode
             self.fixedMode = false;
+            this._nodes.each(function(n) { n.fixed = false; });
+
+            // and resume the forces
             if (self.force)
                 self.force.resume();
         };

@@ -118,8 +118,8 @@ d3highlights = function (graph) {
 
         if(options.highlight && options.highlight.node)
             graph.d3().selectAll('g.node[id="' + options.highlight.node.id + '"] circle')
-                .style('fill', options.highlight.color)
-                .style('stroke', d3colors.darken(new d3color(options.highlight.color),.8).hex());
+                .style('fill', options.highlight.color && typeof options.highlight.color == 'function' ? function(d) { return options.highlight.color(d); } : options.highlight.color)
+                .style('stroke', options.highlight.color && typeof options.highlight.color == 'function' ? function(d) { return d3colors.darken(new d3color(options.highlight.color(d)),.8).hex(); } : d3colors.darken(new d3color(options.highlight.color),.8).hex());
     };
 
     this.isArray = function(obj) {
