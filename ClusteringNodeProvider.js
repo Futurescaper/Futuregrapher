@@ -74,11 +74,6 @@
         //[of]:        this.addNode = function (settings) {
         this.addNode = function (settings) {
             // Temporary hard-coded cluster:
-            if(settings.title.indexOf("social") !== -1)
-                settings.clusterId = "social";
-        
-            if(settings.title.indexOf("innovation") !== -1)
-                settings.clusterId = "innovation";
             
             var node = _nodelib.addNode(settings);
         
@@ -176,7 +171,7 @@
         
         this.onNodeClick = function (d) { 
             if(d.isClusterPlaceholder) {
-                // Expand the cluster
+                return; // For now, do nothing when clicking a placeholder node.
                 
                 // Add all the contained nodes to vis
                 _(d.cluster.nodes).each(function (n) {

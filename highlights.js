@@ -32,7 +32,6 @@ d3highlights = function (graph) {
             .duration(0);
         */
 
-        console.log("Fading in");
         graph.d3().selectAll('g.node circle')
             //.transition()
             //.duration(time || 0)
