@@ -1,4 +1,4 @@
-﻿if(Meteor.isClient)
+﻿if(Meteor.isClient) {
     d3links = function (graph) {
         var self = this;
         this.links = [];
@@ -533,3 +533,5 @@
                 graph.events.onLinkMouseup(link, d3.event);
         };
     }
+}
+
