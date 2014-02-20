@@ -637,6 +637,7 @@
                         node.color = position.color;
                         x.style('stroke', graph.d3nodes().getNodeBorderColor(node));
                     }
+                    node.anchor = position.anchor;
                     var opacity = (node.labelOpacity || node.opacity || 1.0);
                     graph.d3().selectAll('g.label[id="' + position.id + '"]')
                         //.transition()
@@ -651,6 +652,10 @@
                         //.style('font-size', function(d) { return jQuery.isNumeric(d.fontSize) ? d.fontSize + 'em' : d.fontSize })
                         .attr('text-anchor', function(d) { return position.anchor||(d.x < center.x ? 'end' : 'start') })
                         .attr('fill', function(d) { return position.labelColor||graph.d3nodes().getNodeBorderColor(d); } /*LABEL FIX:node.labelColor*/);
+
+                    graph.d3()
+                        .selectAll('g.label')
+                        .attr('transform', function (node) { return graph.d3labels().transformLabel(node, center); });
                 }
             });
 

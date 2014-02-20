@@ -88,8 +88,7 @@
             if (graph.settings.embedLabels)
                 return 'translate(' + d.x + ',' + (d.y - r * .75) + ')';
 
-            var x = //d.x < center.x ? d.x - r - (5/(scale||1)) : d.x + r + (5/(scale||1));
-                ((d.x < center.x && !graph.settings.reverseLabelPosition) || (d.x >= center.x && graph.settings.reverseLabelPosition)) ? d.x - r - (5/(scale||1)) : d.x + r + (5/(scale||1));
+            var x = (d.anchor == 'end' || (!d.anchor && (d.x < center.x && !graph.settings.reverseLabelPosition) || (d.x >= center.x && graph.settings.reverseLabelPosition))) ? d.x - r - (5/(scale||1)) : d.x + r + (5/(scale||1));
             var y = d.y;
             return 'translate(' + x + ',' + y + ')';
         };
