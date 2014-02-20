@@ -696,6 +696,10 @@
             return _clusteringNodeProvider.getNodeByTitle(title);
         };
 
+        this.getNodeColor = function (d) {
+            return _clusteringNodeProvider.getNodeColor(d);
+        }
+
         this.getNodeBorderColor = function (d, opacity) {
             return _clusteringNodeProvider.getNodeBorderColor(d, opacity);
         }

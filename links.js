@@ -349,7 +349,7 @@
                     return a;
         
                 // calculate the standard string-based interpolation value
-                var path = graph.d3links().calculatePath(d);
+                var path = self.calculatePath(d);
                 if(!path)
                     return '';
         
