@@ -32,3 +32,8 @@ Package.on_use(function(api, where) {
         api.export('d3selector');
     }
 });
+
+Package.on_test(function (api) {
+    api.use(["meteor-d3graph", "tinytest", "test-helpers"]);
+    api.add_files(["tests/links-tests.js"], ["client"]);
+});
