@@ -15,6 +15,60 @@
         var visClusters = [];
         this.getVisClusters = function () { return visClusters; }
 
+        function getOrCreateCluster(clusterId) {
+            if(!clusters.hasOwnProperty(clusterId)) {
+                var nodes = [];
+                
+                function makeHull() {
+                    var nodePoints = [];
+                    
+                    _(nodes).each(function (n) {
+                        var offset = n.radius || 5;
+                        var x = n.x || 0;
+                        var y = n.y || 0;
+                        nodePoints.push([x - offset, y - offset]);
+                        nodePoints.push([x - offset, y + offset]);
+                        nodePoints.push([x + offset, y - offset]);
+                        nodePoints.push([x + offset, y + offset]);
+                     });
+                    
+                    return d3.geom.hull(nodePoints);
+                }
+                
+                var cluster = {
+                    id: clusterId,
+                    collapsed: true,
+                    nodes: nodes,
+                    makeHull: makeHull
+                };
+                clusters[clusterId] = cluster;
+    
+                var placeholderNode = {
+                    id: "cluster-" + clusterId,
+                    title: clusterId,
+                    color: "#ff8888",
+                    value: { size: 1, color: 1 },
+                    ratio: { size: 0, color: 0 },
+                    data: [],
+                    radius: graph.settings.maxRadius,
+                    visible: true,
+                    isClusterPlaceholder: true,
+                    clusterId: clusterId,
+                    cluster: cluster
+                };
+                
+                cluster.placeholderNode = placeholderNode;
+                visNodes.push(placeholderNode);
+            }
+            
+            return clusters[clusterId];
+        }
+
+        this.setCluster = function (clusterId, title, color) {
+            var cluster = getOrCreateCluster(clusterId);
+            cluster.placeholderNode.title = title;
+            cluster.placeholderNode.color = color;
+        }
         
 
         //[of]:        this.addNode = function (settings) {
@@ -29,51 +83,8 @@
             var node = _nodelib.addNode(settings);
         
             if(settings.clusterId) {
-                if(!clusters.hasOwnProperty(settings.clusterId)) {
-                    var nodes = [node];
-                    
-                    function makeHull() {
-                        var nodePoints = [];
-                        
-                        _(nodes).each(function (n) {
-                            var offset = n.radius || 5;
-                            var x = n.x || 0;
-                            var y = n.y || 0;
-                            nodePoints.push([x - offset, y - offset]);
-                            nodePoints.push([x - offset, y + offset]);
-                            nodePoints.push([x + offset, y - offset]);
-                            nodePoints.push([x + offset, y + offset]);
-                         });
-                        
-                        return d3.geom.hull(nodePoints);
-                    }
-                    
-                    var cluster = {
-                        id: settings.clusterId,
-                        collapsed: true,
-                        nodes: nodes,
-                        makeHull: makeHull
-                    };
-                    clusters[settings.clusterId] = cluster;
-        
-                    var placeholderNode = {
-                        id: "cluster-" + cluster.id,
-                        title: cluster.id,
-                        value: { size: 1, color: 1 },
-                        ratio: { size: 0, color: 0 },
-                        radius: graph.settings.maxRadius,
-                        visible: true,
-                        isClusterPlaceholder: true,
-                        clusterId: settings.clusterId,
-                        cluster: cluster
-                    };
-                    
-                    cluster.placeholderNode = placeholderNode;
-                    visNodes.push(placeholderNode);
-                }
-                else {
-                    clusters[settings.clusterId].nodes.push(node);
-                }
+                var cluster = getOrCreateCluster(settings.clusterId);
+                cluster.nodes.push(node);
             }
             else {
                 visNodes.push(node);
@@ -128,7 +139,7 @@
 
         this.getNodeColor = function (d) { 
             if(d.isClusterPlaceholder) {
-                return "red";
+                return d.color;
             }
             else
                 return _nodelib.getNodeColor(d); 
