@@ -3,7 +3,6 @@
         this.nodes = [];
         this.nodeDictionary = new Dictionary();
 
-        //[of]:        this.getNodeColor = function (node, minColor, maxColor) {
         this.getNodeColor = function (node, minColor, maxColor) {
             if(node.selected && !window.inCauseEffectView)
                 return new d3color(d3colors.getRgbaFromHex('ff0000')).rgbastr();
@@ -21,9 +20,7 @@
         
             return fill;
         };
-        //[cf]
 
-        //[of]:        this.updateColors = function() {
         this.updateColors = function() {
             graph._nodes.select('svg g.node circle')
                 .style('fill', function (d) {
@@ -34,9 +31,7 @@
                     return graph.getNodeBorderColor(d);
                 });
         };
-        //[cf]
 
-        //[of]:        this.getNodeBorderColor = function(node, darkening) {
         this.getNodeBorderColor = function(node, darkening) {
             if (!graph.d3styles().settings.nodeBorderSize)
                 return '';
@@ -47,9 +42,7 @@
         
             return d3colors.darken(new d3color(color), darkening||graph.d3styles().settings.nodeBorderDarkening||.8).hex();
         };
-        //[cf]
 
-        //[of]:        this.getNodeRadius = function (node) {
         this.getNodeRadius = function (node) {
             var r = node._radius || node.radius;
             if(isNaN(r))
@@ -57,37 +50,27 @@
         
             return parseInt(r);
         };
-        //[cf]
 
-        //[of]:        this.getNodeBorderWidth = function (node) {
         this.getNodeBorderWidth = function (node) {
             return graph.d3styles().settings.nodeBorderSize;
         };
-        //[cf]
 
-        //[of]:        this.getNode = function (name) {
         this.getNode = function (name) {
             if (!this.nodeDictionary)
                 return;
             return this.nodeDictionary.get(name);
         };
-        //[cf]
 
-        //[of]:        this.getNodes = function () {
         this.getNodes = function () {
             return this.nodes;
         }
-        //[cf]
 
-        //[of]:        this.getNodeByTitle = function(title) {
         this.getNodeByTitle = function(title) {
             var nodes = $.grep(this.nodes, function(n) { return n.title == title; });
             if(nodes.length)
                 return nodes[0];
         };
-        //[cf]
 
-        //[of]:        this.addNode = function (nodeDefinition) {
         this.addNode = function (nodeDefinition) {
             if (!nodeDefinition)
                 return null;
@@ -197,9 +180,7 @@
         
             return node;
         };
-        //[cf]
 
-        //[of]:        this.calculateNodes = function () {
         this.calculateNodes = function () {
             if (this.nodes.length <= 0)
                 return;
@@ -289,22 +270,17 @@
                 }
             }, this));
         };
-        //[cf]
 
-        //[of]:        this.getCenter = function () {
         this.getCenter = function () {
             var x = $.map(this.nodes, function (n) { return n.x; });
             var y = $.map(this.nodes, function (n) { return n.y; });
             return { x: (Array.min(x) + Array.max(x)) / 2, y: (Array.min(y) + Array.max(y)) / 2 };
         };
-        //[cf]
 
-        //[of]:        this.clear = function () {
         this.clear = function () {
             this.nodes.splice(0, this.nodes.length);
             this.nodeDictionary = new Dictionary();
         }
-        //[cf]
 
         /// Public Method: removeNode(id, tag, forceRemove)
         ///
@@ -315,7 +291,6 @@
         /// <param name="id">The node id</param>
         /// <param name="tag">The tag to be removed from this node.</param>
         /// <returns>If successful, undefined, otherwise an error message.
-        //[of]:        this.removeNode = function (id, tag, forceRemove) {
         this.removeNode = function (id, tag, forceRemove) {
             var t = tag;
             var node = this.nodeDictionary.get(id);
@@ -356,9 +331,7 @@
             else
                 return "That node could not be found in the dictionary.";
         };
-        //[cf]
 
-        //[of]:        this.getShortestPath = function(nodes, from, to) {
         this.getShortestPath = function(nodes, from, to) {
             var path = this.calculateShortestPaths(nodes, from.index);
             var i = to.index;
@@ -391,9 +364,7 @@
         
             return links;
         };
-        //[cf]
 
-        //[of]:        this.getLinkToIndex = function(node, index) {
         this.getLinkToIndex = function(node, index) {
             for(var i = 0; i < node.to.length; i++)
                 if(node.to[i].target.index == index)
@@ -402,9 +373,7 @@
                 if(node.from[i].source.index == index)
                     return node.from[i];
         };
-        //[cf]
 
-        //[of]:        this.calculateShortestPaths = function (nodes, index, directional) {
         this.calculateShortestPaths = function (nodes, index, directional) {
             // Taken from: http://vasir.net/blog/game_development/dijkstras_algorithm_shortest_path/
         
@@ -427,9 +396,7 @@
         
             return { costs: costs, parents: parents };
         };
-        //[cf]
 
-        //[of]:        this.calculateShortestPaths_iterate = function (nodes, costs, temporary, parents, directional) {
         this.calculateShortestPaths_iterate = function (nodes, costs, temporary, parents, directional) {
             // Find the node x with the smallest cost
             var x = this.getTemporaryMinimumIndex(costs, temporary);
@@ -466,9 +433,7 @@
         
             return false;
         };
-        //[cf]
 
-        //[of]:        this.getTemporaryMinimumIndex = function (costs, temporary) {
         this.getTemporaryMinimumIndex = function (costs, temporary) {
             var min = Infinity;
             var index = -1;
@@ -481,7 +446,6 @@
         
             return index;
         };
-        //[cf]
 
         /// Private Method: _removeNodeByIndex(index)
         ///
@@ -489,7 +453,6 @@
         /// Deletes a specified node and all associated links.
         /// </summary>
         /// <param name="index">The 0-based index of the node to be deleted.</param>
-        //[of]:        this.removeNodeByIndex = function (index, fade) {
         this.removeNodeByIndex = function (index, fade) {
             // remove the node
             var nodes = this.nodes.splice(index, 1);
@@ -551,9 +514,7 @@
                     graph.events.onNodeRemoved(node);
             }
         };
-        //[cf]
 
-        //[of]:        this.setNodeTitle = function (node, title, showFull) {
         this.setNodeTitle = function (node, title, showFull) {
             if (node) {
                 var self = this;
@@ -571,9 +532,7 @@
                         .style('font-size', function (d) { return d.fontSize + 'em'; /*return graph.labellib().getLabelSize(d);*/ });
             }
         };
-        //[cf]
 
-        //[of]:        this.setNodeTitleHtml = function(node, html, ratio) {
         this.setNodeTitleHtml = function(node, html, ratio) {
             var r = ratio;
             if(!r)
@@ -595,9 +554,7 @@
                 .style('cursor', 'pointer')
                 .html(html);
         };
-        //[cf]
 
-        //[of]:        this.updateNodeSizesForZoom = function(scale) {
         this.updateNodeSizesForZoom = function(scale) {
             if(!graph.d3zoomer())
                 return;
@@ -615,9 +572,7 @@
                 .style('stroke', function(d) { return graph.getNodeBorderColor(d); })
                 .style('stroke-width', (parseInt(graph.d3styles().settings.nodeBorderSize) / s)||1);
         };
-        //[cf]
 
-        //[of]:        this.animateNodeClick = function(node, time, callback) {
         this.animateNodeClick = function(node, time, callback) {
             var r = graph.d3().selectAll('g.node[id="' + node.id + '"] circle').attr('r');
             var c = graph.d3().selectAll('g.node[id="' + node.id + '"] circle').style('fill');
@@ -640,18 +595,14 @@
         
             setTimeout(function() { if(callback) callback(); }, time + 20);
         };
-        //[cf]
         
-        //[of]:        this.getNodeTooltip = function (node) {
         this.getNodeTooltip = function (node) {
             if (graph.events.onNodeTooltip && typeof (graph.events.onNodeTooltip === "function"))
                 return graph.events.onNodeTooltip(node, d3.event);
         };
-        //[cf]
         
         var doubleclick = false;
         var clicking = false;
-        //[of]:        this.onNodeClick = function (node) {
         this.onNodeClick = function (node) {
             if(clicking)
                 return;
@@ -672,9 +623,7 @@
                 }, 150);
             }
         };
-        //[cf]
 
-        //[of]:        this.onNodeDblClick = function (node) {
         this.onNodeDblClick = function (node) {
             if (graph.events.onNodeDblClick && typeof (graph.events.onNodeDblClick === "function")) {
                 doubleclick = true;
@@ -690,39 +639,29 @@
                 return true;
             }
         };
-        //[cf]
 
-        //[of]:        this.onNodeMouseover = function (node) {
         this.onNodeMouseover = function (node) {
             graph.currentNode = node;
             if (graph.events.onNodeMouseover && typeof (graph.events.onNodeMouseover === "function"))
                 graph.events.onNodeMouseover(node, d3.event);
         };
-        //[cf]
 
-        //[of]:        this.onNodeMouseout = function (node) {
         this.onNodeMouseout = function (node) {
             graph.currentNode = null;
             if (graph.events.onNodeMouseout && typeof (graph.events.onNodeMouseout === "function"))
                 graph.events.onNodeMouseout(node, d3.event);
         };
-        //[cf]
 
-        //[of]:        this.onNodeMousedown = function (node) {
         this.onNodeMousedown = function (node) {
             if (graph.events.onNodeMousedown && typeof (graph.events.onNodeMousedown === "function"))
                 graph.events.onNodeMousedown(node, d3.event);
         };
-        //[cf]
 
-        //[of]:        this.onNodeMouseup = function (node) {
         this.onNodeMouseup = function (node) {
             if (graph.events.onNodeMouseup && typeof (graph.events.onNodeMouseup === "function"))
                 graph.events.onNodeMouseup(node, d3.event);
         };
-        //[cf]
 
-        //[of]:        this.onNodeRightClick = function(node) {
         this.onNodeRightClick = function(node) {
             if(graph.events.onNodeRightClick && typeof (graph.events.onNodeRightClick === "function")) {
                 graph.events.onNodeRightClick(node, d3.event||window.event);
@@ -734,5 +673,4 @@
                 return false;
             }
         };
-        //[cf]
     }

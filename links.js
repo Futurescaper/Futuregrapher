@@ -5,18 +5,13 @@
 
         this.d3LineBasis = d3.svg.line().interpolate("basis");
 
-        //[of]:        this.getLinks = function () {
         this.getLinks = function () {
             return this.links;
         }
-        //[cf]
-        //[of]:        this.clear = function () {
         this.clear = function () {
             this.links.splice(0, this.links.length);            
         }
-        //[cf]
 
-        //[of]:        this.addLink = function (linkSettings) {
         this.addLink = function (linkSettings) {
             var from = linkSettings.from;
             var to = linkSettings.to;
@@ -100,16 +95,12 @@
         
             return link;
         };
-        //[cf]
 
-        //[of]:        this.selectRandomLink = function() {
         this.selectRandomLink = function() {
             var i = parseInt(Math.random() * this.links.length);
             return this.links[i];
         };
-        //[cf]
 
-        //[of]:        this.updateLinkSizesForZoom = function(scale) {
         this.updateLinkSizesForZoom = function(scale) {
             if(!graph.d3zoomer())
                 return;
@@ -120,7 +111,6 @@
                 .attr('d', function(d) { return self.calculatePath(d); });
             this.updateMarkers();
         };
-        //[cf]
 
         /// Public Method: removeLink(from, to, tag)
         ///
@@ -132,7 +122,6 @@
         /// <param name="to">The name of the target node.</param>
         /// <param name="tag">(optional) The name of the tag to also be removed.</param>
         /// <returns>If successful, undefined, otherwise an error message.</returns>
-        //[of]:        this.removeLink = function (from, to, tag, dontUpdate, forceRemove) {
         this.removeLink = function (from, to, tag, dontUpdate, forceRemove) {
             var found = false;
             var t = tag;
@@ -185,9 +174,7 @@
             else if(!dontUpdate)
                 graph.update();
         };
-        //[cf]
 
-        //[of]:        this.calculateLinks = function () {
         this.calculateLinks = function () {
             var max = 0,
                 min = Infinity,
@@ -215,9 +202,7 @@
                 this.links[i].tooltip = this.getLinkTooltip(this.links[i]);
             }
         };
-        //[cf]
 
-        //[of]:        this.calculatePath = function (d) {
         this.calculatePath = function (d) {
             if(graph.settings.taperedLinks) {
                 var strength_scale = d3.scale.linear().range([graph.settings.taperedLinkMinSize||4, graph.settings.taperedLinkMaxSize||15]) /* thickness range for flow lines */
@@ -340,9 +325,7 @@
                 return "M " + sx + " " + sy + " A " + dr + " " + dr + " 0 0 " + (xt > xs ? "1" : "0") + " " + xt + " " + yt;
             }
         };
-        //[cf]
 
-        //[of]:        this.calculatePathTween = function (d, i, a) {
         this.calculatePathTween = function (d, i, a) {
             return function (b) {
                 if(!d || !b)
@@ -365,9 +348,7 @@
                 return vals.join(' ');
             }
         };
-        //[cf]
 
-        //[of]:        this.getLinkWidth = function (d, thickness) {
         this.getLinkWidth = function (d, thickness) {
             var ratio = d.normalized; //ratio;
         
@@ -382,11 +363,9 @@
         
             return d.linkThickness||1;
         };
-        //[cf]
 
         // Create an array of marker combinations (colors and size indices).
         // This is then mapped to <marker>'s in the dom
-        //[of]:        function createMarkerCombinations(colors, sizeRange) {
         function createMarkerCombinations(colors, sizeRange) {
             var markerCombinations = [];
             _(colors).each(function (color) {
@@ -398,9 +377,7 @@
             
             return markerCombinations;
         }
-        //[cf]
 
-        //[of]:        this.updateMarkers = function () {
         this.updateMarkers = function () {
             var linkColorSet = {};
             var minLinkWidth;
@@ -451,9 +428,7 @@
             markerElements.exit()
                 .remove();
         }
-        //[cf]
 
-        //[of]:        this.getMarkerUrl = function (link) {
         this.getMarkerUrl = function (link) {
             var linkWidth = this.getLinkWidth(link);
             var sizeIndex = this.linkWidthToMarkerSizeIndexScale(linkWidth);
@@ -462,9 +437,7 @@
         
             return "marker-" + sizeIndex + "-" + linkColor.toString().substr(1);
         }
-        //[cf]
 
-        //[of]:        this.updateLinkColors = function() {
         this.updateLinkColors = function() {
             // calculate link positions
             graph.d3()
@@ -482,9 +455,7 @@
                     return c;
                 }, this));
         };
-        //[cf]
 
-        //[of]:        this.getLinkColor = function (d, minColor, maxColor) {
         this.getLinkColor = function (d, minColor, maxColor) {
             if(graph.colorFilterActive && d.source.color && d.source.color == d.target.color) {
                 d.color = d.source.color.indexOf('#') >= 0 ?
@@ -507,16 +478,12 @@
                     .rgbastr();
             return d.color;
         };
-        //[cf]
 
-        //[of]:        this.getLinkTooltip = function (link) {
         this.getLinkTooltip = function (link) {
             if (graph.events.onLinkTooltip && typeof (graph.events.onLinkTooltip === "function"))
                 return graph.events.onLinkTooltip(link);
         };
-        //[cf]
 
-        //[of]:        this.getSharedLinks = function (nodes) {
         this.getSharedLinks = function (nodes) {
             var links = [];
             var dict = new Array();
@@ -533,9 +500,7 @@
             });
             return links;
         };
-        //[cf]
 
-        //[of]:        this.clearLinks = function() {
         this.clearLinks = function() {
             var self = this;
             $.each(this.links, function(i, link) {
@@ -543,40 +508,29 @@
             });
             graph.update();
         };
-        //[cf]
 
-        //[of]:        this.onLinkClick = function(link) {
         this.onLinkClick = function(link) {
             if (graph.events.onLinkClick && typeof (graph.events.onLinkClick === "function"))
                 graph.events.onLinkClick(link, d3.event);
         };
-        //[cf]
 
-        //[of]:        this.onLinkMouseover = function(link) {
         this.onLinkMouseover = function(link) {
             if (graph.events.onLinkMouseover&& typeof (graph.events.onLinkMouseover === "function"))
                 graph.events.onLinkMouseover(link, d3.event);
         };
-        //[cf]
 
-        //[of]:        this.onLinkMouseout = function(link) {
         this.onLinkMouseout = function(link) {
             if (graph.events.onLinkMouseout&& typeof (graph.events.onLinkMouseout === "function"))
                 graph.events.onLinkMouseout(link, d3.event);
         };
-        //[cf]
 
-        //[of]:        this.onLinkMousedown = function(link) {
         this.onLinkMousedown = function(link) {
             if (graph.events.onLinkMousedown&& typeof (graph.events.onLinkMousedown === "function"))
                 graph.events.onLinkMousedown(link, d3.event);
         };
-        //[cf]
 
-        //[of]:        this.onLinkMouseup = function(link) {
         this.onLinkMouseup = function(link) {
             if (graph.events.onLinkMouseup&& typeof (graph.events.onLinkMouseup === "function"))
                 graph.events.onLinkMouseup(link, d3.event);
         };
-        //[cf]
     }

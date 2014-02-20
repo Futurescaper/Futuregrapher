@@ -71,7 +71,6 @@
         }
         
 
-        //[of]:        this.addNode = function (settings) {
         this.addNode = function (settings) {
             // Temporary hard-coded cluster:
             
@@ -87,19 +86,13 @@
             
             return node;
         };
-        //[cf]
-        //[of]:        this.removeNode = function (id, tag, fade, forceRemove) {
         this.removeNode = function (id, tag, fade, forceRemove) {
             return _nodelib.removeNode(id, tag, fade, forceRemove);
         };
-        //[cf]
-        //[of]:        this.removeNodeByIndex = function (index) {
         this.removeNodeByIndex = function (index) {
             return _nodelib.removeNodeByIndex(index);
         }
-        //[cf]
         
-        //[of]:        this.addLink = function (options) {
         this.addLink = function (options) {
             var link = _linklib.addLink(options);
             
@@ -121,12 +114,9 @@
             visLinks.push(link);
             return link;
         };
-        //[cf]
-        //[of]:        this.removeLink = function (from, to) {
         this.removeLink = function (from, to) {
             return _linklib.removeLink(from, to);
         };
-        //[cf]
 
         this.getCluster = function (clusterId) {
             return clusters[clusterId];
@@ -197,7 +187,6 @@
         this.onNodeDblClick = function (d) { return _nodelib.onNodeDblClick(d); }
         this.onNodeRightClick = function (d) { return _nodelib.onNodeRightClick(d); }
 
-        //[of]:        this.moveNodes = function (positions, time, ignoreLinks) {
         this.moveNodes = function (positions, time, ignoreLinks) {
             graph.force.stop();
             graph.fixedMode = true;
@@ -355,10 +344,7 @@
                 .duration(time || 500)
                 .attr('transform', function (node) { return graph.d3labels().transformLabel(node, center); });
         };
-        //[cf]
 
-        //[of]:        Compatibility stuff
-        //[c]Compatibility stuff
         
         this.updateMarkers = function () { _linklib.updateMarkers(); }
         
@@ -441,6 +427,5 @@
         }
         
         
-        //[cf]
     }
 }
