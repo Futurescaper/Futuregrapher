@@ -11,8 +11,8 @@ d3tags = function (graph) {
     /// </summary>
     /// <param name="tag">The name of the tag to be removed.</param>
     this.removeTag = function (tag) {
-        var nodes = graph.nodes;
-        var links = graph.links;
+        var nodes = graph.getNodes();
+        var links = graph.getLinks();
 
         $.each(nodes, function (i, node) {
             if (node)
@@ -45,8 +45,8 @@ d3tags = function (graph) {
         // and see if we need to delete it completely
         if (node.value <= 0) {
             // find the index
-            for (var i = 0; i < graph.nodes.length; i++)
-                if (graph.nodes[i] == node)
+            for (var i = 0; i < graph.getNodes().length; i++)
+                if (graph.getNodes()[i] == node)
                     return graph.removeNodeByIndex(i);
         }
     };

@@ -712,25 +712,14 @@
 
         /* Link methods */
 
-        this.addLink = function (options) {
-            return _clusteringNodeProvider.addLink(options);
-        };
+        this.updateMarkers = function () { _clusteringNodeProvider.updateMarkers(); }
 
-        this.removeLink = function (from, to) {
-            return _clusteringNodeProvider.removeLink(from, to);
-        };
-
-        this.getSharedLinks = function (nodes) {
-            return _clusteringNodeProvider.getSharedLinks(nodes);
-        };
-
-        this.calculatePath = function (d, b) {
-            return _clusteringNodeProvider.calculatePath(d, b);
-        }
-        
-        this.getLinkColor = function (d, minColor, maxColor) {
-            return _clusteringNodeProvider.getLinkColor(d, minColor, maxColor);
-        }
+        this.addLink = function (options) { return _clusteringNodeProvider.addLink(options); };
+        this.removeLink = function (from, to) { return _clusteringNodeProvider.removeLink(from, to); };
+        this.getSharedLinks = function (nodes) { return _clusteringNodeProvider.getSharedLinks(nodes); };
+        this.calculatePath = function (d, b) { return _clusteringNodeProvider.calculatePath(d, b); }
+        this.getLinkColor = function (d, minColor, maxColor) { return _clusteringNodeProvider.getLinkColor(d, minColor, maxColor); }
+        this.getLinkWidth = function (d) { return _clusteringNodeProvider.getLinkWidth(d); }
 
         /* End link methods */
 

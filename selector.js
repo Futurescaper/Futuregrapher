@@ -45,7 +45,7 @@ if(Meteor.isClient)
                 var l = graph.visLinks.select('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
                     //.transition()
                     //.duration(50)
-                    .style("stroke-width", function (d) { return 4 * graph.d3links().getLinkWidth(d) / graph.scale; });
+                    .style("stroke-width", function (d) { return 4 * graph.getLinkWidth(d) / graph.scale; });
                 if(color) {
                     if(!graph.d3links().hasMarkerDefinition(color))
                         graph.d3links().addMarkerDefinition(color, color);
@@ -58,8 +58,8 @@ if(Meteor.isClient)
                 graph.visLinks.select('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
                     //.transition()
                     //.duration(50)
-                    .style('stroke-width', function (d) { return link._strokeWidth || graph.d3links().getLinkWidth(d) / graph.scale; })
-                    .style('stroke', function(l) { return graph.d3links().getLinkColor(l, graph.d3styles().colors.linkMin, graph.d3styles().colors.linkMax); })
+                    .style('stroke-width', function (d) { return link._strokeWidth || graph.getLinkWidth(d) / graph.scale; })
+                    .style('stroke', function(l) { return graph.getLinkColor(l, graph.d3styles().colors.linkMin, graph.d3styles().colors.linkMax); })
                     .attr('marker-end', 'url(#' + graph.settings.markerId + '_default)');
 
                 for(var i = 0; i < links.length; i++)

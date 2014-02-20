@@ -445,8 +445,6 @@
                 .style('stroke', $.proxy(function(d) {
                     var c = this.getLinkColor(d);
                     d.marker = 'custom_' + c.replace(/[()]/g, '');
-                    if(!graph.d3links().hasMarkerDefinition(d.marker))
-                        graph.d3links().addMarkerDefinition(d.marker, c);
                     graph.d3()
                         .selectAll('svg g.links path[source="' + d.source.id + '"][target="' + d.target.id + '"]')
                         .attr('marker-end', function(d) {
@@ -454,6 +452,7 @@
                         });
                     return c;
                 }, this));
+                graph.updateMarkers()
         };
 
         this.getLinkColor = function (d, minColor, maxColor) {
