@@ -2,9 +2,7 @@ Package.describe({
     summary: "Create and manipulate D3 force-directed graphs"
 });
 
-Package.on_use(function(api, where) {
-    api.use(['d3'], 'client');
-    api.add_files([
+var libFiles = [
         'canvg/rgbcolor.js',
         'canvg/StackColor.js',
         'canvg/canvg.js',
@@ -22,7 +20,11 @@ Package.on_use(function(api, where) {
         'zoomer.js',
         'd3graph.js',
         'd3treelayout.js'
-    ]);
+    ];
+
+Package.on_use(function(api, where) {
+    api.use(['d3'], 'client');
+    api.add_files(libFiles);
 
     if (api.export) {
         api.export('d3graph');
@@ -34,6 +36,8 @@ Package.on_use(function(api, where) {
 });
 
 Package.on_test(function (api) {
-    api.use(["meteor-d3graph", "tinytest", "test-helpers"]);
-    api.add_files(["tests/links-tests.js"], ["client"]);
+    api.use(["d3", "tinytest", "test-helpers"]);
+
+    api.add_files(libFiles);
+    api.add_files(["tests/stubs.js", "tests/links-tests.js"], ["client"]);
 });
