@@ -69,10 +69,37 @@
             cluster.placeholderNode.title = title;
             cluster.placeholderNode.color = color;
         }
+
+        this.updateClusters = function () {
+            for (var clusterId in clusters) {
+                if (!clusters.hasOwnProperty(clusterId)) continue;
+
+                var cluster = clusters[clusterId];
+
+                // remove the placeholder node
+                var placeholderIndex = visNodes.indexOf(cluster.placeholderNode);
+                visNodes.splice(placeholderIndex, 1);
+                
+            }
+            
+            // Clear clusters
+            clusters = {};
+            
+            // And rebuild them
+            _(_nodelib.getNodes()).each(function (node) {
+                if (node.clusterId) {
+                    var cluster = getOrCreateCluster(node.clusterId);
+                    cluster.nodes.push(node);
+                }
+                else {
+                    if(visNodes.indexOf(node) === -1)
+                        visNodes.push(node);
+                }
+            });
+            
+        }
         
         this.addNode = function (settings) {
-            // Temporary hard-coded cluster:
-            
             var node = _nodelib.addNode(settings);
         
             if(settings.clusterId) {

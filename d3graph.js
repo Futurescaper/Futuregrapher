@@ -97,7 +97,7 @@
             onLabelMouseout: options.onLabelMouseout
         };
 
-        this.d3 = function() { return d3.select('#' + el.attr('id')); };
+        this.d3 = function() { return d3.select(el[0]); };
 
         this.clusteringNodeProvider = function () { return _clusteringNodeProvider; }
         this.d3tags = function () { return _taglib; };
@@ -251,6 +251,9 @@
 
         this.getNodes = function () { return _clusteringNodeProvider.getVisNodes(); };
         this.getLinks = function () { return _clusteringNodeProvider.getVisLinks(); }; 
+
+        this.getAllNodes = function () { return _clusteringNodeProvider.getAllNodes(); }
+        this.getAllLinks = function () { return _clusteringNodeProvider.getAllLinks(); } 
 
         this.calculate = function(filterKey) {
             _clusteringNodeProvider.calculate(filterKey);
@@ -725,7 +728,14 @@
         this.getLinkWidth = function (d) { return _clusteringNodeProvider.getLinkWidth(d); }
 
         /* End link methods */
+        
+        /* Cluster methods */
+        
+        this.setCluster = function (clusterId, title, color) { return _clusteringNodeProvider.setCluster(clusterId, title, color); }
+        this.updateClusters = function () { return _clusteringNodeProvider.updateClusters(); }
 
+        /* End cluster methods */
+        
         /* Highlight methods */
 
         this.fadeOut = function (time, callback) {

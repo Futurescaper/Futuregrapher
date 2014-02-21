@@ -13,7 +13,7 @@ Tinytest.add('d3graph tests - links test - addLink', function (test) {
     var addedLink = linklib.addLink(linkSettings);
     
     // Verify
-    test.equal(linklib.getLinks().length, 1, "Graph should contain exactly one link");
+    test.equal(linklib.getLinks().length, 1, "Linklib should contain exactly one link");
     test.equal(linklib.getLinks()[0].source.title, "fromNode", "Source node should be our 'fromNode'");
     test.equal(linklib.getLinks()[0].target.title, "toNode", "Target node should be our 'toNode'");
 });

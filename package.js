@@ -40,5 +40,5 @@ Package.on_test(function (api) {
     api.use(["d3", "tinytest", "test-helpers"]);
 
     api.add_files(libFiles);
-    api.add_files(["tests/stubs.js", "tests/links-tests.js"], ["client"]);
+    api.add_files(["tests/stubs.js", "tests/d3graph-tests.js", "tests/links-tests.js"], ["client"]);
 });
