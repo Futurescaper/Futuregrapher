@@ -1,5 +1,5 @@
 ﻿if(Meteor.isClient) {
-    d3links = function (graph) {
+    d3links = function (graph, nodeLib) {
         var self = this;
         this.links = [];
 
@@ -20,10 +20,11 @@
             var tag = linkSettings.tag;
             var type = linkSettings.type||0;
             var update = linkSettings.update == false ? false : true;
-        
-            var source = graph.getNode(from),
-                target = graph.getNode(to),
+
+            var source = nodeLib.getNode(from),
+                target = nodeLib.getNode(to),
                 link;
+
         
             if (!source) {
                 //_DEBUG("Unable to find source node: " + from);

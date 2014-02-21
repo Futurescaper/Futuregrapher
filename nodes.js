@@ -168,8 +168,9 @@
                 node.data.push(data);
         
             node.tooltip = this.getNodeTooltip(node);
-        
+
             this.nodes.push(node);
+            
             this.nodeDictionary.set(id, node);
         
             if (typeof this.nodeAdded === 'function')

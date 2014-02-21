@@ -3,6 +3,7 @@ D3graphStub = function () {
     var _links = {};
 
     // Interface
+    this.settings = { minRadius: 5, maxRadius: 10 };
     this.events = {};
     this.links = [];
     this.update = function() {};

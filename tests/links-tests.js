@@ -1,5 +1,5 @@
 
-Tinytest.add('d3graph tests - links test - addLink', function (test) {
+Tinytest.add('d3graph tests - links - addLink', function (test) {
     // Setup
     var d3graphStub = new D3graphStub();
     d3graphStub.stubNodes("fromNode", "toNode");
