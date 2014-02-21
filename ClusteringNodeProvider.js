@@ -6,7 +6,7 @@
         this.getVisNodes = function () { return visNodes; }
         this.getAllNodes = function () { return _nodelib.getNodes(); }
 
-        var _linklib = new d3links(graph);
+        var _linklib = new d3links(graph, _nodelib);
         var visLinks = [];
         this.getVisLinks = function () { return visLinks; }
         this.getAllLinks = function () { return _linklib.getLinks(); }
@@ -97,6 +97,23 @@
                 }
             });
             
+            _(_linklib.getLinks()).each(function (link) {
+                var hidden = (!!link.source.clusterId) && (link.source.clusterId === link.target.clusterId);
+                
+                if (hidden) {
+                    // If link was previously visible, hide it.
+                    visLinks = _(visLinks).filter(function (l) { return l.id !== link.id });
+                } else {
+                    var alreadyVisible = _(visLinks).find(function (l) { return l.id === link.id });
+                    if(!alreadyVisible) {
+                        visLinks.push(link);
+                    }
+                    
+                    // Make sure endpoints point to either the node or the placeholder node respectively
+                    link.source = link.source.clusterId ? link.source.cluster.placeholderNode : link.sourceNode;
+                    link.target = link.target.clusterId ? link.target.cluster.placeholderNode : link.targetNode;
+                }
+            });            
         }
         
         this.addNode = function (settings) {
@@ -124,18 +141,19 @@
         this.addLink = function (options) {
             var link = _linklib.addLink(options);
             
+            link.sourceNode = link.source;
+            link.targetNode = link.target;
+            
             if (link.source.clusterId) {
                 if (link.target.clusterId && link.source.clusterId === link.target.clusterId) {
                     // Same cluster. Don't add this link to vis.
                     return link;
                 }
         
-                link.sourceNode = link.source;
                 link.source = clusters[link.source.clusterId].placeholderNode;
             }  
             
             if (link.target.clusterId) {
-                link.targetNode = link.target;
                 link.target = clusters[link.target.clusterId].placeholderNode;
             }
         
