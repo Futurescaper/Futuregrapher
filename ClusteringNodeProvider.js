@@ -239,7 +239,9 @@
                             n.fontSize = position.labelSize;
                         if (position.labelOpacity)
                             n.labelOpacity = position.labelOpacity;
-        
+
+                        n.anchor = position.anchor;
+
                         var r = n._radius || n.radius;
                         if (position.x)
                             n.x = position.x; // Math.max(n.radius, Math.min(position.x, graph.width - r));
