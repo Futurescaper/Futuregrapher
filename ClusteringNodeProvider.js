@@ -288,7 +288,7 @@
                         //.transition()
                         //.duration(time || 500)
                         .style('opacity', opacity)
-                        .text(function(d) { return opacity > 0 ? d.title : ''; })
+                        //.text(function(d) { return opacity > 0 ? d.title : ''; })
                         //.style('font-size', function(d) { return jQuery.isNumeric(d.fontSize) ? d.fontSize + 'em' : d.fontSize })
                         .attr('text-anchor', function(d) { return position.anchor||(d.x < center.x ? 'end' : 'start') })
                         .attr('fill', function(d) { return position.labelColor || graph.getNodeBorderColor(d); } /*LABEL FIX:node.labelColor*/);
