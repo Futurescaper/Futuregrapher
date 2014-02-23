@@ -113,8 +113,8 @@
             return node;
         };
         
-        this.removeNode = function (id, tag, fade, forceRemove) {
-            return _nodelib.removeNode(id, tag, fade, forceRemove);
+        this.removeNode = function (id, tag, forceRemove) {
+            return _nodelib.removeNode(id, tag, forceRemove);
         };
         
         this.removeNodeByIndex = function (index) {
@@ -123,7 +123,10 @@
         
         this.addLink = function (options) {
             var link = _linklib.addLink(options);
-            
+
+            if(!link.source || !link.target)
+                return;
+
             if (link.source.clusterId) {
                 if (link.target.clusterId && link.source.clusterId === link.target.clusterId) {
                     // Same cluster. Don't add this link to vis.
