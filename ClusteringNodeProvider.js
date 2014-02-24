@@ -71,49 +71,46 @@
         }
 
         this.updateClusters = function () {
-            for (var clusterId in clusters) {
-                if (!clusters.hasOwnProperty(clusterId)) continue;
-
-                var cluster = clusters[clusterId];
-
-                // remove the placeholder node
-                var placeholderIndex = visNodes.indexOf(cluster.placeholderNode);
-                visNodes.splice(placeholderIndex, 1);
-                
-            }
-            
             // Clear clusters
+            
+            visNodes = _(visNodes).filter(function (n) { return !n.isClusterPlaceholder; });
             clusters = {};
             
             // And rebuild them
             _(_nodelib.getNodes()).each(function (node) {
                 if (node.clusterId) {
                     var cluster = getOrCreateCluster(node.clusterId);
+                    node.cluster = cluster;
                     cluster.nodes.push(node);
                 }
-                else {
-                    if(visNodes.indexOf(node) === -1)
-                        visNodes.push(node);
-                }
+
+                var shouldBeVisible = !(node.cluster && node.cluster.collapsed);
+                var isVisible = _(visNodes).find(function (n) { return n.id === node.id });
+                if(shouldBeVisible && !isVisible)
+                    visNodes.push(node);
+                else if (isVisible && !shouldBeVisible)
+                    visNodes = _(visNodes).filter(function (n) { return n.id !== node.id; });
             });
             
             _(_linklib.getLinks()).each(function (link) {
-                var hidden = (!!link.source.clusterId) && (link.source.clusterId === link.target.clusterId);
+                var shouldBeHidden = (!!link.source.clusterId) && (link.source.clusterId === link.target.clusterId);
                 
-                if (hidden) {
+                if (shouldBeHidden) {
                     // If link was previously visible, hide it.
                     visLinks = _(visLinks).filter(function (l) { return l.id !== link.id });
                 } else {
-                    var alreadyVisible = _(visLinks).find(function (l) { return l.id === link.id });
-                    if(!alreadyVisible) {
+                    var isVisible = _(visLinks).find(function (l) { return l.id === link.id });
+                    if(!isVisible) {
                         visLinks.push(link);
                     }
+
+                    console.log("link.source.clusterId: ", link.source.clusterId, " - cluster: ", link.source.cluster);
                     
                     // Make sure endpoints point to either the node or the placeholder node respectively
                     link.source = link.source.clusterId ? link.source.cluster.placeholderNode : link.sourceNode;
                     link.target = link.target.clusterId ? link.target.cluster.placeholderNode : link.targetNode;
                 }
-            });            
+            });
         }
         
         this.addNode = function (settings) {
