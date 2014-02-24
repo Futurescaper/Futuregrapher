@@ -40,7 +40,7 @@ Package.on_test(function (api) {
     api.use(["d3", "tinytest", "test-helpers"]);
 
     api.add_files(libFiles);
-    api.add_files(["tests/stubs.js", 
+    api.add_files(["tests/stubs.js", "tests/helpers.js",
         "tests/d3graph-tests.js", 
         "tests/clusteringnodeprovider-tests.js", 
         "tests/links-tests.js"

@@ -39,7 +39,9 @@
                     id: clusterId,
                     collapsed: true,
                     nodes: nodes,
-                    makeHull: makeHull
+                    makeHull: makeHull,
+                    incomingPlaceholderLinks: [],
+                    outgoingPlaceholderLinks: []
                 };
                 clusters[clusterId] = cluster;
     
@@ -71,8 +73,9 @@
         }
 
         this.updateClusters = function () {
-            // Remove cluster placeholder nodes and clear clusters
+            // Remove cluster placeholder stuff and clear clusters
             visNodes = _(visNodes).filter(function (n) { return !n.isClusterPlaceholder; });
+            visLinks = _(visLinks).filter(function (l) { return !l.isClusterPlaceholder; });
             clusters = {};
             
             // And rebuild them
@@ -82,9 +85,13 @@
                     node.cluster = cluster;
                     cluster.nodes.push(node);
                 }
+                else {
+                    node.cluster = null;
+                }
 
                 var shouldBeVisible = !(node.cluster && node.cluster.collapsed);
-                var isVisible = _(visNodes).find(function (n) { return n.id === node.id });
+                var isVisible = !!(_(visNodes).find(function (n) { return n.id === node.id; }));
+
                 if(shouldBeVisible && !isVisible)
                     visNodes.push(node);
                 else if (isVisible && !shouldBeVisible)
@@ -92,20 +99,45 @@
             });
             
             _(_linklib.getLinks()).each(function (link) {
-                var shouldBeHidden = (!!link.source.clusterId) && (link.source.clusterId === link.target.clusterId);
+                var shouldBeVisible = !(link.source.clusterId || link.target.clusterId);
+                var isVisible = !!(_(visLinks).find(function (l) { return l.id === link.id; }));
                 
-                if (shouldBeHidden) {
-                    // If link was previously visible, hide it.
-                    visLinks = _(visLinks).filter(function (l) { return l.id !== link.id });
-                } else {
-                    var isVisible = _(visLinks).find(function (l) { return l.id === link.id });
-                    if(!isVisible) {
-                        visLinks.push(link);
+                if (shouldBeVisible && !isVisible)
+                    visLinks.push(link)
+                else if (isVisible && !shouldBeVisible)
+                    visLinks = _(visLinks).filter(function (l) { return l.id !== link.id; });
+                
+                if (link.source.clusterId) {
+                    if (link.target.clusterId && link.source.clusterId === link.target.clusterId) {
+                        // Same cluster. Don't create a placeholder
+                        return link;
+                    }
+                        
+                    visLink = {
+                        source: link.source.cluster.placeholderNode,
+                        target: link.target,
+                        isClusterPlaceholder: true
+                    };
+                    link.source.cluster.outgoingPlaceholderLinks.push(visLink);
+                    
+                    if (link.target.clusterId) {
+                        visLink.target = clusters[link.target.clusterId].placeholderNode;
+                        link.target.cluster.incomingPlaceholderLinks.push(visLink);
                     }
                     
-                    // Make sure endpoints point to either the node or the placeholder node respectively
-                    link.source = link.source.clusterId ? link.source.cluster.placeholderNode : link.sourceNode;
-                    link.target = link.target.clusterId ? link.target.cluster.placeholderNode : link.targetNode;
+                    visLink.id = visLink.source.id + "->" + visLink.target.id;
+                    visLinks.push(visLink);
+                }
+                else if (link.target.clusterId) {
+                    visLink = {
+                        id: link.source.id + "->" + clusters[link.target.clusterId].placeholderNode.id,
+                        source: link.source,
+                        target: link.target.cluster.placeholderNode,
+                        isClusterPlaceholder: true
+                    };
+                    
+                    link.target.cluster.incomingPlaceholderLinks.push(visLink);
+                    visLinks.push(visLink);
                 }
             });
         }
@@ -139,23 +171,44 @@
             if(!link.source || !link.target)
                 return;
 
-            link.sourceNode = link.source;
-            link.targetNode = link.target;
+            // If the link isn't involved with any cluster, put it into visLinks as is.
+            var visLink = link;
 
+            // Otherwise, create a placeholder link
             if (link.source.clusterId) {
                 if (link.target.clusterId && link.source.clusterId === link.target.clusterId) {
-                    // Same cluster. Don't add this link to vis.
+                    // Same cluster. Don't create a placeholder
                     return link;
                 }
-        
-                link.source = clusters[link.source.clusterId].placeholderNode;
-            }  
-            
-            if (link.target.clusterId) {
-                link.target = clusters[link.target.clusterId].placeholderNode;
+                    
+                visLink = {
+                    source: link.source.cluster.placeholderNode,
+                    target: link.target,
+                    isClusterPlaceholder: true
+                };
+                link.source.cluster.outgoingPlaceholderLinks.push(visLink);
+                
+                if (link.target.clusterId) {
+                    visLink.target = clusters[link.target.clusterId].placeholderNode;
+                    link.target.cluster.incomingPlaceholderLinks.push(visLink);
+                }
+                
+                visLink.id = visLink.source.id + "->" + visLink.target.id;
+                visLinks.push(visLink);
+            }
+            else if (link.target.clusterId) {
+                visLink = {
+                    id: link.source.id + "->" + clusters[link.target.clusterId].placeholderNode.id,
+                    source: link.source,
+                    target: link.target.cluster.placeholderNode,
+                    isClusterPlaceholder: true
+                };
+                
+                link.target.cluster.incomingPlaceholderLinks.push(visLink);
+                visLinks.push(visLink);
             }
         
-            visLinks.push(link);
+            visLinks.push(visLink);
             return link;
         };
         
