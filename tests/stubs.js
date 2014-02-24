@@ -1,5 +1,4 @@
 D3graphStub = function () {
-    var _nodes = {};
     var _links = {};
 
     // Interface
@@ -7,6 +6,11 @@ D3graphStub = function () {
     this.events = {};
     this.links = [];
     this.update = function() {};
+};
+
+NodeLibStub = function () {
+    var _nodes = {};
+    
     this.getNode = function (name) { return _nodes[name]; };
     
     // Stub helpers
@@ -15,5 +19,4 @@ D3graphStub = function () {
             _nodes[nodeName] = { title: nodeName, to: [], from: [] };
         });
     }
-
 };

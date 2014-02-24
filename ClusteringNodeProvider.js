@@ -71,8 +71,7 @@
         }
 
         this.updateClusters = function () {
-            // Clear clusters
-            
+            // Remove cluster placeholder nodes and clear clusters
             visNodes = _(visNodes).filter(function (n) { return !n.isClusterPlaceholder; });
             clusters = {};
             
@@ -103,8 +102,6 @@
                     if(!isVisible) {
                         visLinks.push(link);
                     }
-
-                    console.log("link.source.clusterId: ", link.source.clusterId, " - cluster: ", link.source.cluster);
                     
                     // Make sure endpoints point to either the node or the placeholder node respectively
                     link.source = link.source.clusterId ? link.source.cluster.placeholderNode : link.sourceNode;
@@ -118,6 +115,7 @@
         
             if(settings.clusterId) {
                 var cluster = getOrCreateCluster(settings.clusterId);
+                node.cluster = cluster;
                 cluster.nodes.push(node);
             }
             else {

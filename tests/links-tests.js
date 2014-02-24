@@ -2,8 +2,10 @@
 Tinytest.add('d3graph tests - links - addLink', function (test) {
     // Setup
     var d3graphStub = new D3graphStub();
-    d3graphStub.stubNodes("fromNode", "toNode");
-    var linklib = new d3links(d3graphStub);
+    var nodeLibStub = new NodeLibStub();
+    nodeLibStub.stubNodes("fromNode", "toNode");
+    
+    var linklib = new d3links(d3graphStub, nodeLibStub);
 
     // Execute
     var linkSettings = {

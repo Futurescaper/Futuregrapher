@@ -44,3 +44,5 @@ Tinytest.add('d3graph tests - ClusteringNodeProvider - updateClusters test, with
     test.equal(visLinks[0].source.id, "cluster-cluster 1", "Our link should point from cluster 1");
     test.equal(visLinks[0].target.id, "3", "Our link should point to node 3");
 });
+
+
