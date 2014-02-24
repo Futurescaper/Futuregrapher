@@ -459,8 +459,9 @@
             var nodes = this.nodes.splice(index, 1);
             if (nodes.length) {
                 var node = nodes[0];
-                for (var i = graph.links.length; i >= 0; i--) {
-                    if (graph.links[i] && (graph.links[i].source == node || graph.links[i].target == node)) {
+                var links = graph.getLinks();
+                for (var i = links.length; i >= 0; i--) {
+                    if (links[i] && (links[i].source == node || links[i].target == node)) {
                         // remove the from/to for any nodes that reference this link
                         $.each(this.nodes, function (j, n) {
                             for (var k = n.from.length; k >= 0; k--)
@@ -472,7 +473,7 @@
                         });
         
                         // and remove the link itself
-                        graph.links.splice(i, 1);
+                        links.splice(i, 1);
                     }
                 }
         

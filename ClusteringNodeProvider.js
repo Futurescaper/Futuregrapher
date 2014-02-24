@@ -125,8 +125,8 @@
             return node;
         };
         
-        this.removeNode = function (id, tag, fade, forceRemove) {
-            return _nodelib.removeNode(id, tag, fade, forceRemove);
+        this.removeNode = function (id, tag, forceRemove) {
+            return _nodelib.removeNode(id, tag, forceRemove);
         };
         
         this.removeNodeByIndex = function (index) {
@@ -136,9 +136,12 @@
         this.addLink = function (options) {
             var link = _linklib.addLink(options);
             
+            if(!link.source || !link.target)
+                return;
+
             link.sourceNode = link.source;
             link.targetNode = link.target;
-            
+
             if (link.source.clusterId) {
                 if (link.target.clusterId && link.source.clusterId === link.target.clusterId) {
                     // Same cluster. Don't add this link to vis.
@@ -252,7 +255,9 @@
                             n.fontSize = position.labelSize;
                         if (position.labelOpacity)
                             n.labelOpacity = position.labelOpacity;
-        
+
+                        n.anchor = position.anchor;
+
                         var r = n._radius || n.radius;
                         if (position.x)
                             n.x = position.x; // Math.max(n.radius, Math.min(position.x, graph.width - r));
@@ -299,7 +304,7 @@
                         //.transition()
                         //.duration(time || 500)
                         .style('opacity', opacity)
-                        .text(function(d) { return opacity > 0 ? d.title : ''; })
+                        //.text(function(d) { return opacity > 0 ? d.title : ''; })
                         //.style('font-size', function(d) { return jQuery.isNumeric(d.fontSize) ? d.fontSize + 'em' : d.fontSize })
                         .attr('text-anchor', function(d) { return position.anchor||(d.x < center.x ? 'end' : 'start') })
                         .attr('fill', function(d) { return position.labelColor || graph.getNodeBorderColor(d); } /*LABEL FIX:node.labelColor*/);

@@ -674,8 +674,8 @@
             return _clusteringNodeProvider.addNode(settings);
         };
 
-        this.removeNode = function (id, tag, fade, forceRemove) {
-            return _clusteringNodeProvider.removeNode(id, tag, fade, forceRemove);
+        this.removeNode = function (id, tag, forceRemove) {
+            return _clusteringNodeProvider.removeNode(id, tag, forceRemove);
         };
         
         this.removeNodeByIndex = function (index) {
