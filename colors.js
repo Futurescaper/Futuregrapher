@@ -43,7 +43,11 @@ d3color = function(hexOrRgba) {
 
     this.hsv = function() {
         return d3colors.rgbToHsv(this.color.r, this.color.g, this.color.b);
-    }
+    };
+
+    this.isDark = function() {
+        return (1 - (.299 * this.color.r +.587 * this.color.g +.114 * this.color.b) / 255) > .5;
+    };
 };
 
 d3colors = {

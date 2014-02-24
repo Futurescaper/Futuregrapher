@@ -58,7 +58,8 @@ d3highlights = function (graph) {
         this.fadeIn();
 
         // get the full list of nodes that we'll be including
-        var nodes = options.nodes.length ? options.nodes : [options.nodes];
+        var nodes = options.nodes.length >= 0 ? options.nodes : [options.nodes];
+
         var sourceNodes = nodes.slice(0);
 
         if(options.links == 'all' || options.links == 'node') {
