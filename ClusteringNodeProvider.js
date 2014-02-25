@@ -80,11 +80,12 @@
                 var placeholderNode = {
                     id: "cluster-" + clusterId,
                     title: clusterId,
-                    color: "#ff8888",
+                    color: "red",
                     value: { size: 1, color: 1 },
                     ratio: { size: 0, color: 0 },
                     data: [],
-                    radius: graph.settings.maxRadius,
+                    radius: 0, // graph.settings.maxRadius,
+                    _radius: 0, // graph.settings.maxRadius,
                     visible: true,
                     isClusterPlaceholder: true,
                     clusterId: clusterId,
@@ -101,6 +102,7 @@
             var cluster = getOrCreateCluster(clusterId);
             cluster.placeholderNode.title = title;
             cluster.placeholderNode.color = color;
+            cluster.placeholderNode.value.color = color;
         }
 
         this.updateClusters = function () {
@@ -112,6 +114,8 @@
                 if (node.clusterId) {
                     var cluster = getOrCreateCluster(node.clusterId);
                     cluster.nodes.push(node);
+                    cluster.placeholderNode.radius += node.radius;
+                    cluster.placeholderNode._radius += node._radius;
                 }
             });
             
@@ -125,6 +129,7 @@
                     var placeholderLink = {
                         source: clusters[link.source.clusterId].placeholderNode,
                         target: link.target,
+                        normalized: link.normalized,
                         isClusterPlaceholder: true
                     };
                     clusters[link.source.clusterId].outgoingPlaceholderLinks.push(placeholderLink);
@@ -141,6 +146,7 @@
                         id: link.source.id + "->" + clusters[link.target.clusterId].placeholderNode.id,
                         source: link.source,
                         target: clusters[link.target.clusterId].placeholderNode,
+                        normalized: link.normalized,
                         isClusterPlaceholder: true
                     };
                     
@@ -177,13 +183,7 @@
             return clusters[clusterId];
         }
 
-        this.getNodeColor = function (d) { 
-            if(d.isClusterPlaceholder) {
-                return d.color;
-            }
-            else
-                return _nodelib.getNodeColor(d); 
-        }
+        this.getNodeColor = function (d) {  return _nodelib.getNodeColor(d); }
         
         this.getNodeBorderColor = function (d) { return _nodelib.getNodeBorderColor(d); }
         this.getNodeRadius = function (d) { return _nodelib.getNodeRadius(d); }
@@ -402,7 +402,12 @@
         this.getMarkerUrl = function (d) { return _linklib.getMarkerUrl(d); }
         
         this.getLinkWidth = function (d) { return _linklib.getLinkWidth(d); }
-        this.getLinkColor = function (d, minColor, maxColor) { return _linklib.getLinkColor(d, minColor, maxColor); }
+        this.getLinkColor = function (d, minColor, maxColor) { 
+            if (d.isClusterPlaceholder)
+                return graph.d3styles().colors.linkMin;
+            
+            return _linklib.getLinkColor(d, minColor, maxColor); 
+        }
         
         this.calculatePath = function (d, b) { return _linklib.calculatePath(d, b); }
         

@@ -335,7 +335,7 @@
             c.attr("d", function (d) { curve(d.makeHull()); })
 
             var link = this._links = this.visLinks.selectAll("path.link")
-                .data(_clusteringNodeProvider.getVisLinks());
+                .data(_clusteringNodeProvider.getVisLinks(), function (link) { return link.id; });
 
             var d3color = d3.interpolateRgb(this.settings.taperedLinkMinColor, this.settings.taperedLinkMaxColor);
 
@@ -374,7 +374,7 @@
                 });
 
             var node = this._nodes = this.visNodes.selectAll("g.node")
-                .data(_clusteringNodeProvider.getVisNodes());
+                .data(_clusteringNodeProvider.getVisNodes(), function (node) { return node.id; });
 
             var nodeEnter = node.enter().append("g")
                 .attr("class", "node")

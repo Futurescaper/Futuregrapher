@@ -45,6 +45,7 @@
 
         this.getNodeRadius = function (node) {
             var r = node._radius || node.radius;
+            
             if(isNaN(r))
                 return graph.settings.minRadius;
         
