@@ -295,10 +295,12 @@
             w = this.width;
             h = this.height;
 
-            force.nodes(_clusteringNodeProvider.getVisNodes());
+            var visNodes = _clusteringNodeProvider.getVisNodes();
+
+            force.nodes(visNodes);
             force.links(_clusteringNodeProvider.getVisLinks());
 
-            var nodeCount = _clusteringNodeProvider.getVisNodes().length;
+            var nodeCount = visNodes.length;
             self.settings.linkConstant = (nodeCount > 1) ?
                 this.settings.linkMultiplier * Math.min(w, h) / (3 * Math.sqrt(nodeCount - 1)) :
                 1; 
@@ -312,31 +314,6 @@
                 .charge(this.charge)
                 .gravity(this.settings.gravity)
                 .size([this.width, this.height])
-/*                .linkDistance(function(l, i) {
-                    var n1 = l.source, n2 = l.target;
-
-                    // larger distance for bigger groups:
-                    // both between single nodes and _other_ groups (where size of own node group still counts),
-                    // and between two group nodes.
-                    //
-                    // reduce distance for groups with very few outer links,
-                    // again both in expanded and grouped form, i.e. between individual nodes of a group and
-                    // nodes of another group or other group node or between two group nodes.
-                    //
-                    // The latter was done to keep the single-link groups ('blue', rose, ...) close.
-
-                    var n1ClusterSize = n1.clusterId ? _clusteringNodeProvider.getCluster(n1.clusterId).nodes.length : 1;
-                    var n2ClusterSize = n2.clusterId ? _clusteringNodeProvider.getCluster(n2.clusterId).nodes.length : 1;
-                    
-                    var n1LinkCount = 0;
-                    var n2LinkCount = 0;
-
-                    return 30 +
-                        Math.min(
-                            20 * Math.min((n1.size || (n1.clusterId != n2.clusterId ? n1ClusterSize : 0)), (n2.size || (n1.group != n2.group ? n2ClusterSize : 0))),
-                            -30 + 30 * Math.min(n1LinkCount, n2LinkCount),
-                        100);
-                })*/
 
             _clusteringNodeProvider.updateMarkers();
             

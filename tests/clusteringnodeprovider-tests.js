@@ -6,7 +6,7 @@ function setupDummyNetwork(clusteringNodeProvider) {
     _(linkSettings).each(function (linkSetting) { clusteringNodeProvider.addLink(linkSetting); });
  }
 
-Tinytest.add('d3graph tests - ClusteringNodeProvider - test clustering (no clusters)', function (test) {
+Tinytest.add('d3graph tests - ClusteringNodeProvider - test clustering (no clusters) - 1', function (test) {
     // Setup
     var d3graphStub = new D3graphStub();
     var clusteringNodeProvider = new ClusteringNodeProvider(d3graphStub);
@@ -31,7 +31,9 @@ Tinytest.add('d3graph tests - ClusteringNodeProvider - test clustering (no clust
     test.equal(visLinks[1].target.id, "3", "Second link should point to node 3");
 });
 
-Tinytest.add('d3graph tests - ClusteringNodeProvider - updateClusters test, with clusters', function (test) {
+
+
+Tinytest.add('d3graph tests - ClusteringNodeProvider - updateClusters test - with clusters', function (test) {
     // Setup
     var d3graphStub = new D3graphStub();
     var clusteringNodeProvider = new ClusteringNodeProvider(d3graphStub);
@@ -54,7 +56,8 @@ Tinytest.add('d3graph tests - ClusteringNodeProvider - updateClusters test, with
     test.equal(visLinks[0].target.id, "3", "Our link should point to node 3");
 });
 
-Tinytest.add("d3graph tests - ClusteringNodeProvider - updateClusters test, changing clusters from one set to another", function (test) {
+
+Tinytest.add("d3graph tests - ClusteringNodeProvider - updateClusters test - changing clusters from one set to another", function (test) {
     // Setup
     var d3graphStub = new D3graphStub();
     var clusteringNodeProvider = new ClusteringNodeProvider(d3graphStub);
@@ -66,13 +69,15 @@ Tinytest.add("d3graph tests - ClusteringNodeProvider - updateClusters test, chan
     var linkSettings = [{ from: "1", to: "2" }, { from: "1", to: "3" }];
     _(linkSettings).each(function (linkSetting) { clusteringNodeProvider.addLink(linkSetting); });
     
+    console.log("All links before: ", clusteringNodeProvider.getAllLinks());
+    
     // Execute
     clusteringNodeProvider.getNode("1").clusterId = null;
     clusteringNodeProvider.getNode("2").clusterId = null;
     clusteringNodeProvider.getNode("3").clusterId = "cluster 2";
     clusteringNodeProvider.getNode("4").clusterId = "cluster 2";
     clusteringNodeProvider.updateClusters();
-    
+
     // Verify
     var visNodes = clusteringNodeProvider.getVisNodes();
     var visLinks = clusteringNodeProvider.getVisLinks()
@@ -89,3 +94,28 @@ Tinytest.add("d3graph tests - ClusteringNodeProvider - updateClusters test, chan
     test.equal(visLinks[1].source.id, "1", "Second link should point from node 1");
     test.equal(visLinks[1].target.id, "cluster-cluster 2", "Second link should point to cluster 2");
 });
+
+
+Tinytest.add('d3graph tests - ClusteringNodeProvider - test remove node (no clusters)', function (test) {
+    // Setup
+    var d3graphStub = new D3graphStub();
+    var clusteringNodeProvider = new ClusteringNodeProvider(d3graphStub);
+    d3graphStub._clusteringNodeProvider = clusteringNodeProvider;
+    setupDummyNetwork(clusteringNodeProvider);
+    
+    // Execute
+    clusteringNodeProvider.removeNode("2", null, true);
+    
+    // Verify
+    var visNodes = clusteringNodeProvider.getVisNodes();
+    var visLinks = clusteringNodeProvider.getVisLinks()
+
+    testArrayProperty(test, visNodes, "id", ["1", "3", "4"]);
+
+    test.equal(visLinks.length, 1, "Only the link from 1 - 3 should be left");
+
+    test.equal(visLinks[0].id, "1->3", "Second link should have id 1->3");
+    test.equal(visLinks[0].source.id, "1", "Second link should point from node 1");
+    test.equal(visLinks[0].target.id, "3", "Second link should point to node 3");
+});
+
