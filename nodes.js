@@ -565,23 +565,23 @@
             .html(html);
     };
 
-    this.updateNodeSizesForZoom = function(scale) {
-        if(!graph.d3zoomer())
-            return;
-    
-        var s = scale;
-        if(s < 1)
-            s = 1;
-        if(s > 8)
-            s = 8;
-        else if(!s)
-            s = 1;
-    
-        graph.d3().selectAll('g.node circle')
-            .attr('r', function(d) { d._radius = d.radius / s; return d._radius; })
-            .style('stroke', function(d) { return graph.getNodeBorderColor(d); })
-            .style('stroke-width', (parseInt(graph.d3styles().settings.nodeBorderSize) / s)||1);
-    };
+        this.updateNodeSizesForZoom = function(scale) {
+            if(!graph.d3zoomer())
+                return;
+        
+            var s = scale||graph.scale;
+            if(s < 1)
+                s = 1;
+            if(s > 8)
+                s = 8;
+            else if(!s)
+                s = 1;
+        
+            graph.d3().selectAll('g.node circle')
+                .attr('r', function(d) { d._radius = d.radius / s; return d._radius; })
+                .style('stroke', function(d) { return graph.getNodeBorderColor(d); })
+                .style('stroke-width', (parseInt(graph.d3styles().settings.nodeBorderSize) / s)||1);
+        };
 
     this.animateNodeClick = function(node, time, callback) {
         var r = graph.d3().selectAll('g.node[id="' + node.id + '"] circle').attr('r');

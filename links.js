@@ -448,7 +448,7 @@
                 graph.d3()
                     .selectAll('svg g.links path[source="' + d.source.id + '"][target="' + d.target.id + '"]')
                     .attr('marker-end', function(d) {
-                        return d.directional == false ? '' : 'url(#' + (graph.id||'') + graph.settings.markerId + '_' + d.marker + ')'
+                        return d.directional == false ? '' : 'url(#' + self.getMarkerUrl(d) + ')'
                     });
                 return c;
             }, this));
@@ -457,10 +457,9 @@
 
     this.getLinkColor = function (d, minColor, maxColor) {
         if(graph.colorFilterActive && d.source.color && d.source.color == d.target.color) {
-            d.color = d.source.color.indexOf('#') >= 0 ?
-                d3colors.lighten(d.source.color).hex() :
-                d.source.color;
-    
+            var c = new d3color(d.source.color);
+            d.color = (c.isDark() ? d3colors.lighten(c,.3).hex() : d3colors.darken(c,.7).hex());
+
             if(d.color.indexOf('#') >= 0) {
                 // limit the brightness
                 var rgb = d3colors.getRgbaFromHex(d.color);
