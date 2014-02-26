@@ -459,7 +459,7 @@
         this.getLinkColor = function (d, minColor, maxColor) {
             if(graph.colorFilterActive && d.source.color && d.source.color == d.target.color) {
                 var c = new d3color(d.source.color);
-                d.color = (c.isDark() ? d3colors.lighten(c).hex() : d3colors.darken(c).hex());
+                d.color = (c.isDark() ? d3colors.lighten(c,.3).hex() : d3colors.darken(c,.7).hex());
 
                 if(d.color.indexOf('#') >= 0) {
                     // limit the brightness
