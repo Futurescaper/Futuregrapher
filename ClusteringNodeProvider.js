@@ -384,6 +384,8 @@
                 .delay(function (d, i) { return i * 2; })
                 .duration(time || 500)
                 .attr('transform', function (node) { return graph.d3labels().transformLabel(node, center); });
+
+            graph.updateLinkColors();
         };
 
         
