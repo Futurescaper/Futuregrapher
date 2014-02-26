@@ -26,3 +26,17 @@ NodeLibStub = function () {
         });
     }
 };
+
+ClusteringNodeProviderStub = function () {
+    this.updateMarkers = function () {};
+    
+    this.getVisNodes = function () { return []; }
+    this.getVisLinks = function () { return []; }
+    this.getVisClusters = function () { return []; }
+    
+    this.getCenter = function () { return null; }
+
+    this.updateSizesForZoom = function () {}
+    
+    this.addNode = function () {};
+}

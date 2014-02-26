@@ -33,7 +33,7 @@ d3zoomer = function () {
             }
         }
 
-        this.graph.vis = d3.select('#' + graph.el.attr('id')).append("svg:svg")
+        this.graph.vis = d3.select(graph.el[0]).append("svg:svg")
             .attr("width", graph.width)
             .attr("height", graph.height)
             .attr("class", graph.options.class)
