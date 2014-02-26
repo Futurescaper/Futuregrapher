@@ -1,4 +1,6 @@
-Tinytest.add('d3graph tests - constructor test', function (test) {
+var testLevel = "meteor-d3graph tests - d3graph - ";
+
+Tinytest.add(testLevel +  'constructor test', function (test) {
     // Setup
     var el = $("<div />");
     var options = {};

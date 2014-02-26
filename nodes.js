@@ -45,6 +45,7 @@
 
         this.getNodeRadius = function (node) {
             var r = node._radius || node.radius;
+            
             if(isNaN(r))
                 return graph.settings.minRadius;
         
@@ -459,7 +460,7 @@
             var nodes = this.nodes.splice(index, 1);
             if (nodes.length) {
                 var node = nodes[0];
-                var links = graph.getLinks();
+                var links = graph.getAllLinks();
                 for (var i = links.length; i >= 0; i--) {
                     if (links[i] && (links[i].source == node || links[i].target == node)) {
                         // remove the from/to for any nodes that reference this link

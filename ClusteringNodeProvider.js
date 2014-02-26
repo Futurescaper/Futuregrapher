@@ -2,14 +2,46 @@
     ClusteringNodeProvider = function (graph) {
 
         var _nodelib = new d3nodes(graph);
-        var visNodes = [];
-        this.getVisNodes = function () { return visNodes; }
         this.getAllNodes = function () { return _nodelib.getNodes(); }
+        this.getVisNodes = function () {
+            var result = [];
+            var clusterPlaceholdersToAdd = {};
+            
+            _(_nodelib.getNodes()).each(function (n) {
+                if (n.clusterId)
+                    clusterPlaceholdersToAdd[n.clusterId] = clusters[n.clusterId].placeholderNode;
+                else
+                    result.push(n);
+            });
 
+            _(clusterPlaceholdersToAdd).each(function (value, key) { result.push(value); });
+            
+            return result;
+        }
+        
         var _linklib = new d3links(graph, _nodelib);
-        var visLinks = [];
-        this.getVisLinks = function () { return visLinks; }
         this.getAllLinks = function () { return _linklib.getLinks(); }
+        this.getVisLinks = function () { 
+            var result = [];
+            
+            _(_linklib.getLinks()).each(function (l) {
+            
+                if (l.source.clusterId || l.target.clusterId) {
+                    if (l.source.clusterId === l.target.clusterId) return;  // Link within same cluster, ignore it.
+                    
+                    var sourceNode = l.source.clusterId ? clusters[l.source.clusterId].placeholderNode : l.source;
+                    var targetNode = l.target.clusterId ? clusters[l.target.clusterId].placeholderNode : l.target;
+                    
+                    var placeholderLinksToSearch = l.source.clusterId ? clusters[l.source.clusterId].outgoingPlaceholderLinks : clusters[l.target.clusterId].incomingPlaceholderLinks;
+                    var placeholderLink = _(placeholderLinksToSearch).find(function (l) { return l.source === sourceNode && l.target === targetNode });
+                    result.push(placeholderLink);
+                }
+                else
+                    result.push(l);
+            });
+            
+            return result;
+        }
 
         var clusters = {};
         var visClusters = [];
@@ -48,11 +80,12 @@
                 var placeholderNode = {
                     id: "cluster-" + clusterId,
                     title: clusterId,
-                    color: "#ff8888",
+                    color: "red",
                     value: { size: 1, color: 1 },
                     ratio: { size: 0, color: 0 },
                     data: [],
-                    radius: graph.settings.maxRadius,
+                    radius: 0, // graph.settings.maxRadius,
+                    _radius: 0, // graph.settings.maxRadius,
                     visible: true,
                     isClusterPlaceholder: true,
                     clusterId: clusterId,
@@ -60,7 +93,6 @@
                 };
                 
                 cluster.placeholderNode = placeholderNode;
-                visNodes.push(placeholderNode);
             }
             
             return clusters[clusterId];
@@ -70,163 +102,88 @@
             var cluster = getOrCreateCluster(clusterId);
             cluster.placeholderNode.title = title;
             cluster.placeholderNode.color = color;
+            cluster.placeholderNode.value.color = color;
         }
 
         this.updateClusters = function () {
             // Remove cluster placeholder stuff and clear clusters
-            visNodes = _(visNodes).filter(function (n) { return !n.isClusterPlaceholder; });
-            visLinks = _(visLinks).filter(function (l) { return !l.isClusterPlaceholder; });
             clusters = {};
             
             // And rebuild them
             _(_nodelib.getNodes()).each(function (node) {
                 if (node.clusterId) {
                     var cluster = getOrCreateCluster(node.clusterId);
-                    node.cluster = cluster;
                     cluster.nodes.push(node);
+                    cluster.placeholderNode.radius += node.radius;
+                    cluster.placeholderNode._radius += node._radius;
                 }
-                else {
-                    node.cluster = null;
-                }
-
-                var shouldBeVisible = !(node.cluster && node.cluster.collapsed);
-                var isVisible = !!(_(visNodes).find(function (n) { return n.id === node.id; }));
-
-                if(shouldBeVisible && !isVisible)
-                    visNodes.push(node);
-                else if (isVisible && !shouldBeVisible)
-                    visNodes = _(visNodes).filter(function (n) { return n.id !== node.id; });
             });
             
             _(_linklib.getLinks()).each(function (link) {
-                var shouldBeVisible = !(link.source.clusterId || link.target.clusterId);
-                var isVisible = !!(_(visLinks).find(function (l) { return l.id === link.id; }));
-                
-                if (shouldBeVisible && !isVisible)
-                    visLinks.push(link)
-                else if (isVisible && !shouldBeVisible)
-                    visLinks = _(visLinks).filter(function (l) { return l.id !== link.id; });
-                
                 if (link.source.clusterId) {
                     if (link.target.clusterId && link.source.clusterId === link.target.clusterId) {
                         // Same cluster. Don't create a placeholder
-                        return link;
+                        return;
                     }
                         
-                    visLink = {
-                        source: link.source.cluster.placeholderNode,
+                    var placeholderLink = {
+                        source: clusters[link.source.clusterId].placeholderNode,
                         target: link.target,
+                        normalized: link.normalized,
                         isClusterPlaceholder: true
                     };
-                    link.source.cluster.outgoingPlaceholderLinks.push(visLink);
+                    clusters[link.source.clusterId].outgoingPlaceholderLinks.push(placeholderLink);
                     
                     if (link.target.clusterId) {
-                        visLink.target = clusters[link.target.clusterId].placeholderNode;
-                        link.target.cluster.incomingPlaceholderLinks.push(visLink);
+                        placeholderLink.target = clusters[link.target.clusterId].placeholderNode;
+                        clusters[link.target.clusterId].incomingPlaceholderLinks.push(placeholderLink);
                     }
                     
-                    visLink.id = visLink.source.id + "->" + visLink.target.id;
-                    visLinks.push(visLink);
+                    placeholderLink.id = placeholderLink.source.id + "->" + placeholderLink.target.id;
                 }
                 else if (link.target.clusterId) {
-                    visLink = {
+                    var placeholderLink = {
                         id: link.source.id + "->" + clusters[link.target.clusterId].placeholderNode.id,
                         source: link.source,
-                        target: link.target.cluster.placeholderNode,
+                        target: clusters[link.target.clusterId].placeholderNode,
+                        normalized: link.normalized,
                         isClusterPlaceholder: true
                     };
                     
-                    link.target.cluster.incomingPlaceholderLinks.push(visLink);
-                    visLinks.push(visLink);
+                    clusters[link.target.clusterId].incomingPlaceholderLinks.push(placeholderLink);
                 }
             });
         }
         
         this.addNode = function (settings) {
             var node = _nodelib.addNode(settings);
-        
-            if(settings.clusterId) {
-                var cluster = getOrCreateCluster(settings.clusterId);
-                node.cluster = cluster;
-                cluster.nodes.push(node);
-            }
-            else {
-                visNodes.push(node);
-            }
-            
+            this.updateClusters();
             return node;
         };
         
         this.removeNode = function (id, tag, forceRemove) {
-            return _nodelib.removeNode(id, tag, forceRemove);
+            var node = _nodelib.removeNode(id, tag, forceRemove);
+            this.updateClusters();
+            return node;
         };
-        
-        this.removeNodeByIndex = function (index) {
-            return _nodelib.removeNodeByIndex(index);
-        }
         
         this.addLink = function (options) {
             var link = _linklib.addLink(options);
-            
-            if(!link.source || !link.target)
-                return;
-
-            // If the link isn't involved with any cluster, put it into visLinks as is.
-            var visLink = link;
-
-            // Otherwise, create a placeholder link
-            if (link.source.clusterId) {
-                if (link.target.clusterId && link.source.clusterId === link.target.clusterId) {
-                    // Same cluster. Don't create a placeholder
-                    return link;
-                }
-                    
-                visLink = {
-                    source: link.source.cluster.placeholderNode,
-                    target: link.target,
-                    isClusterPlaceholder: true
-                };
-                link.source.cluster.outgoingPlaceholderLinks.push(visLink);
-                
-                if (link.target.clusterId) {
-                    visLink.target = clusters[link.target.clusterId].placeholderNode;
-                    link.target.cluster.incomingPlaceholderLinks.push(visLink);
-                }
-                
-                visLink.id = visLink.source.id + "->" + visLink.target.id;
-                visLinks.push(visLink);
-            }
-            else if (link.target.clusterId) {
-                visLink = {
-                    id: link.source.id + "->" + clusters[link.target.clusterId].placeholderNode.id,
-                    source: link.source,
-                    target: link.target.cluster.placeholderNode,
-                    isClusterPlaceholder: true
-                };
-                
-                link.target.cluster.incomingPlaceholderLinks.push(visLink);
-                visLinks.push(visLink);
-            }
-        
-            visLinks.push(visLink);
+            this.updateClusters();
             return link;
         };
         
         this.removeLink = function (from, to) {
-            return _linklib.removeLink(from, to);
+            var link =  _linklib.removeLink(from, to);
+            this.updateClusters();
+            return link;
         };
 
         this.getCluster = function (clusterId) {
             return clusters[clusterId];
         }
 
-        this.getNodeColor = function (d) { 
-            if(d.isClusterPlaceholder) {
-                return d.color;
-            }
-            else
-                return _nodelib.getNodeColor(d); 
-        }
+        this.getNodeColor = function (d) {  return _nodelib.getNodeColor(d); }
         
         this.getNodeBorderColor = function (d) { return _nodelib.getNodeBorderColor(d); }
         this.getNodeRadius = function (d) { return _nodelib.getNodeRadius(d); }
@@ -260,22 +217,6 @@
         this.onNodeClick = function (d) { 
             if(d.isClusterPlaceholder) {
                 return; // For now, do nothing when clicking a placeholder node.
-                
-                // Add all the contained nodes to vis
-                _(d.cluster.nodes).each(function (n) {
-                    visNodes.push(n);
-                });
-                
-                // remove the placeholder
-                var placeholderIndex = visNodes.indexOf(d);
-                visNodes.splice(placeholderIndex, 1);
-                
-                // Add cluster to vis
-                visClusters.push(d.cluster);
-                
-                d.cluster.collapsed = false;
-                graph.update();
-                return;
             }
             else {            
                 return _nodelib.onNodeClick(d); 
@@ -292,7 +233,7 @@
             var center = graph.getCenter();
             var node = null;
             $.each(positions, function (i, position) {
-                $.each(visNodes, function (j, n) {
+                $.each(/*visNodes*/ _nodelib.getNodes(), function (j, n) {
                     if (position.id == n.id) {
                         node = n;
                         n.fixed = true;
@@ -461,7 +402,12 @@
         this.getMarkerUrl = function (d) { return _linklib.getMarkerUrl(d); }
         
         this.getLinkWidth = function (d) { return _linklib.getLinkWidth(d); }
-        this.getLinkColor = function (d, minColor, maxColor) { return _linklib.getLinkColor(d, minColor, maxColor); }
+        this.getLinkColor = function (d, minColor, maxColor) { 
+            if (d.isClusterPlaceholder)
+                return graph.d3styles().colors.linkMin;
+            
+            return _linklib.getLinkColor(d, minColor, maxColor); 
+        }
         
         this.calculatePath = function (d, b) { return _linklib.calculatePath(d, b); }
         

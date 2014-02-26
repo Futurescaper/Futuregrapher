@@ -1,5 +1,6 @@
+var testLevel = "meteor-d3graph tests - d3links - ";
 
-Tinytest.add('d3graph tests - links - addLink', function (test) {
+Tinytest.add(testLevel + 'addLink', function (test) {
     // Setup
     var d3graphStub = new D3graphStub();
     var nodeLibStub = new NodeLibStub();
