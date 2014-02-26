@@ -1,5 +1,4 @@
-﻿if(Meteor.isClient)
-d3styles = function(graph) {
+﻿d3styles = function(graph) {
     if(!graph)
         return;
 

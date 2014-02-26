@@ -8,6 +8,7 @@ var libFiles = [
         'canvg/canvg.js',
         'geostats/geostats.min.js',
         'geostats/jenks.util.js',
+        'tipsy/tipsy.js',
         'dictionary.js',
         'colors.js',
         'ClusteringNodeProvider.js',
@@ -24,8 +25,8 @@ var libFiles = [
     ];
 
 Package.on_use(function(api, where) {
-    api.use(['d3'], 'client');
-    api.add_files(libFiles);
+    api.use(['d3', 'jquery'], 'client');
+    api.add_files(libFiles, ["client"]);
 
     if (api.export) {
         api.export('d3graph');
@@ -39,7 +40,7 @@ Package.on_use(function(api, where) {
 Package.on_test(function (api) {
     api.use(["d3", "tinytest", "test-helpers"]);
 
-    api.add_files(libFiles);
+    api.add_files(libFiles, ["client"]);
     api.add_files(["tests/stubs.js", "tests/helpers.js",
         "tests/d3graph-tests.js", 
         "tests/d3links-tests.js",

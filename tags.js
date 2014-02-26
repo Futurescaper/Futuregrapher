@@ -1,5 +1,4 @@
-﻿if(Meteor.isClient)
-d3tags = function (graph) {
+﻿d3tags = function (graph) {
     var self = this;
 
     /// Public Method: removeTag(tag)

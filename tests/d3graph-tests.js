@@ -4,9 +4,11 @@ Tinytest.add(testLevel +  'constructor test', function (test) {
     // Setup
     var el = $("<div />");
     var options = {};
+
+    $.browser = { msie: false };
     
     // Execute
-    //var graph = new d3graph(el, options);
+    var graph = new d3graph(el, options);
     
     // Verify
 });
