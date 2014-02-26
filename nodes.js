@@ -561,7 +561,7 @@
             if(!graph.d3zoomer())
                 return;
         
-            var s = scale;
+            var s = scale||graph.scale;
             if(s < 1)
                 s = 1;
             if(s > 8)

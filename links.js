@@ -449,7 +449,7 @@
                     graph.d3()
                         .selectAll('svg g.links path[source="' + d.source.id + '"][target="' + d.target.id + '"]')
                         .attr('marker-end', function(d) {
-                            return d.directional == false ? '' : 'url(#' + (graph.id||'') + graph.settings.markerId + '_' + d.marker + ')'
+                            return d.directional == false ? '' : 'url(#' + self.getMarkerUrl(d) + ')'
                         });
                     return c;
                 }, this));
