@@ -65,3 +65,30 @@ Tinytest.add(testLevel + "test updateClusters by changing clusters from one set 
     test.equal(visLinks[1].source.id, "1", "Second link should point from node 1");
     test.equal(visLinks[1].target.id, "cluster-cluster 2", "Second link should point to cluster 2");
 });
+
+Tinytest.add(testLevel + "test persistence of cluster color and title over updateClusters()", function (test) {
+    // Setup
+    var d3graphStub = new D3graphStub();
+    var clusteringNodeProvider = new ClusteringNodeProvider(d3graphStub);
+
+    // Create nodes with one cluster
+    var nodeSettings = [{ id: "1", clusterId: "cluster 1" }, { id: "2", clusterId: "cluster 1" }, { id: "3" }, { id: "4" }];
+    _(nodeSettings).each(function (nodeSetting) { clusteringNodeProvider.addNode(nodeSetting); });
+
+    var linkSettings = [{ from: "1", to: "2" }, { from: "1", to: "3" }];
+    _(linkSettings).each(function (linkSetting) { clusteringNodeProvider.addLink(linkSetting); });
+
+    clusteringNodeProvider.setCluster("cluster 1", "cluster title", "#ff0000");
+    
+    // Execute
+    clusteringNodeProvider.updateClusters();
+
+    // Verify
+    var visNodes = clusteringNodeProvider.getVisNodes();
+    console.log("Vis nodes: ", visNodes);
+
+    test.equal(visNodes[2].value.color, "#ff0000", "Cluster placeholder node should be red like we configured it");
+    test.equal(visNodes[2].title, "cluster title", "Cluster placeholder node should have the title that we configured");
+});
+
+
