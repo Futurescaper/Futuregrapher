@@ -26,7 +26,8 @@ Tinytest.add(testLevel + "test updateMarkers", function (test) {
     var d3graphStub = new D3graphStub();
     var el =  $("<div />");
     d3graphStub.markers = d3.select(el[0]).append("svg:svg").append("svg:defs");
-    d3graphStub.d3styles = function () { return { colors: { linkMin: "blue", linkMax: "red" } }; }
+    d3graphStub.d3styles = function () { return { colors: { linkMin: "#ff0000", linkMax: "#00ff00" } }; }
+    d3graphStub.settings = { minMarkerSize: 10, maxMarkerSize: 100 };
     
     var nodeLibStub = new NodeLibStub();
     nodeLibStub.stubNodes("fromNode", "toNode");
@@ -42,9 +43,10 @@ Tinytest.add(testLevel + "test updateMarkers", function (test) {
     linklib.updateMarkers();
     
     // Verify
-    var nodeElements = el.find("marker");
-    test.equal(nodeElements.length, 10, "There should be 10 markers when there is one link");
+    var markerElements = el.find("marker");
+    test.equal(markerElements.length, 10, "There should be 10 markers when there is one link color");
     
-    console.log(el[0]);
+    test.equal(markerElements[0].getAttribute("markerWidth"), "50", "First marker should be 50 pixels wide");
+    test.equal(markerElements[0].getAttribute("markerHeight"), "30", "First marker should be 30 pixels wide");
 });
 
