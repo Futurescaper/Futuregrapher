@@ -371,8 +371,8 @@
                                 });
                             }
                         }
-                        return parseInt(width||1);
                     });
+                    return parseInt(width||1);
                 })
                 .attrTween('d', _linklib.calculatePathTween);
         
