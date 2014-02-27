@@ -321,6 +321,25 @@
                     yt = pt.y;
                 }
             }
+
+            result = Intersection.intersectCircleEllipse({ x: sx, y: sy}, sr, { x: cx, y: cy }, dr, dr);
+            if(result.points.length) {
+                // find the correct point (closest to source) and use that as our target
+                var min = 1000000;
+                var pt;
+                $.each(result.points, function(i, point) {
+                    var dist = Math.sqrt(Math.pow(point.x - tx, 2) + Math.pow(point.y - ty, 2));
+                    if(dist < min) {
+                        min = dist;
+                        pt = point;
+                    }
+                });
+
+                if(pt) {
+                    sx = pt.x;
+                    sy = pt.y;
+                }
+            }
     
             return "M " + sx + " " + sy + " A " + dr + " " + dr + " 0 0 " + (xt > xs ? "1" : "0") + " " + xt + " " + yt;
         }
