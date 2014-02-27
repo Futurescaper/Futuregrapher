@@ -43,10 +43,9 @@
     }
 
     var clusters = {};
-    var visClusters = [];
-    this.getVisClusters = function () { return visClusters; }
+    this.getVisClusters = function () { return []; /*return _.values(clusters);*/ }
 
-    function getOrCreateCluster(clusterId) {
+    function getOrCreateCluster(clusterId, settings) {
         if(!clusters.hasOwnProperty(clusterId)) {
             var nodes = [];
             
@@ -79,7 +78,6 @@
             var placeholderNode = {
                 id: "cluster-" + clusterId,
                 title: clusterId,
-                color: "red",
                 value: { size: 1, color: 1 },
                 ratio: { size: 0, color: 0 },
                 data: [],
@@ -93,25 +91,37 @@
             
             cluster.placeholderNode = placeholderNode;
         }
+
+        if (settings) {
+            clusters[clusterId].placeholderNode.title = settings.title;
+            clusters[clusterId].placeholderNode.value.color = settings.color;
+        }
         
         return clusters[clusterId];
     }
 
     this.setCluster = function (clusterId, title, color) {
-        var cluster = getOrCreateCluster(clusterId);
-        cluster.placeholderNode.title = title;
-        cluster.placeholderNode.color = color;
-        cluster.placeholderNode.value.color = color;
+        var cluster = getOrCreateCluster(clusterId, { title: title, color: color });
     }
 
     this.updateClusters = function () {
         // Remove cluster placeholder stuff and clear clusters
+        var oldClusters = _.clone(clusters);
         clusters = {};
         
         // And rebuild them
         _(_nodelib.getNodes()).each(function (node) {
             if (node.clusterId) {
-                var cluster = getOrCreateCluster(node.clusterId);
+            
+                var settings;
+                if(oldClusters.hasOwnProperty(node.clusterId)) {
+                    settings = {
+                        title: oldClusters[node.clusterId].placeholderNode.title,
+                        color: oldClusters[node.clusterId].placeholderNode.value.color
+                    };
+                }
+            
+                var cluster = getOrCreateCluster(node.clusterId, settings);
                 cluster.nodes.push(node);
                 cluster.placeholderNode.radius += node.radius;
                 cluster.placeholderNode._radius += node._radius;
