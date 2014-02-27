@@ -67,7 +67,7 @@
         reverseLabelPosition: this.options.reverseLabelPosition,
         constrainNodes: this.options.constrainNodes,
         clustering: true,
-        preventCollisions: true
+        preventCollisions: this.options.preventCollisions == undefined ? true : this.options.preventCollisions
     };
 
     this.events = {
