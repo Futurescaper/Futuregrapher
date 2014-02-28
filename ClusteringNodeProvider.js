@@ -400,9 +400,130 @@
     
     this.updateMarkers = function () { _linklib.updateMarkers(); }
     
-    this.calculate = function(filterKey) {
-        _nodelib.calculateNodes(filterKey);
-        _linklib.calculateLinks(filterKey);
+    this.calculateNodes = function () {
+        var nodes = this.getVisNodes();
+        if (nodes.length <= 0)
+            return;
+    
+        var sorted = { size: nodes.slice(0), color: nodes.slice(0) };
+    
+        sorted.size.sort(function (a, b) {
+            return b.value.size - a.value.size;
+        });
+        sorted.color.sort(function (a, b) {
+            return b.value.color - a.value.color;
+        });
+    
+        if(graph.settings.jenks > 0) {
+            // generate jenks values
+            var stats = {
+                size: new geostats($.map(sorted.size, function(n) { return n.value.size; })),
+                color: new geostats($.map(sorted.color, function(n) { return n.value.color; }))
+            };
+            try
+            {
+                var jenks = {
+                    size: stats.size.getJenks(parseInt(graph.settings.jenks)),
+                    color: stats.color.getJenks(parseInt(graph.settings.jenks))
+                };
+    
+                // re-score each node as value = [1, x] based on its size and color values
+                var dimensions = ['size', 'color'];
+                $.each(dimensions, function(i, dimension) {
+                    $.each(sorted[dimension], function(i, node) {
+                        var assigned = 0;
+                        for(var j = 1; j < jenks[dimension].length; j++) {
+                            if(node.value[dimension] >= jenks[dimension][j])
+                                assigned = j + 1;
+                        }
+    
+                        node.jenks[dimension] = assigned;
+                    });
+                });
+            }
+            catch(e) { }
+        }
+        else {
+            $.each(sorted.size, function(i, node) { node.jenks.size = 0; });
+            $.each(sorted.color, function(i, node) { node.jenks.color = 0; });
+        }
+    
+        var dimensions = ['size', 'color'];
+        $.each(dimensions, $.proxy(function(i, dimension) {
+            var list = sorted[dimension];
+    
+            if(dimension == 'color' && typeof(list[0].value.color) === "string") {
+                list[i].color = new d3color(list[0].value.color).rgbastr();
+                return;
+            }
+    
+            var max = list[0].jenks[dimension] || list[0].value[dimension];
+            var min = list[list.length - 1].jenks[dimension] || list[list.length - 1].value[dimension];
+    
+            for (var i = 0; i < list.length; i++) {
+                var val = list[i].jenks[dimension] || list[i].value[dimension];
+                var ratio = max < 0 ? 0 : (max == min) ? 0 : (val - min) / (max - min);
+    
+                if (isNaN(ratio))
+                    ratio = 0.5;
+    
+                if (ratio < graph.settings.minRatio)
+                    ratio = graph.settings.minRatio;
+    
+                list[i].rank = i;
+                list[i].ratio[dimension] = ratio;
+    
+                if(dimension == 'size') {
+                    list[i].radius = graph.settings.minRadius + ((graph.settings.maxRadius - graph.settings.minRadius) * ratio);
+                    if (list[i].radius < graph.settings.minRadius)
+                        list[i].radius = graph.settings.minRadius;
+                    if (list[i].radius > graph.settings.maxRadius)
+                        list[i].radius = graph.settings.maxRadius;
+    
+                    list[i].tooltip = this.getNodeTooltip(list[i]);
+                }
+                else
+                    list[i].color = d3colors.blend(
+                        d3colors.getRgbaFromHex(graph.d3styles().colors.nodeMin),
+                        d3colors.getRgbaFromHex(graph.d3styles().colors.nodeMax),
+                        list[i].ratio.color).rgbastr();
+            }
+        }, this));
+    };
+
+    this.calculateLinks = function () {
+        var links = getVisLinks();
+    
+        var max = 0,
+            min = Infinity,
+            i,
+            w;
+    
+        for (i = 0; i < links.length; i++) {
+            w = links[i].value;
+            if (w < min)
+                min = w;
+            if (w > max)
+                max = w;
+        }
+        //if (min == max)
+        //    min--;
+    
+        for (i = 0; i < links.length; i++) {
+            if(max == min)
+                links[i].normalized = links[i].ratio = 0;
+            else {
+                w = (links[i].value - min) / (max - min);
+                links[i].normalized = w;
+                links[i].ratio = links[i].value / max;
+            }
+            links[i].tooltip = this.getLinkTooltip(links[i]);
+        }
+    };
+    
+    this.calculate = function() {
+        this.calculateNodes();
+        this.calculateLinks();
     };
     
     

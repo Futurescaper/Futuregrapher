@@ -175,34 +175,6 @@
             graph.update();
     };
 
-    this.calculateLinks = function () {
-        var max = 0,
-            min = Infinity,
-            i,
-            w;
-    
-        for (i = 0; i < this.links.length; i++) {
-            w = this.links[i].value;
-            if (w < min)
-                min = w;
-            if (w > max)
-                max = w;
-        }
-        //if (min == max)
-        //    min--;
-    
-        for (i = 0; i < this.links.length; i++) {
-            if(max == min)
-                this.links[i].normalized = this.links[i].ratio = 0;
-            else {
-                w = (this.links[i].value - min) / (max - min);
-                this.links[i].normalized = w;
-                this.links[i].ratio = this.links[i].value / max;
-            }
-            this.links[i].tooltip = this.getLinkTooltip(this.links[i]);
-        }
-    };
-
     this.calculatePath = function (d) {
         if(graph.settings.taperedLinks) {
             var strength_scale = d3.scale.linear().range([graph.settings.taperedLinkMinSize||4, graph.settings.taperedLinkMaxSize||15]) /* thickness range for flow lines */

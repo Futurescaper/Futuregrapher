@@ -254,8 +254,8 @@
     this.getAllNodes = function () { return _clusteringNodeProvider.getAllNodes(); }
     this.getAllLinks = function () { return _clusteringNodeProvider.getAllLinks(); } 
 
-    this.calculate = function(filterKey) {
-        _clusteringNodeProvider.calculate(filterKey);
+    this.calculate = function() {
+        _clusteringNodeProvider.calculate();
     };
     
     var padding = 1.5; // separation between nodes 

@@ -84,3 +84,21 @@ Tinytest.add(testLevel + 'test removeNode where node is only node in cluster', f
     var clusters = clusteringNodeProvider.getVisClusters();
     test.equal(clusters.length, 0, "There should be no clusters");
 });
+
+Tinytest.add(testLevel + "simple test of calcluate()", function (test) {
+    // Setup
+    var d3graphStub = new D3graphStub();
+    var clusteringNodeProvider = new ClusteringNodeProvider(d3graphStub);
+    d3graphStub._clusteringNodeProvider = clusteringNodeProvider;
+
+    var nodeSettings = [{ id: "1" }, { id: "2", clusterId: "cluster" }, { id: "3" }, { id: "4" }];
+    _(nodeSettings).each(function (nodeSetting) { clusteringNodeProvider.addNode(nodeSetting); });
+
+    var linkSettings = [{ from: "1", to: "2" }, { from: "1", to: "3" }];
+    _(linkSettings).each(function (linkSetting) { clusteringNodeProvider.addLink(linkSetting); });
+    
+    // Execute
+    clusteringNodeProvider.calculate();
+    
+    // Verify
+});
