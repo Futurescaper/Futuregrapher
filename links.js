@@ -391,9 +391,19 @@
         
         var markerCombinations = createMarkerCombinations(linkColors, this.linkWidthToMarkerSizeIndexScale.range());
         
+        // Add marker for the tracker (used when adding a link)
+        markerCombinations.push({ id: "tracker", color: "#ff0000", fixedSize: 3 });
+        
         var markerSizeIndexToSizeScale = d3.scale.ordinal()
             .domain(this.linkWidthToMarkerSizeIndexScale.range())
             .rangePoints([graph.settings.minMarkerSize, graph.settings.maxMarkerSize]);
+    
+        function markerSize(marker) {
+            if (marker.fixedSize) 
+                return marker.fixedSize;
+            else
+                return markerSizeIndexToSizeScale(marker.sizeIndex);
+        }
     
         var markerElements = graph.markers.selectAll("marker")
             .data(markerCombinations, function (d) { return d.id; });
@@ -407,14 +417,14 @@
             .append("svg:path");
         
         markerElements
-                .attr("markerWidth", function (d) { return 5 * markerSizeIndexToSizeScale(d.sizeIndex); })
-                .attr("markerHeight", function (d) { return 3 * markerSizeIndexToSizeScale(d.sizeIndex); })
-                .attr("viewBox", function (d) { return  "0 0 " + (10 * markerSizeIndexToSizeScale(d.sizeIndex)) + " " + (10 * markerSizeIndexToSizeScale(d.sizeIndex)); })
-                .attr("refX", function (d) { return 10 * markerSizeIndexToSizeScale(d.sizeIndex); })
-                .attr("refY", function (d) { return 10 * markerSizeIndexToSizeScale(d.sizeIndex); })
+                .attr("markerWidth", function (d) { return 5 * markerSize(d); })
+                .attr("markerHeight", function (d) { return 3 * markerSize(d); })
+                .attr("viewBox", function (d) { return  "0 0 " + (10 * markerSize(d)) + " " + (10 * markerSize(d)); })
+                .attr("refX", function (d) { return 10 * markerSize(d); })
+                .attr("refY", function (d) { return 10 * markerSize(d); })
                 .attr("fill", function (d) { return d.color; })
             .select("path")
-                .attr("d", function (d) { return "M0,0L" + (10 * markerSizeIndexToSizeScale(d.sizeIndex)) + "," + (10 * markerSizeIndexToSizeScale(d.sizeIndex)) + "L0," + (10 * markerSizeIndexToSizeScale(d.sizeIndex)) + "z"});
+                .attr("d", function (d) { return "M0,0L" + (10 * markerSize(d)) + "," + (10 * markerSize(d)) + "L0," + (10 * markerSize(d)) + "z"});
     
         markerElements.exit()
             .remove();
