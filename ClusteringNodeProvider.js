@@ -80,6 +80,7 @@
                 title: clusterId,
                 value: { size: 1, color: 1 },
                 ratio: { size: 0, color: 0 },
+                jenks: { size: 0, color: 0 },
                 data: [],
                 radius: 0, // graph.settings.maxRadius,
                 _radius: 0, // graph.settings.maxRadius,
@@ -406,8 +407,6 @@
             return;
     
         var sorted = { size: nodes.slice(0), color: nodes.slice(0) };
-
-        console.log("pre-sort: ", _(_(sorted.size).pluck("value")).pluck("size").join(", "));
     
         sorted.size.sort(function (a, b) {
             return b.value.size - a.value.size;
