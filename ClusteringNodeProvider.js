@@ -111,7 +111,6 @@
         clusters = {};
 
         // And rebuild them
-        Helper.debug("updating Clusters");
         _(_nodelib.getNodes()).each(function (node) {
             if (node.clusterId) {
 
@@ -128,7 +127,6 @@
                 cluster.placeholderNode.radius += node.radius;
                 cluster.placeholderNode._radius += node._radius;
                 cluster.placeholderNode.value.size += node.value.size;
-                Helper.debug("Cluster " + node.clusterId + " + " + node.value.size + " = " + cluster.placeholderNode.value.size);
             }
         });
 
