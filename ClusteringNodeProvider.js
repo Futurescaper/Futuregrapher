@@ -5,7 +5,7 @@
     this.getVisNodes = function () {
         var result = [];
         var clusterPlaceholdersToAdd = {};
-        
+
         _(_nodelib.getNodes()).each(function (n) {
             if (n.clusterId)
                 clusterPlaceholdersToAdd[n.clusterId] = clusters[n.clusterId].placeholderNode;
@@ -14,23 +14,23 @@
         });
 
         _(clusterPlaceholdersToAdd).each(function (value, key) { result.push(value); });
-        
+
         return result;
     }
-    
+
     var _linklib = new d3links(graph, _nodelib);
     this.getAllLinks = function () { return _linklib.getLinks(); }
-    this.getVisLinks = function () { 
+    this.getVisLinks = function () {
         var result = [];
-        
+
         _(_linklib.getLinks()).each(function (l) {
-        
+
             if (l.source.clusterId || l.target.clusterId) {
                 if (l.source.clusterId === l.target.clusterId) return;  // Link within same cluster, ignore it.
-                
+
                 var sourceNode = l.source.clusterId ? clusters[l.source.clusterId].placeholderNode : l.source;
                 var targetNode = l.target.clusterId ? clusters[l.target.clusterId].placeholderNode : l.target;
-                
+
                 var placeholderLinksToSearch = l.source.clusterId ? clusters[l.source.clusterId].outgoingPlaceholderLinks : clusters[l.target.clusterId].incomingPlaceholderLinks;
                 var placeholderLink = _(placeholderLinksToSearch).find(function (l) { return l.source === sourceNode && l.target === targetNode });
                 result.push(placeholderLink);
@@ -38,7 +38,7 @@
             else
                 result.push(l);
         });
-        
+
         return result;
     }
 
@@ -48,10 +48,10 @@
     function getOrCreateCluster(clusterId, settings) {
         if(!clusters.hasOwnProperty(clusterId)) {
             var nodes = [];
-            
+
             function makeHull() {
                 var nodePoints = [];
-                
+
                 _(nodes).each(function (n) {
                     var offset = n.radius || 5;
                     var x = n.x || 0;
@@ -60,11 +60,11 @@
                     nodePoints.push([x - offset, y + offset]);
                     nodePoints.push([x + offset, y - offset]);
                     nodePoints.push([x + offset, y + offset]);
-                 });
-                
+                });
+
                 return d3.geom.hull(nodePoints);
             }
-            
+
             var cluster = {
                 id: clusterId,
                 collapsed: true,
@@ -78,7 +78,7 @@
             var placeholderNode = {
                 id: "cluster-" + clusterId,
                 title: clusterId,
-                value: { size: 1, color: 1 },
+                value: { size: 0, color: 0 },
                 ratio: { size: 0, color: 0 },
                 jenks: { size: 0, color: 0 },
                 data: [],
@@ -89,7 +89,7 @@
                 clusterId: clusterId,
                 cluster: cluster
             };
-            
+
             cluster.placeholderNode = placeholderNode;
         }
 
@@ -97,7 +97,7 @@
             clusters[clusterId].placeholderNode.title = settings.title;
             clusters[clusterId].placeholderNode.value.color = settings.color;
         }
-        
+
         return clusters[clusterId];
     }
 
@@ -109,11 +109,12 @@
         // Remove cluster placeholder stuff and clear clusters
         var oldClusters = _.clone(clusters);
         clusters = {};
-        
+
         // And rebuild them
+        Helper.debug("updating Clusters");
         _(_nodelib.getNodes()).each(function (node) {
             if (node.clusterId) {
-            
+
                 var settings;
                 if(oldClusters.hasOwnProperty(node.clusterId)) {
                     settings = {
@@ -121,21 +122,25 @@
                         color: oldClusters[node.clusterId].placeholderNode.value.color
                     };
                 }
-            
+
                 var cluster = getOrCreateCluster(node.clusterId, settings);
                 cluster.nodes.push(node);
                 cluster.placeholderNode.radius += node.radius;
                 cluster.placeholderNode._radius += node._radius;
+                cluster.placeholderNode.value.size += node.value.size;
+                Helper.debug("Cluster " + node.clusterId + " + " + node.value.size + " = " + cluster.placeholderNode.value.size);
             }
         });
-        
+
+        this.calculateNodes();
+
         _(_linklib.getLinks()).each(function (link) {
             if (link.source.clusterId) {
                 if (link.target.clusterId && link.source.clusterId === link.target.clusterId) {
                     // Same cluster. Don't create a placeholder
                     return;
                 }
-                    
+
                 var placeholderLink = {
                     source: clusters[link.source.clusterId].placeholderNode,
                     target: link.target,
@@ -143,12 +148,12 @@
                     isClusterPlaceholder: true
                 };
                 clusters[link.source.clusterId].outgoingPlaceholderLinks.push(placeholderLink);
-                
+
                 if (link.target.clusterId) {
                     placeholderLink.target = clusters[link.target.clusterId].placeholderNode;
                     clusters[link.target.clusterId].incomingPlaceholderLinks.push(placeholderLink);
                 }
-                
+
                 placeholderLink.id = placeholderLink.source.id + "->" + placeholderLink.target.id;
             }
             else if (link.target.clusterId) {
@@ -159,30 +164,30 @@
                     normalized: link.normalized,
                     isClusterPlaceholder: true
                 };
-                
+
                 clusters[link.target.clusterId].incomingPlaceholderLinks.push(placeholderLink);
             }
         });
     }
-    
+
     this.addNode = function (settings) {
         var node = _nodelib.addNode(settings);
         this.updateClusters();
         return node;
     };
-    
+
     this.removeNode = function (id, tag, forceRemove) {
         var node = _nodelib.removeNode(id, tag, forceRemove);
         this.updateClusters();
         return node;
     };
-    
+
     this.addLink = function (options) {
         var link = _linklib.addLink(options);
         this.updateClusters();
         return link;
     };
-    
+
     this.removeLink = function (from, to) {
         var link =  _linklib.removeLink(from, to);
         this.updateClusters();
@@ -194,52 +199,52 @@
     }
 
     this.getNodeColor = function (d) {  return _nodelib.getNodeColor(d); }
-    
+
     this.getNodeBorderColor = function (d) { return _nodelib.getNodeBorderColor(d); }
     this.getNodeRadius = function (d) { return _nodelib.getNodeRadius(d); }
-    
+
     this.getNodeTooltip = function (d) { return _nodelib.getNodeTooltip(d); }
 
-    this.onNodeMouseover = function (d) { 
+    this.onNodeMouseover = function (d) {
         if(d.isClusterPlaceholder) return;
 
-        return _nodelib.onNodeMouseover(d); 
+        return _nodelib.onNodeMouseover(d);
     }
-    
-    this.onNodeMouseout = function (d) { 
+
+    this.onNodeMouseout = function (d) {
         if(d.isClusterPlaceholder) return;
 
-        return _nodelib.onNodeMouseout(d); 
+        return _nodelib.onNodeMouseout(d);
     }
-    
-    this.onNodeMousedown = function (d) { 
+
+    this.onNodeMousedown = function (d) {
         if(d.isClusterPlaceholder) return;
 
-        return _nodelib.onNodeMousedown(d); 
+        return _nodelib.onNodeMousedown(d);
     }
-    
-    this.onNodeMouseup = function (d) { 
+
+    this.onNodeMouseup = function (d) {
         if(d.isClusterPlaceholder) return;
 
-        return _nodelib.onNodeMouseup(d); 
+        return _nodelib.onNodeMouseup(d);
     }
-    
-    this.onNodeClick = function (d) { 
+
+    this.onNodeClick = function (d) {
         if(d.isClusterPlaceholder) {
             return; // For now, do nothing when clicking a placeholder node.
         }
-        else {            
-            return _nodelib.onNodeClick(d); 
+        else {
+            return _nodelib.onNodeClick(d);
         }
     }
-    
+
     this.onNodeDblClick = function (d) { return _nodelib.onNodeDblClick(d); }
     this.onNodeRightClick = function (d) { return _nodelib.onNodeRightClick(d); }
 
     this.moveNodes = function (positions, time, ignoreLinks) {
         graph.force.stop();
         graph.fixedMode = true;
-    
+
         var center = graph.getCenter();
         var node = null;
         $.each(positions, function (i, position) {
@@ -267,11 +272,11 @@
                         n.x = position.x; // Math.max(n.radius, Math.min(position.x, graph.width - r));
                     if (position.y)
                         n.y = position.y; // Math.max(n.radius, Math.min(position.y, graph.height - r));
-    
+
                     return false;
                 }
             });
-    
+
             if (node) {
                 graph.d3().selectAll('g.node[id="' + position.id + '"]')
                     .each(function (d) { d.fixed = true; })
@@ -280,12 +285,12 @@
                     .duration(time || 500)
                     .attr('cx', function(d) { return d.x; }).attr('cy', function(d) { return d.y; })
                     .attr('transform', function (d) { return 'translate(' + d.x + ',' + d.y + ')'; });
-    
+
                 var x = graph.d3().selectAll('g.node[id="' + position.id + '"] circle')
                     .transition()
                     .delay(function (d, i) { return i * 2; })
                     .duration(time || 500);
-    
+
                 if(position.radius)
                     x = x.attr('r', node._radius || node.radius);
                 if(position.opacity >= 0.0)
@@ -303,7 +308,7 @@
                     //.transition()
                     //.duration(time || 500)
                     .style('opacity', opacity);
-    
+
                 graph.d3().selectAll('g.label[id="' + position.id + '"] text')
                     //.transition()
                     //.duration(time || 500)
@@ -314,7 +319,7 @@
                     .attr('fill', function(d) { return position.labelColor || graph.getNodeBorderColor(d); } /*LABEL FIX:node.labelColor*/);
             }
         });
-    
+
         if (ignoreLinks)
             graph._links
                 .transition()
@@ -386,7 +391,7 @@
                     return parseInt(width||1);
                 })
                 .attrTween('d', _linklib.calculatePathTween);
-        
+
         // Update labels
         graph.d3()
             .selectAll('g.label')
@@ -398,23 +403,23 @@
         graph.updateLinkColors();
     };
 
-    
+
     this.updateMarkers = function () { _linklib.updateMarkers(); }
-    
+
     this.calculateNodes = function () {
         var nodes = this.getVisNodes();
         if (nodes.length <= 0)
             return;
-    
+
         var sorted = { size: nodes.slice(0), color: nodes.slice(0) };
-    
+
         sorted.size.sort(function (a, b) {
             return b.value.size - a.value.size;
         });
         sorted.color.sort(function (a, b) {
             return b.value.color - a.value.color;
         });
-    
+
         if(graph.settings.jenks > 0) {
             // generate jenks values
             var stats = {
@@ -427,7 +432,7 @@
                     size: stats.size.getJenks(parseInt(graph.settings.jenks)),
                     color: stats.color.getJenks(parseInt(graph.settings.jenks))
                 };
-    
+
                 // re-score each node as value = [1, x] based on its size and color values
                 var dimensions = ['size', 'color'];
                 $.each(dimensions, function(i, dimension) {
@@ -437,7 +442,7 @@
                             if(node.value[dimension] >= jenks[dimension][j])
                                 assigned = j + 1;
                         }
-    
+
                         node.jenks[dimension] = assigned;
                     });
                 });
@@ -448,39 +453,39 @@
             $.each(sorted.size, function(i, node) { node.jenks.size = 0; });
             $.each(sorted.color, function(i, node) { node.jenks.color = 0; });
         }
-    
+
         var dimensions = ['size', 'color'];
         $.each(dimensions, $.proxy(function(i, dimension) {
             var list = sorted[dimension];
-    
+
             if(dimension == 'color' && typeof(list[0].value.color) === "string") {
                 list[i].color = new d3color(list[0].value.color).rgbastr();
                 return;
             }
-    
+
             var max = list[0].jenks[dimension] || list[0].value[dimension];
             var min = list[list.length - 1].jenks[dimension] || list[list.length - 1].value[dimension];
-    
+
             for (var i = 0; i < list.length; i++) {
                 var val = list[i].jenks[dimension] || list[i].value[dimension];
                 var ratio = max < 0 ? 0 : (max == min) ? 0 : (val - min) / (max - min);
-    
+
                 if (isNaN(ratio))
                     ratio = 0.5;
-    
+
                 if (ratio < graph.settings.minRatio)
                     ratio = graph.settings.minRatio;
-    
+
                 list[i].rank = i;
                 list[i].ratio[dimension] = ratio;
-    
+
                 if(dimension == 'size') {
                     list[i].radius = graph.settings.minRadius + ((graph.settings.maxRadius - graph.settings.minRadius) * ratio);
                     if (list[i].radius < graph.settings.minRadius)
                         list[i].radius = graph.settings.minRadius;
                     if (list[i].radius > graph.settings.maxRadius)
                         list[i].radius = graph.settings.maxRadius;
-    
+
                     list[i].tooltip = this.getNodeTooltip(list[i]);
                 }
                 else
@@ -499,12 +504,12 @@
 
     this.calculateLinks = function () {
         var links = this.getVisLinks();
-    
+
         var max = 0,
             min = Infinity,
             i,
             w;
-    
+
         for (i = 0; i < links.length; i++) {
             w = links[i].value;
             if (w < min)
@@ -514,7 +519,7 @@
         }
         //if (min == max)
         //    min--;
-    
+
         for (i = 0; i < links.length; i++) {
             if(max == min)
                 links[i].normalized = links[i].ratio = 0;
@@ -526,89 +531,89 @@
             links[i].tooltip = this.getLinkTooltip(links[i]);
         }
     };
-    
+
     this.calculate = function() {
         this.calculateNodes();
         this.calculateLinks();
     };
-    
-    
+
+
     this.onLinkMouseover = function (d) { return _linklib.onLinkMouseover(d); }
     this.onLinkMouseout = function (d) { return _linklib.onLinkMouseout(d); }
     this.onLinkClick = function (d) { return _linklib.onLinkClick(d); }
-    
+
     this.getMarkerUrl = function (d) { return _linklib.getMarkerUrl(d); }
-    
+
     this.getLinkWidth = function (d) { return _linklib.getLinkWidth(d); }
-    this.getLinkColor = function (d, minColor, maxColor) { 
+    this.getLinkColor = function (d, minColor, maxColor) {
         if (d.isClusterPlaceholder)
             return graph.d3styles().colors.linkMin;
-        
-        return _linklib.getLinkColor(d, minColor, maxColor); 
+
+        return _linklib.getLinkColor(d, minColor, maxColor);
     }
-    
+
     this.calculatePath = function (d, b) { return _linklib.calculatePath(d, b); }
-    
+
     this.updateLinkColors = function () { _linklib.updateLinkColors(); }
-    
-    
-    
-    
+
+
+
+
     this.updateSizesForZoom = function (scale) {
         _nodelib.updateNodeSizesForZoom(scale);
         _linklib.updateLinkSizesForZoom(scale);
     }
-    
+
     /* Node methods */
-    
+
     this.animateNodeClick = function(node, time, callback) {
         return _nodelib.animateNodeClick(node, time, callback);
     };
-    
+
     this.setNodeTitle = function (node, title) {
         return _nodelib.setNodeTitle(node, title);
     };
-    
+
     this.updateNodeColors = function () {
         return _nodelib.updateColors();
     }
-    
+
     this.getNode = function (id) {
         return _nodelib.getNode(id);
     };
-    
+
     this.getNodeByTitle = function(title) {
         return _nodelib.getNodeByTitle(title);
     };
-    
+
     this.getNodeBorderColor = function (d, opacity) {
         return _nodelib.getNodeBorderColor(d, opacity);
     }
-    
+
     this.viewClusters = function (pct) {
         return _nodelib.viewClusters(pct);
     };
-    
+
     /* End node methods */
-    
+
     /* Link methods */
-    
-    
+
+
     this.getSharedLinks = function (nodes) {
         return _linklib.getSharedLinks(nodes);
     };
-    
+
     /* End link methods */
-    
-    
+
+
     this.getCenter = function () {
         return _nodelib.getCenter();
     };
-    
+
     this.clear = function () {
         _nodelib.clear();
         _linklib.clear();
     }
-    
-    
+
+
 }
