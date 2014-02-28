@@ -468,11 +468,6 @@
         return d.color;
     };
 
-    this.getLinkTooltip = function (link) {
-        if (graph.events.onLinkTooltip && typeof (graph.events.onLinkTooltip === "function"))
-            return graph.events.onLinkTooltip(link);
-    };
-
     this.getSharedLinks = function (nodes) {
         var links = [];
         var dict = new Array();

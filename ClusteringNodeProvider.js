@@ -406,6 +406,8 @@
             return;
     
         var sorted = { size: nodes.slice(0), color: nodes.slice(0) };
+
+        console.log("pre-sort: ", _(_(sorted.size).pluck("value")).pluck("size").join(", "));
     
         sorted.size.sort(function (a, b) {
             return b.value.size - a.value.size;
@@ -491,8 +493,13 @@
         }, this));
     };
 
+    this.getLinkTooltip = function (link) {
+        if (graph.events.onLinkTooltip && typeof (graph.events.onLinkTooltip === "function"))
+            return graph.events.onLinkTooltip(link);
+    };
+
     this.calculateLinks = function () {
-        var links = getVisLinks();
+        var links = this.getVisLinks();
     
         var max = 0,
             min = Infinity,
