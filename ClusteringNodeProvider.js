@@ -240,13 +240,16 @@
     this.onNodeRightClick = function (d) { return _nodelib.onNodeRightClick(d); }
 
     this.moveNodes = function (positions, time, ignoreLinks) {
+        var self = this;    // We're using this within $.each() for now..
         graph.force.stop();
         graph.fixedMode = true;
 
-        var center = graph.getCenter();
+        var center = this.getCenter();
         var node = null;
+        var visNodes = self.getVisNodes();
+
         $.each(positions, function (i, position) {
-            $.each(/*visNodes*/ _nodelib.getNodes(), function (j, n) {
+            $.each(visNodes, function (j, n) {
                 if (position.id == n.id) {
                     node = n;
                     n.fixed = true;
@@ -299,7 +302,7 @@
                     x.style('stroke', position.stroke);
                 else if(position.color) {
                     node.color = position.color;
-                    x.style('stroke', graph.getNodeBorderColor(node));
+                    x.style('stroke', self.getNodeBorderColor(node));
                 }
                 var opacity = (node.labelOpacity || node.opacity || 1.0);
                 graph.d3().selectAll('g.label[id="' + position.id + '"]')
@@ -314,7 +317,7 @@
                     //.text(function(d) { return opacity > 0 ? d.title : ''; })
                     //.style('font-size', function(d) { return jQuery.isNumeric(d.fontSize) ? d.fontSize + 'em' : d.fontSize })
                     .attr('text-anchor', function(d) { return position.anchor||(d.x < center.x ? 'end' : 'start') })
-                    .attr('fill', function(d) { return position.labelColor || graph.getNodeBorderColor(d); } /*LABEL FIX:node.labelColor*/);
+                    .attr('fill', function(d) { return position.labelColor || self.getNodeBorderColor(d); } /*LABEL FIX:node.labelColor*/);
             }
         });
 
@@ -399,6 +402,9 @@
             .attr('transform', function (node) { return graph.d3labels().transformLabel(node, center); });
 
         graph.updateLinkColors();
+
+        graph.fixedMode = false;
+        graph.force.start();
     };
 
 
@@ -457,7 +463,7 @@
             var list = sorted[dimension];
 
             if(dimension == 'color' && typeof(list[0].value.color) === "string") {
-                list[i].color = new d3color(list[0].value.color).rgbastr();
+                list[0].color = new d3color(list[0].value.color).rgbastr();
                 return;
             }
 
@@ -583,10 +589,6 @@
     this.getNodeByTitle = function(title) {
         return _nodelib.getNodeByTitle(title);
     };
-
-    this.getNodeBorderColor = function (d, opacity) {
-        return _nodelib.getNodeBorderColor(d, opacity);
-    }
 
     this.viewClusters = function (pct) {
         return _nodelib.viewClusters(pct);

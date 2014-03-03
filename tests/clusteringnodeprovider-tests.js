@@ -90,7 +90,6 @@ Tinytest.add(testLevel + "simple test of calcluate()", function (test) {
     var d3graphStub = new D3graphStub();
     var clusteringNodeProvider = new ClusteringNodeProvider(d3graphStub);
     d3graphStub._clusteringNodeProvider = clusteringNodeProvider;
-    d3graphStub.d3styles = function () { return { colors: { nodeMin: "#ff0000", nodeMax: "#00ff00" } }; }
     d3graphStub.settings = { minRadius: 10, maxRadius: 40 };
 
     var nodeSettings = [{ id: "1", weight: 1 }, { id: "2", weight: 2 }, { id: "3",weight: 3 }, { id: "4", weight: 4 }];
@@ -108,5 +107,28 @@ Tinytest.add(testLevel + "simple test of calcluate()", function (test) {
     testArrayProperty(test, visNodes, "color", ["rgb(255,0,0)", "rgb(170,85,0)", "rgb(85,170,0)", "rgb(0,255,0)"]);
 
     var visLinks = clusteringNodeProvider.getVisLinks();
-    testArrayProperty(test, visLinks, "normalized", [1, 2]);
+    testArrayProperty(test, visLinks, "normalized", [0, 1]);
 });
+
+/* This doesn't work because it modifies the svg so it cannot mock d3graph.
+
+Tinytest.add(testLevel + "simple moveNodes() test", function (test) {
+    // Setup
+    var d3graphStub = new D3graphStub();
+    d3graphStub._d3styles.settings = { nodeBorderSize: 1 };
+    d3graphStub.force = { stop: function () {} };
+    var clusteringNodeProvider = new ClusteringNodeProvider(d3graphStub);
+    d3graphStub._clusteringNodeProvider = clusteringNodeProvider;
+    setupDummyNetwork(clusteringNodeProvider);
+
+    var positions = [{ id: "1", color: "#0000ff" }, { id: "2", color: "#ff00ff" }];
+    
+    // Execute
+    clusteringNodeProvider.moveNodes(positions, 250, true);
+    
+    // Verify
+});
+
+*/
+
+

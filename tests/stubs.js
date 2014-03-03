@@ -1,6 +1,7 @@
 D3graphStub = function () {
     var _links = {};
-
+    
+    this._d3styles = { colors: { nodeMin: "#ff0000", nodeMax: "#00ff00" } };
     this._clusteringNodeProvider = null;
 
     // Interface
@@ -12,6 +13,8 @@ D3graphStub = function () {
     this.getAllLinks = function () { return this._clusteringNodeProvider ? this._clusteringNodeProvider.getAllLinks() : this.links; }
     
     this.d3 = function () { return d3; }
+
+    this.d3styles = function () { return this._d3styles; };
 };
 
 NodeLibStub = function () {

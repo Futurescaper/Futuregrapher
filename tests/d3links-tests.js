@@ -44,7 +44,7 @@ Tinytest.add(testLevel + "test updateMarkers", function (test) {
     
     // Verify
     var markerElements = el.find("marker");
-    test.equal(markerElements.length, 10, "There should be 10 markers when there is one link color");
+    test.equal(markerElements.length, 11, "There should be 10 markers for one link color, plus a tracker-marker");
     
     test.equal(markerElements[0].getAttribute("markerWidth"), "50", "First marker should be 50 pixels wide");
     test.equal(markerElements[0].getAttribute("markerHeight"), "30", "First marker should be 30 pixels wide");
