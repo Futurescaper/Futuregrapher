@@ -258,7 +258,7 @@
                     if (position.opacity >= 0.0)
                         n.opacity = position.opacity;
                     if (position.color)
-                        n.color = n._color = position.color;
+                        n.value.color = n.color = n._color = position.color;
                     if (position.labelColor)
                         n.labelColor = position.labelColor;
                     if (position.labelSize)
@@ -404,7 +404,6 @@
         graph.updateLinkColors();
 
         graph.fixedMode = false;
-        graph.force.start();
     };
 
 
@@ -492,11 +491,12 @@
 
                     list[i].tooltip = this.getNodeTooltip(list[i]);
                 }
-                else
+                else {
                     list[i].color = d3colors.blend(
                         d3colors.getRgbaFromHex(graph.d3styles().colors.nodeMin),
                         d3colors.getRgbaFromHex(graph.d3styles().colors.nodeMax),
                         list[i].ratio.color).rgbastr();
+                }
             }
         }, this));
     };
