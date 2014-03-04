@@ -95,6 +95,7 @@
 
         if (settings) {
             clusters[clusterId].placeholderNode.title = settings.title;
+            clusters[clusterId].placeholderNode.color = settings.color;
             clusters[clusterId].placeholderNode.value.color = settings.color;
         }
 
@@ -103,6 +104,15 @@
 
     this.setCluster = function (clusterId, title, color) {
         var cluster = getOrCreateCluster(clusterId, { title: title, color: color });
+        
+        graph.d3().selectAll('g.node[id="' + cluster.placeholderNode.id + '"] circle')
+            .transition()
+            .duration(250)
+            .style('fill', color)
+            .style('stroke', function (d) { console.log("Node border color: ", _nodelib.getNodeBorderColor(d));  return _nodelib.getNodeBorderColor(d); });
+            
+        graph.d3().selectAll('g.label[id="' + cluster.placeholderNode.id + '"] text')
+            .attr('fill', function(d) { return _nodelib.getNodeBorderColor(d); });
     }
 
     this.updateClusters = function () {
@@ -246,10 +256,14 @@
 
         var center = this.getCenter();
         var node = null;
+        
         var visNodes = self.getVisNodes();
+        var libNodes = self.getAllNodes();
+        
+        var nodes = _.union(visNodes, libNodes);
 
         $.each(positions, function (i, position) {
-            $.each(visNodes, function (j, n) {
+            $.each(nodes, function (j, n) {
                 if (position.id == n.id) {
                     node = n;
                     n.fixed = true;
@@ -321,14 +335,15 @@
             }
         });
 
-        if (ignoreLinks)
+        if (ignoreLinks) {
             graph._links
                 .transition()
                 //.delay(function (d, i) { return i * 2; })
                 .duration(time || 500)
                 .style('opacity', 1.0)
                 .attrTween('d', _linklib.calculatePathTween); //function (d) { return graph.linklib().calculatePath(d); });
-        else
+        }
+        else {
             graph._links
                 .transition()
                 .duration(time || 500)
@@ -392,7 +407,8 @@
                     return parseInt(width||1);
                 })
                 .attrTween('d', _linklib.calculatePathTween);
-
+        }
+        
         // Update labels
         graph.d3()
             .selectAll('g.label')
@@ -401,7 +417,7 @@
             .duration(time || 500)
             .attr('transform', function (node) { return graph.d3labels().transformLabel(node, center); });
 
-        graph.updateLinkColors();
+        //graph.updateLinkColors();
 
         graph.fixedMode = false;
     };
