@@ -33,6 +33,7 @@
 
                 var placeholderLinksToSearch = l.source.clusterId ? clusters[l.source.clusterId].outgoingPlaceholderLinks : clusters[l.target.clusterId].incomingPlaceholderLinks;
                 var placeholderLink = _(placeholderLinksToSearch).find(function (l) { return l.source === sourceNode && l.target === targetNode });
+                
                 result.push(placeholderLink);
             }
             else
@@ -142,6 +143,8 @@
 
         this.calculateNodes();
 
+        var placeholderLinks = {};
+
         _(_linklib.getLinks()).each(function (link) {
             if (link.source.clusterId) {
                 if (link.target.clusterId && link.source.clusterId === link.target.clusterId) {
@@ -149,33 +152,48 @@
                     return;
                 }
 
-                var placeholderLink = {
-                    source: clusters[link.source.clusterId].placeholderNode,
-                    target: link.target,
-                    normalized: link.normalized,
-                    isClusterPlaceholder: true
-                };
-                clusters[link.source.clusterId].outgoingPlaceholderLinks.push(placeholderLink);
+                var id = clusters[link.source.clusterId].placeholderNode.id + "->" + (link.target.clusterId ? clusters[link.target.clusterId].placeholderNode.id : link.target.id);
 
-                if (link.target.clusterId) {
-                    placeholderLink.target = clusters[link.target.clusterId].placeholderNode;
-                    clusters[link.target.clusterId].incomingPlaceholderLinks.push(placeholderLink);
+                if(!placeholderLinks.hasOwnProperty(id)) {
+                    var placeholderLink = {
+                        id: id,
+                        source: clusters[link.source.clusterId].placeholderNode,
+                        target: link.target,
+                        value: 0,
+                        isClusterPlaceholder: true
+                    };
+                    clusters[link.source.clusterId].outgoingPlaceholderLinks.push(placeholderLink);
+    
+                    if (link.target.clusterId) {
+                        placeholderLink.target = clusters[link.target.clusterId].placeholderNode;
+                        clusters[link.target.clusterId].incomingPlaceholderLinks.push(placeholderLink);
+                    }
+                    
+                    placeholderLinks[id] = placeholderLink;
                 }
-
-                placeholderLink.id = placeholderLink.source.id + "->" + placeholderLink.target.id;
+                
+                placeholderLinks[id].value += link.value;
             }
             else if (link.target.clusterId) {
-                var placeholderLink = {
-                    id: link.source.id + "->" + clusters[link.target.clusterId].placeholderNode.id,
-                    source: link.source,
-                    target: clusters[link.target.clusterId].placeholderNode,
-                    normalized: link.normalized,
-                    isClusterPlaceholder: true
-                };
+                var id = link.source.id + "->" + clusters[link.target.clusterId].placeholderNode.id;
 
-                clusters[link.target.clusterId].incomingPlaceholderLinks.push(placeholderLink);
+                if(!placeholderLinks.hasOwnProperty(id)) {
+                    var placeholderLink = {
+                        id: id,
+                        source: link.source,
+                        target: clusters[link.target.clusterId].placeholderNode,
+                        value: 0,
+                        isClusterPlaceholder: true
+                    };
+
+                    clusters[link.target.clusterId].incomingPlaceholderLinks.push(placeholderLink);
+                    placeholderLinks[id] = placeholderLink;                    
+                }
+                placeholderLinks[id].value += link.value;
             }
         });
+
+        this.calculateLinks();
     }
 
     this.addNode = function (settings) {
