@@ -21,16 +21,6 @@
 
     var self = this;
 
-    this.calculateDefaultGravity = function () {
-        var k = Math.sqrt(_clusteringNodeProvider.getVisNodes().length / (this.width * this.height));
-        return 100 * k;        
-    }
-    
-    this.calculateDefaultCharge = function () {
-        var k = Math.sqrt(_clusteringNodeProvider.getVisNodes().length / (this.width * this.height));
-        return -50 / k;
-    }
-
     this.settings = {
         maxLabels: this.options.maxLabels||7,
         labelLength: this.options.labelLength||8,
@@ -147,6 +137,11 @@
         return self.settings.linkConstant + Math.pow(d.target.radius + d.source.radius, self.settings.linkRadiiFalloffPower);
     };
 
+    this.calculateDefaultGravity = function () {
+        var k = Math.sqrt(_clusteringNodeProvider.getVisNodes().length / (self.width * self.height));
+        return (self.settings.gravity = 100 * k);
+    };
+
     this.charge = function (d) {
         return self.settings.chargeConstant * self.settings.linkConstant * Math.pow(d.ratio, self.settings.chargeRatioFalloffPower);
     };
@@ -170,8 +165,6 @@
     }
     else {
         this.vis = d3.select(el[0]).append("svg:svg");
-        //.attr("width", w)
-        //.attr("height", h);
 
         if(this.options.class)
             this.vis.attr('class', this.options.class);
@@ -215,26 +208,6 @@
         .charge(this.charge)
         .size([w, h]);
 
-    /* NO IDEA WHY THIS DOESN'T WORK!!!!!
-
-     force.drag = d3.behavior.drag()
-     .on("dragstart", function() {
-     _highlightlib.displayNodes();
-     this.dragging = true;
-     force.resume();
-     })
-     .on("drag", function(d) {
-     d.x += d3.event.dx;
-     d.y += d3.event.dy;
-     d.px += d3.event.dx;
-     d.py += d3.event.dy;
-     d3.select(this).attr("transform", "translate(" + d.x + "," + d.y + ")");
-     force.tick();
-     })
-     .on("dragend", function() {
-     this.dragging = false;
-     });
-     */
     force.drag = d3.behavior.drag()
         .origin(Object)
         .on("dragstart", $.proxy(function(e) {
@@ -259,18 +232,18 @@
         }, this));
 
     this.getNodes = function () { return _clusteringNodeProvider.getVisNodes(); };
-    this.getLinks = function () { return _clusteringNodeProvider.getVisLinks(); }; 
+    this.getLinks = function () { return _clusteringNodeProvider.getVisLinks(); };
 
     this.getAllNodes = function () { return _clusteringNodeProvider.getAllNodes(); }
-    this.getAllLinks = function () { return _clusteringNodeProvider.getAllLinks(); } 
+    this.getAllLinks = function () { return _clusteringNodeProvider.getAllLinks(); }
 
     this.calculate = function() {
         _clusteringNodeProvider.calculate();
     };
-    
+
     var padding = 1.5; // separation between nodes 
     var maxRadius = 12;
-    
+
     // Resolves collisions between d and all other circles.
     function collide(alpha) {
         var quadtree = d3.geom.quadtree(_clusteringNodeProvider.getVisNodes());
@@ -280,13 +253,13 @@
                 nx2 = d.x + r,
                 ny1 = d.y - r,
                 ny2 = d.y + r;
-            
+
             quadtree.visit(function(quad, x1, y1, x2, y2) {
                 if (quad.point && (quad.point !== d)) {
                     var x = d.x - quad.point.x,
-                    y = d.y - quad.point.y,
-                    l = Math.sqrt(x * x + y * y),
-                    r = d.radius + quad.point.radius + padding;
+                        y = d.y - quad.point.y,
+                        l = Math.sqrt(x * x + y * y),
+                        r = d.radius + quad.point.radius + padding;
                     if (l < r) {
                         l = (l - r) / l * alpha;
                         d.x -= x *= l;
@@ -312,7 +285,7 @@
         var nodeCount = visNodes.length;
         self.settings.linkConstant = (nodeCount > 1) ?
             this.settings.linkMultiplier * Math.min(w, h) / (3 * Math.sqrt(nodeCount - 1)) :
-            1; 
+            1;
 
         this.force
             .theta(this.settings.theta)
@@ -325,14 +298,14 @@
             .size([this.width, this.height])
 
         _clusteringNodeProvider.updateMarkers();
-        
+
         var curve = d3.svg.line()
             .interpolate("cardinal-closed")
             .tension(.85);
-    
+
         var cluster = this._clusters = this.visClusters.selectAll("path.hull")
             .data(_clusteringNodeProvider.getVisClusters());
-        
+
         var c = cluster.enter().append("svg:path")
             .attr("class", "hull")
             .attr("id", function (d) { return d.id; })
@@ -555,7 +528,7 @@
             link
                 .attr('d', function (d) { return _clusteringNodeProvider.calculatePath(d); });
 
-            if (self.settings.preventCollisions) 
+            if (self.settings.preventCollisions)
                 node.each(collide(0.5));
 
             // Update nodes
@@ -589,7 +562,7 @@
         force.start();
 
         this.updateLabels();
-        
+
         this.updateSizesForZoom(this.scale);
     };
 
@@ -597,11 +570,11 @@
         _clusteringNodeProvider.updateSizesForZoom(scale);
         _labellib.updateLabelSizesForZoom(scale);
     }
-    
+
     this.updateNodeColors = function () {
         _clusteringNodeProvider.updateNodeColors();
     }
-    
+
     this.updateLinkColors = function () {
         _clusteringNodeProvider.updateLinkColors();
     }
@@ -663,7 +636,7 @@
     this.removeNode = function (id, tag, forceRemove) {
         return _clusteringNodeProvider.removeNode(id, tag, forceRemove);
     };
-    
+
     this.removeNodeByIndex = function (index) {
         return _clusteringNodeProvider.removeNodeByIndex(index);
     }
@@ -671,7 +644,7 @@
     this.setNodeTitle = function (node, title) {
         return _clusteringNodeProvider.setNodeTitle(node, title);
     };
-    
+
     this.updateNodeColors = function () {
         return _clusteringNodeProvider.updateNodeColors();
     }
@@ -715,14 +688,14 @@
     this.getLinkWidth = function (d) { return _clusteringNodeProvider.getLinkWidth(d); }
 
     /* End link methods */
-    
+
     /* Cluster methods */
-    
+
     this.setCluster = function (clusterId, title, color) { return _clusteringNodeProvider.setCluster(clusterId, title, color); }
     this.updateClusters = function () { return _clusteringNodeProvider.updateClusters(); }
 
     /* End cluster methods */
-    
+
     /* Highlight methods */
 
     this.fadeOut = function (time, callback) {
