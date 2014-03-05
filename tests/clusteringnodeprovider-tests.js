@@ -131,4 +131,29 @@ Tinytest.add(testLevel + "simple moveNodes() test", function (test) {
 
 */
 
+Tinytest.add(testLevel + "test updateMarkers", function (test) {
+    // Setup
+    var d3graphStub = new D3graphStub();
+    var el =  $("<div />");
+    d3graphStub.markers = d3.select(el[0]).append("svg:svg").append("svg:defs");
+    d3graphStub.d3styles = function () { return { colors: { linkMin: "#ff0000", linkMax: "#00ff00", nodeMin: "#ff0000", nodeMax: "#00ff00" } }; }
+    d3graphStub.settings = { minMarkerSize: 10, maxMarkerSize: 100 };
+    
+    var clusteringNodeProvider = new ClusteringNodeProvider(d3graphStub);
 
+    var nodeSettings = [{ id: "fromNode" }, { id: "toNode" }];
+    _(nodeSettings).each(function (nodeSetting) { clusteringNodeProvider.addNode(nodeSetting); });
+
+    var linkSettings = [{ from: "fromNode", to: "toNode" }];
+    _(linkSettings).each(function (linkSetting) { clusteringNodeProvider.addLink(linkSetting); });
+
+    // Execute
+    clusteringNodeProvider.updateMarkers();
+    
+    // Verify
+    var markerElements = el.find("marker");
+    test.equal(markerElements.length, 11, "There should be 10 markers for one link color, plus a tracker-marker");
+    
+    test.equal(markerElements[0].getAttribute("markerWidth"), "50", "First marker should be 50 pixels wide");
+    test.equal(markerElements[0].getAttribute("markerHeight"), "30", "First marker should be 30 pixels wide");
+});

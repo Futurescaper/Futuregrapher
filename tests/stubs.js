@@ -9,6 +9,7 @@ D3graphStub = function () {
     this.events = {};
     this.links = [];
     this.update = function() {};
+    this.updateMarkers = function () {};
 
     this.getAllLinks = function () { return this._clusteringNodeProvider ? this._clusteringNodeProvider.getAllLinks() : this.links; }
     
