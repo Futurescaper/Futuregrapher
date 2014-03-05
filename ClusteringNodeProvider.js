@@ -435,8 +435,7 @@
             .duration(time || 500)
             .attr('transform', function (node) { return graph.d3labels().transformLabel(node, center); });
 
-        //graph.updateLinkColors();
-
+        graph.updateLinkColors();
         graph.fixedMode = false;
     };
 
