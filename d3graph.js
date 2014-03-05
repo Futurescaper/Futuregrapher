@@ -21,6 +21,16 @@
 
     var self = this;
 
+    this.calculateDefaultGravity = function () {
+        var k = Math.sqrt(_clusteringNodeProvider.getVisNodes().length / (this.width * this.height));
+        return 100 * k;        
+    }
+    
+    this.calculateDefaultCharge = function () {
+        var k = Math.sqrt(_clusteringNodeProvider.getVisNodes().length / (this.width * this.height));
+        return -50 / k;
+    }
+
     this.settings = {
         maxLabels: this.options.maxLabels||7,
         labelLength: this.options.labelLength||8,
@@ -304,18 +314,14 @@
             this.settings.linkMultiplier * Math.min(w, h) / (3 * Math.sqrt(nodeCount - 1)) :
             1; 
 
-        var k = Math.sqrt(visNodes.length / (w * h));
-        var charge = -50 / k;
-        var gravity = 100 * k;        
-
         this.force
             .theta(this.settings.theta)
             .linkStrength(function(d) {
                 return self.settings.linkStrength * (d.source.color == d.target.color ? 4 : 1);
             })
             .friction(this.settings.friction)
-            .charge(charge)
-            .gravity(gravity)
+            .charge(this.charge)
+            .gravity(this.settings.gravity)
             .size([this.width, this.height])
 
         _clusteringNodeProvider.updateMarkers();
