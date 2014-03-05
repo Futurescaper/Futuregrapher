@@ -305,7 +305,7 @@
             1; 
 
         var k = Math.sqrt(visNodes.length / (w * h));
-        var charge = -10 / k;
+        var charge = -50 / k;
         var gravity = 100 * k;        
 
         this.force
