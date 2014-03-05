@@ -116,6 +116,30 @@
             .attr('fill', function(d) { return _nodelib.getNodeBorderColor(d); });
     }
 
+    this.updateClusterSizes = function() {
+        for(var i in clusters)
+            clusters[i].placeholderNode.value.size = 0;
+
+        _(_nodelib.getNodes()).each(function (node) {
+            if (node.clusterId) {
+                var cluster = clusters[node.clusterId];
+                if(cluster)
+                    cluster.placeholderNode.value.size += node.value.size;
+            }
+        });
+
+        this.calculateNodes();
+
+        for(var i in clusters)
+            graph.d3().selectAll('g.node[id="' + clusters[i].placeholderNode.id + '"] circle')
+                .attr('r', clusters[i].placeholderNode.radius);
+
+        graph.d3().selectAll('g.links path').attr('d', function(d) { return _linklib.calculatePath(d); });
+
+        graph.updateLabels();
+        graph.updateSizesForZoom(graph.scale);
+    };
+
     this.updateClusters = function () {
         // Remove cluster placeholder stuff and clear clusters
         var oldClusters = _.clone(clusters);
