@@ -695,6 +695,7 @@
     /* Link methods */
 
     this.updateMarkers = function () { _clusteringNodeProvider.updateMarkers(); }
+    this.getMarkerUrl = function (d) { return _clusteringNodeProvider.getMarkerUrl(d); }
 
     this.addLink = function (options) { return _clusteringNodeProvider.addLink(options); };
     this.removeLink = function (from, to) { return _clusteringNodeProvider.removeLink(from, to); };
