@@ -170,13 +170,23 @@
             this.vis.attr('class', this.options.class);
     }
 
+    var hoveredNode = null;
+
     this.vis
         .on('mousemove', function() {
             if(self.events.onGraphMousemove)
                 self.events.onGraphMousemove(d3.event);
         })
         .on('mousedown', function(e) { if(self.events.onGraphMousedown) self.events.onGraphMousedown(e); })
-        .on('mouseup', function(e) { if(self.events.onGraphMouseup) self.events.onGraphMouseup(e); });
+        .on('mouseup', function(e) { 
+            if(hoveredNode) {
+                _clusteringNodeProvider.onNodeMouseup(hoveredNode);
+                hoveredNode = null;
+            }
+            else {
+                if(self.events.onGraphMouseup) self.events.onGraphMouseup(e); 
+            }
+        });
 
     this.markers = this.vis
         .append("svg:defs");
@@ -361,10 +371,10 @@
         var nodeEnter = node.enter().append("g")
             .attr("class", "node")
             .attr('id', function (d) { return d.id; })
-            .on('mouseover', function (d) { return _clusteringNodeProvider.onNodeMouseover(d); })
-            .on('mouseout', function (d) { return _clusteringNodeProvider.onNodeMouseout(d); })
+            .on('mouseover', function (d) { hoveredNode = d; return _clusteringNodeProvider.onNodeMouseover(d); })
+            .on('mouseout', function (d) { hoveredNode = null; return _clusteringNodeProvider.onNodeMouseout(d); })
             .on('mousedown', function(d) { return _clusteringNodeProvider.onNodeMousedown(d); })
-            .on('mouseup', function(d) { return _clusteringNodeProvider.onNodeMouseup(d); })
+            .on('mouseup', function(d) { hoveredNode = null; d3.event.stopPropagation(); return _clusteringNodeProvider.onNodeMouseup(d); })
             .on('click', function (d) { return _clusteringNodeProvider.onNodeClick(d); })
             .on('dblclick', function(d) { return _clusteringNodeProvider.onNodeDblClick(d); });
 
