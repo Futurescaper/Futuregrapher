@@ -209,6 +209,10 @@
         .append('svg:g')
         .attr('class', 'labels');
 
+    this.visUi = this.vis
+        .append('svg:g')
+        .attr('class', 'ui')
+
     var force = this.force = d3.layout.force()
         .theta(this.settings.theta)
         .gravity(this.settings.gravity)

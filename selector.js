@@ -12,6 +12,45 @@ d3selector = function (graph) {
         return link.selected;
     };
 
+    this.showUi = function (element, x, y) {
+        var menu = graph.visUi.append("svg:g")
+            .attr("class", "menu")
+            .attr("transform", "translate(" + (x + 3) + ".5, " + (y - 33) + ".5)");
+        
+        function addButton(buttonX, buttonY, iconCode, clickFunction) {
+            var button = menu.append("svg:g")
+                .attr("transform" ,"translate(" + buttonX + ", " + buttonY + ")");
+            
+            button.append("svg:rect")
+                .attr("width", 30)
+                .attr("height", 30)
+                .attr("fill", "#f8f8f8")
+                .attr("stroke", "#e7e7e7")
+                .attr("stroke-width", 1)
+            
+            var icon = button.append("svg:text")
+                .attr("x", 3)
+                .attr("y", 24)
+                .attr('font-family', 'FontAwesome')
+                .attr('font-size', 27)
+                .style("fill", "#777")
+                .text(iconCode)
+                .on("mouseover", function (d) { icon.transition(250).style("fill", "#333"); })
+                .on("mouseout", function (d) { icon.transition(250).style("fill", "#777"); })
+                .on("click", clickFunction);
+        }
+        
+        function editElement(el) { console.log("Edit " + el.title); };
+        function deleteElement(el) { console.log("Delete " + el.title); };
+        
+        addButton(0, 0, "\uf040", editElement.bind(null, element));
+        addButton(34, 0, "\uf00d", deleteElement.bind(null, element));
+    };
+        
+    this.hideUi = function () {
+        graph.visUi.selectAll("g.menu").remove();
+    };
+
     this.setNode = function(node, on) {
         if(on) {
             node.originalColor = graph._nodes.select('g.node[id="' + node.id + '"] circle').style('fill');
@@ -21,6 +60,9 @@ d3selector = function (graph) {
                 .style('fill', graph.d3styles().colors.nodeSelected || '#ff0000')
                 .style('stroke', '#800000');
             nodes.push(node);
+            
+            var mouse = d3.mouse(graph.vis[0][0]);
+            this.showUi(node, mouse[0], mouse[1]);
         }
         else {
             graph._nodes.select('g.node[id="' + node.id + '"] circle')
@@ -44,14 +86,17 @@ d3selector = function (graph) {
             var l = graph.visLinks.select('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
                 //.transition()
                 //.duration(50)
-                .style("stroke-width", function (d) { return 4 * graph.getLinkWidth(d) / graph.scale; });
+                .style("stroke-width", function (d) { return 4 * graph.getLinkWidth(d) / graph.scale; })
+                .attr('marker-end', function(link) { return link.directional ? 'url(#' + graph.getMarkerUrl(link) + ')' : ''; });
+
             if(color) {
-                if(!graph.d3links().hasMarkerDefinition(color))
-                    graph.d3links().addMarkerDefinition(color, color);
                 l.style('stroke', color)
-                    .attr('marker-end', 'url(#' + graph.settings.markerId + '_' + color + ')');
+                    .attr('marker-end', function(link) { return link.directional ? 'url(#tracker)' : ''; });
             }
             links.push(link);
+
+            var mouse = d3.mouse(graph.vis[0][0]);
+            this.showUi(link, mouse[0], mouse[1]);
         }
         else {
             graph.visLinks.select('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
@@ -96,6 +141,8 @@ d3selector = function (graph) {
     this.clear = function() {
         this.clearNodes();
         this.clearLinks();
+        
+        this.hideUi();
     };
 
     this.clearNodes = function() {
@@ -118,8 +165,8 @@ d3selector = function (graph) {
                 //.transition()
                 //.duration(50)
                 .style('stroke-width', function(d) { return link._strokeWidth || graph.d3links().getLinkWidth(d) / graph.scale; })
-                .style('stroke', function(l) { return graph.d3links().getLinkColor(l, graph.d3styles().colors.linkMin, graph.d3styles().colors.linkMax); })
-                .attr('marker-end', 'url(#' + graph.settings.markerId + '_default)');
+                .style('stroke', function(l) { return graph.getLinkColor(l); })
+                .attr('marker-end', function(link) { return link.directional ? 'url(#' + graph.getMarkerUrl(link) + ')' : ''; });
         }
 
         links = [];
