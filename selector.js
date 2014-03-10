@@ -12,7 +12,7 @@ d3selector = function (graph) {
         return link.selected;
     };
 
-    this.showUi = function (element, x, y) {
+    this.showUi = function (element, x, y, isNode) {
         var menu = graph.visUi.append("svg:g")
             .attr("class", "menu")
             .attr("transform", "translate(" + (x + 3) + ".5, " + (y - 33) + ".5)");
@@ -40,11 +40,13 @@ d3selector = function (graph) {
                 .on("click", clickFunction);
         }
         
-        function editElement(el) { console.log("Edit " + el.title); };
-        function deleteElement(el) { console.log("Delete " + el.title); };
-        
-        addButton(0, 0, "\uf040", editElement.bind(null, element));
-        addButton(34, 0, "\uf00d", deleteElement.bind(null, element));
+        function triggerEvent(element, eventName) { 
+            if (graph.events.hasOwnProperty(eventName) && typeof (graph.events[eventName] === "function"))
+                graph.events[eventName](element, d3.event);
+        };
+
+        addButton(0, 0, "\uf040", triggerEvent.bind(null, element, isNode ? "onNodeEdit" : "onLinkEdit"));
+        addButton(34, 0, "\uf00d", triggerEvent.bind(null, element, isNode ? "onNodeDelete" : "onLinkDelete"));
     };
         
     this.hideUi = function () {
@@ -62,7 +64,7 @@ d3selector = function (graph) {
             nodes.push(node);
             
             var mouse = d3.mouse(graph.vis[0][0]);
-            this.showUi(node, mouse[0], mouse[1]);
+            this.showUi(node, mouse[0], mouse[1], true);
         }
         else {
             graph._nodes.select('g.node[id="' + node.id + '"] circle')
@@ -96,7 +98,7 @@ d3selector = function (graph) {
             links.push(link);
 
             var mouse = d3.mouse(graph.vis[0][0]);
-            this.showUi(link, mouse[0], mouse[1]);
+            this.showUi(link, mouse[0], mouse[1], false);
         }
         else {
             graph.visLinks.select('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
