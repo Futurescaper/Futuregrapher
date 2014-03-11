@@ -577,6 +577,9 @@
             if (self.fixedMode)
                 return;
 
+            if (self.settings.preventCollisions)
+                node.each(collide(0.5));
+
             // FIX FOR IE10/11 WHERE THE MARKERS DON'T GET MOVED WITH THE LINES
             if(navigator.appVersion.indexOf("MSIE 10") != -1 || ($.browser.mozilla && parseInt($.browser.version, 10) == 11))
                 link.each(function() { this.parentNode.insertBefore(this, this); });
@@ -589,9 +592,6 @@
             // Update links
             link
                 .attr('d', function (d) { return _clusteringNodeProvider.calculatePath(d); });
-
-            if (self.settings.preventCollisions)
-                node.each(collide(0.5));
 
             // Update nodes
             node
