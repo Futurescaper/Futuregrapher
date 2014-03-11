@@ -418,21 +418,6 @@
         graph.update();
     };
 
-    this.onLinkClick = function(link) {
-        if (graph.events.onLinkClick && typeof (graph.events.onLinkClick === "function"))
-            graph.events.onLinkClick(link, d3.event);
-    };
-
-    this.onLinkMouseover = function(link) {
-        if (graph.events.onLinkMouseover&& typeof (graph.events.onLinkMouseover === "function"))
-            graph.events.onLinkMouseover(link, d3.event);
-    };
-
-    this.onLinkMouseout = function(link) {
-        if (graph.events.onLinkMouseout&& typeof (graph.events.onLinkMouseout === "function"))
-            graph.events.onLinkMouseout(link, d3.event);
-    };
-
     this.onLinkMousedown = function(link) {
         if (graph.events.onLinkMousedown&& typeof (graph.events.onLinkMousedown === "function"))
             graph.events.onLinkMousedown(link, d3.event);

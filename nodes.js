@@ -523,7 +523,7 @@
     
     var doubleclick = false;
     var clicking = false;
-    this.onNodeClick = function (node) {
+    this.onNodeClick = function (node, x, y) {
         if(clicking)
             return;
         doubleclick = false;
@@ -539,12 +539,12 @@
             setTimeout(function() {
                 clicking = false;
                 if(!doubleclick)
-                    graph.events.onNodeClick(node, d3.event);
+                    graph.events.onNodeClick(node, x, y);
             }, 150);
         }
     };
 
-    this.onNodeDblClick = function (node) {
+    this.onNodeDblClick = function (node, x, y) {
         if (graph.events.onNodeDblClick && typeof (graph.events.onNodeDblClick === "function")) {
             doubleclick = true;
             clicking = false;
@@ -555,7 +555,7 @@
                 window.event.preventDefault();
                 window.event.stopPropagation();
             }
-            graph.events.onNodeDblClick(node, d3.event||window.event);
+            graph.events.onNodeDblClick(node, x, y);
             return true;
         }
     };

@@ -89,6 +89,7 @@
         onNodeEdit: options.onNodeEdit,
         onNodeDelete: options.onNodeDelete,
         onLinkClick: options.onLinkClick,
+        onLinkDblClick: options.onLinkDblClick,
         onLinkMouseover: options.onLinkMouseover,
         onLinkMouseout: options.onLinkMouseout,
         onLinkMousedown: options.onLinkMousedown,
@@ -346,9 +347,34 @@
         var l = link.enter().append("svg:path")
             .attr('source', function (link) { return link.source.id; })
             .attr('target', function (link) { return link.target.id; })
-            .on('mouseover', function (d) { _clusteringNodeProvider.onLinkMouseover(d); })
-            .on('mouseout', function (d) { _clusteringNodeProvider.onLinkMouseout(d); })
-            .on('click', function(d) { _clusteringNodeProvider.onLinkClick(d); })
+            .on('mouseover', function (d) { 
+                if (self.events.onLinkMouseover&& typeof (self.events.onLinkMouseover === "function"))
+                    self.events.onLinkMouseover(d, d3.event);
+            })
+            .on('mouseout', function (d) { 
+                if (self.events.onLinkMouseout&& typeof (self.events.onLinkMouseout === "function"))
+                    self.events.onLinkMouseout(d, d3.event);
+            })
+            .on('click', function(d) { 
+                doubleclick = false;
+                var mouse = d3.mouse(self.vis[0][0]);
+                
+                if (self.events.onLinkClick&& typeof (self.events.onLinkClick === "function")) {
+                    setTimeout(function() {
+                        if(!doubleclick)
+                            self.events.onLinkClick(d, mouse[0], mouse[1]);
+                    }, 300);
+                }
+                d3.event.stopPropagation();
+            })
+            .on('dblclick', function (d) { 
+                if (self.events.onLinkDblClick&& typeof (self.events.onLinkDblClick === "function")) {
+                    doubleclick = true;
+                    var mouse = d3.mouse(self.vis[0][0]);
+                    self.events.onLinkDblClick(d, mouse[0], mouse[1]);
+                    d3.event.stopPropagation();
+                }
+            })
             .attr('class', 'link');
 
         if(this.settings.taperedLinks)
@@ -379,12 +405,30 @@
         var nodeEnter = node.enter().append("g")
             .attr("class", "node")
             .attr('id', function (d) { return d.id; })
-            .on('mouseover', function (d) { hoveredNode = d; return _clusteringNodeProvider.onNodeMouseover(d); })
-            .on('mouseout', function (d) { hoveredNode = null; return _clusteringNodeProvider.onNodeMouseout(d); })
-            .on('mousedown', function(d) { return _clusteringNodeProvider.onNodeMousedown(d); })
-            .on('mouseup', function(d) { hoveredNode = null; d3.event.stopPropagation(); return _clusteringNodeProvider.onNodeMouseup(d); })
-            .on('click', function (d) { return _clusteringNodeProvider.onNodeClick(d); })
-            .on('dblclick', function(d) { return _clusteringNodeProvider.onNodeDblClick(d); });
+            .on('mouseover', function (d) { 
+                hoveredNode = d; 
+                return _clusteringNodeProvider.onNodeMouseover(d); 
+            })
+            .on('mouseout', function (d) { 
+                hoveredNode = null; 
+                return _clusteringNodeProvider.onNodeMouseout(d); 
+            })
+            .on('mousedown', function(d) { 
+                return _clusteringNodeProvider.onNodeMousedown(d); 
+            })
+            .on('mouseup', function(d) { 
+                hoveredNode = null; 
+                d3.event.stopPropagation(); 
+                return _clusteringNodeProvider.onNodeMouseup(d); 
+            })
+            .on('click', function (d) { 
+                var mouse = d3.mouse(self.vis[0][0]);
+                return _clusteringNodeProvider.onNodeClick(d, mouse[0], mouse[1]); 
+            })
+            .on('dblclick', function(d) { 
+                var mouse = d3.mouse(self.vis[0][0]);
+                return _clusteringNodeProvider.onNodeDblClick(d, mouse[0], mouse[1]); 
+            })
 
         if(this.options.nodeSorting)
             nodeEnter.sort(function(a, b) {

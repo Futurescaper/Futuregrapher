@@ -282,16 +282,16 @@
         return _nodelib.onNodeMouseup(d);
     }
 
-    this.onNodeClick = function (d) {
+    this.onNodeClick = function (d, x, y) {
         if(d.isClusterPlaceholder) {
             return; // For now, do nothing when clicking a placeholder node.
         }
         else {
-            return _nodelib.onNodeClick(d);
+            return _nodelib.onNodeClick(d, x, y);
         }
     }
 
-    this.onNodeDblClick = function (d) { return _nodelib.onNodeDblClick(d); }
+    this.onNodeDblClick = function (d, x, y) { return _nodelib.onNodeDblClick(d, x, y); }
     this.onNodeRightClick = function (d) { return _nodelib.onNodeRightClick(d); }
 
     this.moveNodes = function (positions, time, ignoreLinks) {
@@ -599,10 +599,6 @@
         this.calculateLinks();
     };
 
-
-    this.onLinkMouseover = function (d) { return _linklib.onLinkMouseover(d); }
-    this.onLinkMouseout = function (d) { return _linklib.onLinkMouseout(d); }
-    this.onLinkClick = function (d) { return _linklib.onLinkClick(d); }
 
     this.getLinkWidth = function (d) { return _linklib.getLinkWidth(d); }
     this.getLinkColor = function (d, minColor, maxColor) {

@@ -13,6 +13,8 @@ d3selector = function (graph) {
     };
 
     this.showUi = function (element, x, y, isNode) {
+        this.hideUi();
+        
         var menu = graph.visUi.append("svg:g")
             .attr("class", "menu")
             .attr("transform", "translate(" + (x + 3) + ".5, " + (y - 33) + ".5)");
@@ -34,6 +36,7 @@ d3selector = function (graph) {
                 .attr('font-family', 'FontAwesome')
                 .attr('font-size', 27)
                 .style("fill", "#777")
+                .style("cursor", "hand")
                 .text(iconCode)
                 .on("mouseover", function (d) { icon.transition(250).style("fill", "#333"); })
                 .on("mouseout", function (d) { icon.transition(250).style("fill", "#777"); })
@@ -43,15 +46,20 @@ d3selector = function (graph) {
         function triggerEvent(element, eventName) { 
             if (graph.events.hasOwnProperty(eventName) && typeof (graph.events[eventName] === "function"))
                 graph.events[eventName](element, d3.event);
+
+            this.hideUi();
         };
 
-        addButton(0, 0, "\uf040", triggerEvent.bind(null, element, isNode ? "onNodeEdit" : "onLinkEdit"));
-        addButton(34, 0, "\uf00d", triggerEvent.bind(null, element, isNode ? "onNodeDelete" : "onLinkDelete"));
+        addButton(0, 0, "\uf040", triggerEvent.bind(this, element, isNode ? "onNodeEdit" : "onLinkEdit"));
+        addButton(34, 0, "\uf00d", triggerEvent.bind(this, element, isNode ? "onNodeDelete" : "onLinkDelete"));
     };
         
     this.hideUi = function () {
         graph.visUi.selectAll("g.menu").remove();
     };
+
+    this.showNodeToolbar = function (node, x, y) { this.showUi(node, x, y, true); };
+    this.showLinkToolbar = function (link, x, y) { this.showUi(link, x, y, false); };
 
     this.setNode = function(node, on) {
         if(on) {
@@ -62,9 +70,6 @@ d3selector = function (graph) {
                 .style('fill', graph.d3styles().colors.nodeSelected || '#ff0000')
                 .style('stroke', '#800000');
             nodes.push(node);
-            
-            var mouse = d3.mouse(graph.vis[0][0]);
-            this.showUi(node, mouse[0], mouse[1], true);
         }
         else {
             graph._nodes.select('g.node[id="' + node.id + '"] circle')
@@ -96,9 +101,6 @@ d3selector = function (graph) {
                     .attr('marker-end', function(link) { return link.directional ? 'url(#tracker)' : ''; });
             }
             links.push(link);
-
-            var mouse = d3.mouse(graph.vis[0][0]);
-            this.showUi(link, mouse[0], mouse[1], false);
         }
         else {
             graph.visLinks.select('g.links path[source="' + link.source.id + '"][target="' + link.target.id + '"]')
