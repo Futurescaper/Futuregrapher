@@ -67,7 +67,8 @@
         reverseLabelPosition: this.options.reverseLabelPosition,
         constrainNodes: this.options.constrainNodes,
         clustering: true,
-        preventCollisions: this.options.preventCollisions == undefined ? true : this.options.preventCollisions
+        preventCollisions: this.options.preventCollisions == undefined ? true : this.options.preventCollisions,
+        fitToScreen: this.options.fitToScreen === undefined ? true :  this.options.fitToScreen
     };
 
     this.events = {
@@ -117,6 +118,9 @@
     this.scale = this.settings.initialZoom || 1.0;
     this.trans = [(w / 2) - (w * this.scale / 2), (h / 2) - (h * this.scale / 2)];
 
+    // This variable decides whether to to screen during tick. It's initialized to the setting, but switched off when alpha drops low enough.
+    var fitToScreenCounter = this.settings.fitToScreen ? 50 : 0;
+
     var doubleclick = false;
     this.el.on('click', function (evt) {
         doubleclick = false;
@@ -165,8 +169,7 @@
     };
 
     if(this.settings.zoom) {
-        this.zoomer = new d3zoomer();
-        this.zoomer.initialize(this, this.options.zoomWidgetId);
+        this.zoomer = new d3zoomer(this, this.options.zoomWidgetId);
     }
     else {
         this.vis = d3.select(el[0]).append("svg:svg");
@@ -593,6 +596,8 @@
             link
                 .attr('d', function (d) { return _clusteringNodeProvider.calculatePath(d); });
 
+            var minX, maxX, minY, maxY;
+
             // Update nodes
             node
                 .attr("transform", function (d) {
@@ -606,6 +611,11 @@
                         if(d.y > self.height - d.radius)
                             d.y = self.height - d.radius;
                     }
+                    
+                    if (!minX || minX > d.x) minX = d.x;
+                    if (!maxX || maxX < d.x) maxX = d.x;
+                    if (!minY || minY > d.y) minY = d.y;
+                    if (!maxY || maxY < d.y) maxY = d.y;
 
                     return "translate(" + d.x + "," + d.y + ")";
                 });
@@ -618,6 +628,32 @@
             self.d3()
                 .selectAll('g.label text')
                 .attr('text-anchor', function (node) { return self.settings.embedLabels ? 'middle' : (RTL ? (node.x < center.x ? 'start' : 'end') : (node.x < center.x ? 'end' : 'start')); });
+
+            if (fitToScreenCounter > 0 && self.zoomer) {
+                fitToScreenCounter -= 1;
+                var bbox = {
+                    width: maxX - minX,
+                    height: maxY - minY
+                };
+                
+                var newScaleX = w / bbox.width;
+                var newScaleY = h / bbox.height;
+                var newScale = Math.min(newScaleX, newScaleY);
+    
+                var scaledWidth = bbox.width * newScale;
+                var scaledHeight = bbox.height * newScale;
+                
+                var x = (w - scaledWidth) / 2 - minX * newScale;
+                var y = (h - scaledHeight) / 2 - minY * newScale;
+                
+                self.zoomer.transform(newScale, [x, y]);
+                
+                //self.scale = newScale;
+                //self.trans = [x, y];
+                
+                //self.vis.attr('transform', 'translate(' + self.trans + ') scale(' + self.scale + ')');
+
+            }
         });
 
         // Restart the force layout.

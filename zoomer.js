@@ -1,60 +1,64 @@
-d3zoomer = function () {
+d3zoomer = function (graph, widgetId) {
+    var self = this;
+    var zoom = this.zoom = { min:.25, max: 20, default:.8 };
+
+    this.graph = graph;
+
+    this.behavior = d3.behavior.zoom()
+        .translate(graph.trans)
+        .scale(graph.scale)
+        .scaleExtent([zoom.min, zoom.max]);
+
     var doZoom = true;
     var widget = null;
 
-    var zoom = this.zoom = { min:.25, max: 20, default:.8 };
 
-    this.initialize = $.proxy(function (graph, widgetId) {
-        this.graph = graph;
+    this.transform = function(scale, translate) {
+        if(this.graph.noZoom)
+            return;
 
-        this.behavior = d3.behavior.zoom()
-            .translate(graph.trans)
-            .scale(graph.scale)
-            .scaleExtent([zoom.min, zoom.max]);
+        this.graph.trans = translate;
 
-        function rescale() {
-            if(graph.noZoom)
-                return;
-
-            graph.trans = d3.event.translate;
-
-            // FIX: after using the zoom widget, this value is not holding the current scale value!!!
-            graph.scale = d3.event.scale;
-            //Helper.debug("Mouse zoom: " + this.graph.trans + ": Scale=" + this.graph.scale);
-            graph.vis.attr('transform', 'translate(' + graph.trans + ') scale(' + graph.scale + ')');
-
-            // update labels
-            graph.d3labels().updateLabelSizesForZoom(graph.scale);
-            graph.updateSizesForZoom(graph.scale);
-
-            if(widget) {
-                doZoom = false;
-                widget.setValue(0, Math.sqrt(graph.scale - zoom.min) / Math.sqrt(zoom.max - zoom.min));
-            }
-        }
-
-        this.graph.vis = d3.select(graph.el[0]).append("svg:svg")
-            .attr("width", graph.width)
-            .attr("height", graph.height)
-            .attr("class", graph.options.class)
-
-            // -- Zooming / panning code
-            .attr('pointer-events', 'all')
-            .append('svg:g')
-            .call(this.behavior.on('zoom', rescale)).on('dblclick.zoom', null)
-            .append('svg:g');
-
-        this.graph.vis
-            .append('rect')
-            .attr('width', 10000)
-            .attr('height', 10000)
-            .attr('fill', 'transparent');
-
+        // FIX: after using the zoom widget, this value is not holding the current scale value!!!
+        this.graph.scale = scale;
+        //Helper.debug("Mouse zoom: " + this.graph.trans + ": Scale=" + this.graph.scale);
         this.graph.vis.attr('transform', 'translate(' + this.graph.trans + ') scale(' + this.graph.scale + ')');
 
-        if(widgetId)
-            this.createWidget(widgetId);
-    }, this);
+        // update labels
+        this.graph.d3labels().updateLabelSizesForZoom(this.graph.scale);
+        this.graph.updateSizesForZoom(this.graph.scale);
+
+        if(widget) {
+            doZoom = false;
+            widget.setValue(0, Math.sqrt(this.graph.scale - zoom.min) / Math.sqrt(zoom.max - zoom.min));
+        }
+        this.behavior.scale(scale).translate(translate);
+    }
+
+    var rescale = function () { this.transform(d3.event.scale, d3.event.translate); };
+
+    this.graph.vis = d3.select(graph.el[0]).append("svg:svg")
+        .attr("width", graph.width)
+        .attr("height", graph.height)
+        .attr("class", graph.options.class)
+
+        // -- Zooming / panning code
+        .attr('pointer-events', 'all')
+        .append('svg:g')
+        .call(this.behavior.on('zoom', rescale.bind(self)))
+        .on('dblclick.zoom', null)
+        .append('svg:g');
+
+    this.graph.vis
+        .append('rect')
+        .attr('width', 10000)
+        .attr('height', 10000)
+        .attr('fill', 'transparent');
+
+    this.graph.vis.attr('transform', 'translate(' + this.graph.trans + ') scale(' + this.graph.scale + ')');
+
+    if(widgetId)
+        this.createWidget(widgetId);
 
     this.createWidget = $.proxy(function(id) {
         widget = new Dragdealer(id, {
