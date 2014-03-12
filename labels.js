@@ -63,6 +63,9 @@
         });
 
         function getWords(text, count) {
+            if(!text)
+                return '';
+
             var arr = text.split(' ');
             return arr.length > count ?
                 arr.slice(0, count).join(' ') + '...' :
