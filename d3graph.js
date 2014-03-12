@@ -597,6 +597,7 @@
             link
                 .attr('d', function (d) { return _clusteringNodeProvider.calculatePath(d); });
 
+            // These are used to detemine the bounding box if we're doing fit-to-screen
             var minX, maxX, minY, maxY;
 
             // Update nodes
@@ -613,10 +614,10 @@
                             d.y = self.height - d.radius;
                     }
                     
-                    if (!minX || minX > d.x) minX = d.x;
-                    if (!maxX || maxX < d.x) maxX = d.x;
-                    if (!minY || minY > d.y) minY = d.y;
-                    if (!maxY || maxY < d.y) maxY = d.y;
+                    if (!minX || minX > d.x - d.radius) minX = d.x - d.radius;
+                    if (!maxX || maxX < d.x + d.radius) maxX = d.x + d.radius;
+                    if (!minY || minY > d.y - d.radius) minY = d.y - d.radius;
+                    if (!maxY || maxY < d.y + d.radius) maxY = d.y + d.radius;
 
                     return "translate(" + d.x + "," + d.y + ")";
                 });
@@ -632,9 +633,10 @@
 
             if (fitToScreenCounter > 0 && self.zoomer) {
                 fitToScreenCounter -= 1;
+                
                 var bbox = {
-                    width: maxX - minX,
-                    height: maxY - minY
+                    width: maxX - minX + 10,
+                    height: maxY - minY + 10
                 };
                 
                 var newScaleX = w / bbox.width;
