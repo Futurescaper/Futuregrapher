@@ -120,7 +120,7 @@
 
     // This variable decides whether to to screen during tick. It's initialized to the setting, but switched off when alpha drops low enough.
     var fitToScreenCounter = this.settings.fitToScreen ? 50 : 0;
-    this.resetFitToScreen = function() { fitToScreenCounter = 50; };
+    this.resetFitToScreen = function(x) { fitToScreenCounter = x || 50; };
 
     var doubleclick = false;
     this.el.on('click', function (evt) {
