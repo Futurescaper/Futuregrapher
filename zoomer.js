@@ -12,7 +12,6 @@ d3zoomer = function (graph, widgetId) {
     var doZoom = true;
     var widget = null;
 
-
     this.transform = function(scale, translate) {
         if(this.graph.noZoom)
             return;

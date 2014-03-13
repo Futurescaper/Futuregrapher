@@ -46,5 +46,6 @@ Package.on_test(function (api) {
         "tests/d3links-tests.js",
         "tests/clusteringnodeprovider-tests.js", 
         "tests/clusteringnodeprovider-clustering-tests.js",
+        "tests/d3zoomer-tests.js"
     ], ["client"]);
 });
