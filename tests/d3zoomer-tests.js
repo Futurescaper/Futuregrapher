@@ -21,3 +21,6 @@ Tinytest.add(testLevel +  'Test transform() function', function (test) {
     test.equal(innerG.attr("transform"), "translate(10,20) scale(3)", "The zoomer should have mofied the transform of the inner G element");
 });
 
+
+
+

@@ -9,6 +9,7 @@ var libFiles = [
         'geostats/geostats.min.js',
         'geostats/jenks.util.js',
         'tipsy/tipsy.js',
+        'intersect/intersect.js',
         'dictionary.js',
         'colors.js',
         'ClusteringNodeProvider.js',
