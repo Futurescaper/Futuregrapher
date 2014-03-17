@@ -35,6 +35,7 @@ d3zoomer = function (graph, widgetId) {
     }
 
     var rescale = function () { this.transform(d3.event.scale, d3.event.translate); };
+    this.behavior.on('zoom', rescale.bind(self));
 
     this.graph.vis = d3.select(graph.el[0]).append("svg:svg")
         .attr("width", graph.width)
@@ -44,7 +45,7 @@ d3zoomer = function (graph, widgetId) {
         // -- Zooming / panning code
         .attr('pointer-events', 'all')
         .append('svg:g')
-        .call(this.behavior.on('zoom', rescale.bind(self)))
+        .call(this.behavior)
         .on('dblclick.zoom', null)
         .append('svg:g');
 
@@ -59,6 +60,7 @@ d3zoomer = function (graph, widgetId) {
     if(widgetId)
         this.createWidget(widgetId);
 
+    //[of]:    this.createWidget = $.proxy(function(id) {
     this.createWidget = $.proxy(function(id) {
         widget = new Dragdealer(id, {
             horizontal: false,
@@ -70,30 +72,31 @@ d3zoomer = function (graph, widgetId) {
             animationCallback: $.proxy(function(x, y) {
                 if(!doZoom)
                     return;
-
+    
                 y = Math.pow(Math.sqrt(zoom.max - zoom.min) * y, 2) + zoom.min;
                 if(y < zoom.min)
                     y = zoom.min;
-
+    
                 var trans = [(this.graph.width / 2) - (this.graph.width * y / 2), (this.graph.height / 2) - (this.graph.height * y / 2)];
-
+    
                 Helper.debug("Widget zoom: " + trans + ": Scale=" + y);
-
+    
                 var graph = this.graph;
                 var w = graph.el.width();
                 var h = graph.el.height();
-
+    
                 graph.scale = y;
                 graph.trans = [(w / 2) - (w * graph.scale / 2), (h / 2) - (h * graph.scale / 2)];
-
+    
                 /* FIX: this doesn't seem to actually update the "internal" scale value */
                 graph.vis.attr('transform', 'translate(' + graph.trans + ') scale(' + graph.scale + ')');
                 graph.zoom.translate(graph.trans).scale(graph.scale);
-
+    
                 graph.d3labels().updateLabelSizesForZoom(y);
                 graph.updateSizesForZoom(y);
             }, this)
         });
+    //[cf]
 
         $('#' + id).mouseenter(function() {
             Helper.debug("Entered zoom widget");

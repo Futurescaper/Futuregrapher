@@ -122,6 +122,9 @@
     var fitToScreenCounter = this.settings.fitToScreen ? 50 : 0;
     this.resetFitToScreen = function(x) { fitToScreenCounter = x || 50; };
 
+    this.disableZoom = function () { this.zoomer.disable(); }
+    this.enableZoom = function () { this.zoomer.enable(); }
+
     var doubleclick = false;
     this.el.on('click', function (evt) {
         doubleclick = false;
