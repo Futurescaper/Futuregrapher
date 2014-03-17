@@ -666,7 +666,8 @@
         });
 
         // Restart the force layout.
-        force.start();
+        if(!this.fixedMode)
+            force.start();
 
         this.updateLabels();
 

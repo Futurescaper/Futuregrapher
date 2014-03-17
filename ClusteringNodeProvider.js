@@ -463,7 +463,7 @@
             .attr('transform', function (node) { return graph.d3labels().transformLabel(node, center); });
 
         graph.updateLinkColors();
-        graph.fixedMode = false;
+        //graph.fixedMode = false;
     };
 
 
