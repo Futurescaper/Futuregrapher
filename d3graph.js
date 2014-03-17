@@ -189,8 +189,6 @@
         .on('mousedown', function(e) {
             if(self.events.onGraphMousedown) 
                 self.events.onGraphMousedown(e); 
-            if (hoveredNode)
-                d3.event.stopPropagation(); 
         })
         .on('mouseup', function(e) { 
             if(hoveredNode) {
@@ -428,7 +426,6 @@
             })
             .on('mouseup', function(d) { 
                 hoveredNode = null; 
-                d3.event.stopPropagation(); 
                 return _clusteringNodeProvider.onNodeMouseup(d); 
             })
             .on('click', function (d) { 

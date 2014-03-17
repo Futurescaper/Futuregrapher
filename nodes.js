@@ -517,7 +517,7 @@
     };
     
     this.getNodeTooltip = function (node) {
-        if (graph.events.onNodeTooltip && typeof (graph.events.onNodeTooltip === "function"))
+        if (graph.events.onNodeTooltip && typeof graph.events.onNodeTooltip === "function")
             return graph.events.onNodeTooltip(node, d3.event);
     };
     
@@ -528,7 +528,7 @@
             return;
         doubleclick = false;
         clicking = true;
-        if (graph.events.onNodeClick && typeof (graph.events.onNodeClick === "function")) {
+        if (graph.events.onNodeClick && typeof graph.events.onNodeClick === "function") {
             d3.event.preventDefault();
     
             if(window.event.preventDefault)
@@ -545,7 +545,7 @@
     };
 
     this.onNodeDblClick = function (node, x, y) {
-        if (graph.events.onNodeDblClick && typeof (graph.events.onNodeDblClick === "function")) {
+        if (graph.events.onNodeDblClick && typeof graph.events.onNodeDblClick === "function") {
             doubleclick = true;
             clicking = false;
     
@@ -562,28 +562,28 @@
 
     this.onNodeMouseover = function (node) {
         graph.currentNode = node;
-        if (graph.events.onNodeMouseover && typeof (graph.events.onNodeMouseover === "function"))
+        if (graph.events.onNodeMouseover && typeof graph.events.onNodeMouseover === "function")
             graph.events.onNodeMouseover(node, d3.event);
     };
 
     this.onNodeMouseout = function (node) {
         graph.currentNode = null;
-        if (graph.events.onNodeMouseout && typeof (graph.events.onNodeMouseout === "function"))
+        if (graph.events.onNodeMouseout && typeof graph.events.onNodeMouseout === "function")
             graph.events.onNodeMouseout(node, d3.event);
     };
 
     this.onNodeMousedown = function (node) {
-        if (graph.events.onNodeMousedown && typeof (graph.events.onNodeMousedown === "function"))
+        if (graph.events.onNodeMousedown && typeof graph.events.onNodeMousedown === "function")
             graph.events.onNodeMousedown(node, d3.event);
     };
 
     this.onNodeMouseup = function (node) {
-        if (graph.events.onNodeMouseup && typeof (graph.events.onNodeMouseup === "function"))
+        if (graph.events.onNodeMouseup && typeof graph.events.onNodeMouseup === "function")
             graph.events.onNodeMouseup(node, d3.event);
     };
 
     this.onNodeRightClick = function(node) {
-        if(graph.events.onNodeRightClick && typeof (graph.events.onNodeRightClick === "function")) {
+        if(graph.events.onNodeRightClick && typeof graph.events.onNodeRightClick === "function") {
             graph.events.onNodeRightClick(node, d3.event||window.event);
             if(d3.event)
                 d3.event.preventDefault();
