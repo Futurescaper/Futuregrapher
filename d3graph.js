@@ -186,14 +186,20 @@
             if(self.events.onGraphMousemove)
                 self.events.onGraphMousemove(d3.event);
         })
-        .on('mousedown', function(e) { if(self.events.onGraphMousedown) self.events.onGraphMousedown(e); d3.event.stopPropagation(); })
+        .on('mousedown', function(e) {
+            if(self.events.onGraphMousedown) 
+                self.events.onGraphMousedown(e); 
+            if (hoveredNode)
+                d3.event.stopPropagation(); 
+        })
         .on('mouseup', function(e) { 
             if(hoveredNode) {
                 _clusteringNodeProvider.onNodeMouseup(hoveredNode);
                 hoveredNode = null;
             }
             else {
-                if(self.events.onGraphMouseup) self.events.onGraphMouseup(e); 
+                if(self.events.onGraphMouseup) 
+                    self.events.onGraphMouseup(e); 
             }
         });
 
