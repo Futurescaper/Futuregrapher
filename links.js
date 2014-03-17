@@ -419,12 +419,12 @@
     };
 
     this.onLinkMousedown = function(link) {
-        if (graph.events.onLinkMousedown&& typeof (graph.events.onLinkMousedown === "function"))
+        if (_.isFunction(graph.events.onLinkMousedown))
             graph.events.onLinkMousedown(link, d3.event);
     };
 
     this.onLinkMouseup = function(link) {
-        if (graph.events.onLinkMouseup&& typeof (graph.events.onLinkMouseup === "function"))
+        if (_isFunction(graph.events.onLinkMouseup))
             graph.events.onLinkMouseup(link, d3.event);
     };
 }

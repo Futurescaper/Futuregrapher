@@ -517,7 +517,7 @@
     };
     
     this.getNodeTooltip = function (node) {
-        if (graph.events.onNodeTooltip && typeof graph.events.onNodeTooltip === "function")
+        if (_.isFunction(graph.events.onNodeTooltip))
             return graph.events.onNodeTooltip(node, d3.event);
     };
     
@@ -528,7 +528,7 @@
             return;
         doubleclick = false;
         clicking = true;
-        if (graph.events.onNodeClick && typeof graph.events.onNodeClick === "function") {
+        if (_.isFunction(graph.events.onNodeClick)) {
             d3.event.preventDefault();
     
             if(window.event.preventDefault)
@@ -545,7 +545,7 @@
     };
 
     this.onNodeDblClick = function (node, x, y) {
-        if (graph.events.onNodeDblClick && typeof graph.events.onNodeDblClick === "function") {
+        if (_.isFunction(graph.events.onNodeDblClick)) {
             doubleclick = true;
             clicking = false;
     
@@ -562,28 +562,28 @@
 
     this.onNodeMouseover = function (node) {
         graph.currentNode = node;
-        if (graph.events.onNodeMouseover && typeof graph.events.onNodeMouseover === "function")
+        if (_.isFunction(graph.events.onNodeMouseover))
             graph.events.onNodeMouseover(node, d3.event);
     };
 
     this.onNodeMouseout = function (node) {
         graph.currentNode = null;
-        if (graph.events.onNodeMouseout && typeof graph.events.onNodeMouseout === "function")
+        if (_.isFunction(graph.events.onNodeMouseout))
             graph.events.onNodeMouseout(node, d3.event);
     };
 
     this.onNodeMousedown = function (node) {
-        if (graph.events.onNodeMousedown && typeof graph.events.onNodeMousedown === "function")
+        if (_.isFunction(graph.events.onNodeMousedown))
             graph.events.onNodeMousedown(node, d3.event);
     };
 
     this.onNodeMouseup = function (node) {
-        if (graph.events.onNodeMouseup && typeof graph.events.onNodeMouseup === "function")
+        if (_.isFunction(graph.events.onNodeMouseup))
             graph.events.onNodeMouseup(node, d3.event);
     };
 
     this.onNodeRightClick = function(node) {
-        if(graph.events.onNodeRightClick && typeof graph.events.onNodeRightClick === "function") {
+        if(_.isFunction(graph.events.onNodeRightClick)) {
             graph.events.onNodeRightClick(node, d3.event||window.event);
             if(d3.event)
                 d3.event.preventDefault();

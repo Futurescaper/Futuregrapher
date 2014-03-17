@@ -463,7 +463,7 @@
             .attr('transform', function (node) { return graph.d3labels().transformLabel(node, center); });
 
         graph.updateLinkColors();
-        //graph.fixedMode = false;
+        graph.fixedMode = false;
     };
 
 
@@ -560,7 +560,7 @@
     };
 
     this.getLinkTooltip = function (link) {
-        if (graph.events.onLinkTooltip && typeof (graph.events.onLinkTooltip === "function"))
+        if (_.isFunction(graph.events.onLinkTooltip))
             return graph.events.onLinkTooltip(link);
     };
 

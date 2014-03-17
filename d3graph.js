@@ -125,7 +125,7 @@
     var doubleclick = false;
     this.el.on('click', function (evt) {
         doubleclick = false;
-        if (self.events.onGraphClick && typeof (self.events.onGraphClick) === "function") {
+        if (_.isFunction(self.events.onGraphClick)) {
             // set a timer and run the event after it expires - to allow for a possible double-click event instead
             setTimeout(function() {
                 if(!doubleclick)
@@ -135,7 +135,7 @@
     });
 
     this.el.on('dblclick', function (evt) {
-        if (self.events.onGraphDoubleClick && typeof (self.events.onGraphDoubleClick) === "function") {
+        if (_.isFunction(self.events.onGraphDoubleClick)) {
             doubleclick = true;
             if(evt.preventDefault) evt.preventDefault();
             if(evt.stopPropagation) evt.stopPropagation();
@@ -356,18 +356,18 @@
             .attr('source', function (link) { return link.source.id; })
             .attr('target', function (link) { return link.target.id; })
             .on('mouseover', function (d) { 
-                if (self.events.onLinkMouseover&& typeof (self.events.onLinkMouseover === "function"))
+                if (_.isFunction(self.events.onLinkMouseover))
                     self.events.onLinkMouseover(d, d3.event);
             })
             .on('mouseout', function (d) { 
-                if (self.events.onLinkMouseout&& typeof (self.events.onLinkMouseout === "function"))
+                if (_.isFunction(self.events.onLinkMouseout))
                     self.events.onLinkMouseout(d, d3.event);
             })
             .on('click', function(d) { 
                 doubleclick = false;
                 var mouse = d3.mouse(self.vis[0][0]);
                 
-                if (self.events.onLinkClick&& typeof (self.events.onLinkClick === "function")) {
+                if (_.isFunction(self.events.onLinkClick)) {
                     setTimeout(function() {
                         if(!doubleclick)
                             self.events.onLinkClick(d, mouse[0], mouse[1]);
@@ -376,7 +376,7 @@
                 d3.event.stopPropagation();
             })
             .on('dblclick', function (d) { 
-                if (self.events.onLinkDblClick&& typeof (self.events.onLinkDblClick === "function")) {
+                if (_.isFunction(self.events.onLinkDblClick)) {
                     doubleclick = true;
                     var mouse = d3.mouse(self.vis[0][0]);
                     self.events.onLinkDblClick(d, mouse[0], mouse[1]);
@@ -663,8 +663,7 @@
         });
 
         // Restart the force layout.
-        if(!this.fixedMode)
-            force.start();
+        force.start();
 
         this.updateLabels();
 

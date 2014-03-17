@@ -12,7 +12,7 @@ d3selector = function (graph) {
         return link.selected;
     };
 
-    this.showUi = function (element, x, y, isNode, hideEditIcon) {
+    this.showUi = function (element, x, y, isNode) {
         this.hideUi();
         
         var menu = graph.visUi.append("svg:g")
@@ -44,15 +44,13 @@ d3selector = function (graph) {
         }
         
         function triggerEvent(element, eventName) { 
-            if (graph.events.hasOwnProperty(eventName) && typeof (graph.events[eventName] === "function"))
+            if (_.isFunction(graph.events[eventName]))
                 graph.events[eventName](element, d3.event);
 
             this.hideUi();
         };
 
-        if(!hideEditIcon)
-            addButton(0, 0, "\uf040", triggerEvent.bind(this, element, isNode ? "onNodeEdit" : "onLinkEdit"));
-
+        addButton(0, 0, "\uf040", triggerEvent.bind(this, element, isNode ? "onNodeEdit" : "onLinkEdit"));
         addButton(34, 0, "\uf00d", triggerEvent.bind(this, element, isNode ? "onNodeDelete" : "onLinkDelete"));
     };
         
@@ -61,7 +59,7 @@ d3selector = function (graph) {
     };
 
     this.showNodeToolbar = function (node, x, y) { this.showUi(node, x, y, true); };
-    this.showLinkToolbar = function (link, x, y, hideEditIcon) { this.showUi(link, x, y, false, hideEditIcon); };
+    this.showLinkToolbar = function (link, x, y) { this.showUi(link, x, y, false); };
 
     this.setNode = function(node, on) {
         if(on) {
