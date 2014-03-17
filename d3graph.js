@@ -646,6 +646,9 @@
                 var newScaleY = h / bbox.height;
                 var newScale = Math.min(newScaleX, newScaleY);
     
+                // Don't zoom in too much automatically...
+                newScale = Math.min(newScale, 2);
+    
                 var scaledWidth = bbox.width * newScale;
                 var scaledHeight = bbox.height * newScale;
                 
