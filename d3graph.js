@@ -122,9 +122,6 @@
     var fitToScreenCounter = this.settings.fitToScreen ? 50 : 0;
     this.resetFitToScreen = function(x) { fitToScreenCounter = x || 50; };
 
-    this.disableZoom = function () { this.zoomer.disable(); }
-    this.enableZoom = function () { this.zoomer.enable(); }
-
     var doubleclick = false;
     this.el.on('click', function (evt) {
         doubleclick = false;
@@ -189,7 +186,7 @@
             if(self.events.onGraphMousemove)
                 self.events.onGraphMousemove(d3.event);
         })
-        .on('mousedown', function(e) { if(self.events.onGraphMousedown) self.events.onGraphMousedown(e); })
+        .on('mousedown', function(e) { if(self.events.onGraphMousedown) self.events.onGraphMousedown(e); d3.event.stopPropagation(); })
         .on('mouseup', function(e) { 
             if(hoveredNode) {
                 _clusteringNodeProvider.onNodeMouseup(hoveredNode);
