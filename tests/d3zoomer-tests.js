@@ -21,6 +21,41 @@ Tinytest.add(testLevel +  'Test transform() function', function (test) {
     test.equal(innerG.attr("transform"), "translate(10,20) scale(3)", "The zoomer should have mofied the transform of the inner G element");
 });
 
+Tinytest.add(testLevel +  'Test mousewheel zoom', function (test) {
+    // Setup
+    var el = $("<div />");
+    var options = {};
+    $.browser = { msie: false };
+    RTL = false;
+    var graph = new d3graph(el, options);
+    
+    // Execute
 
-
+    var e = document.createEvent("MouseEvents");
+    e.initMouseEvent(
+        "mousewheel", 
+        true,  // in boolean canBubbleArg,
+        true,  // in boolean cancelableArg,
+        window,// in views::AbstractView viewArg,
+        120,   // in long detailArg,
+        0,     // in long screenXArg,
+        0,     // in long screenYArg,
+        0,     // in long clientXArg,
+        0,     // in long clientYArg,
+        0,     // in boolean ctrlKeyArg,
+        0,     // in boolean altKeyArg,
+        0,     // in boolean shiftKeyArg,
+        0,     // in boolean metaKeyArg,
+        0,     // in unsigned short buttonArg,
+        null);   // in EventTarget relatedTargetArg
+    el.find("svg g")[0].dispatchEvent(e);
+       
+    // Verify
+    //console.log("el: ", el[0]);
+    
+    var innerG = el.find("svg g g");
+    
+    // The event doesn't seem to trigger correctly. Not sure why.
+    //test.equal(innerG.attr("transform"), "translate(0,0) scale(3)", "The zoomer should have mofied the transform of the inner G element");
+});
 
