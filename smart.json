@@ -1,9 +1,9 @@
 {
-    "name": "d3graph2",
+    "name": "futuregrapher",
     "description": "Create and manipulate D3 force-directed graphs",
-    "homepage": "https://github.com/Futurescaper/meteor-d3graph",
-    "author": "Futurescaper Ltd. <kevin@futurescaper.com>",
-    "version": "0.1.145",
-    "git": "https://github.com/Futurescaper/meteor-d3graph.git",
+    "homepage": "https://github.com/Futurescaper/futuregrapher",
+    "author": "Futurescaper Ltd.",
+    "version": "0.9.0",
+    "git": "https://github.com/Futurescaper/futuregrapher.git",
     "packages": {}
 }
