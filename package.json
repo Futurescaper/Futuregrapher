@@ -2,17 +2,17 @@
   "name": "Futuregrapher",
   "description": "Network visualization library",
   "version": "0.9.0",
-  "homepage": "http://github.com/futurescaper/futuregrapher",
+  "homepage": "http://github.com/Futurescaper/Futuregrapher",
   "author": "Futurescaper Ltd",
   "licenses": [
     {
       "type": "MIT",
-      "url": "http://github.com/tkellen/requirejs-library-skeleton/blob/master/LICENSE"
+      "url": "github.com/Futurescaper/Futuregrapher/blob/master/LICENSE"
     }
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/futurescaper/futuregrapher.git"
+    "url": "git://github.com/Futurescaper/Futuregrapher.git"
   },
   "engines": {
     "node": ">=0.6.0"
