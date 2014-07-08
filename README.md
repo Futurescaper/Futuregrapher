@@ -4,9 +4,10 @@ Network visualization javascript library
 
 This library combines a number of D3 and custom features into a dynamic graph visualization library. It allows you to work with collapsible clusters as a way of grouping nodes.
 
+
 Meteor
 ------
-The d3graph library is a standalone Meteor package (installed with mrt add d3graph) that allows for easy creation and manipulation of a D3 force-directed graph.  It is a separate Git repository, available at https://github.com/Futurescaper/meteor-d3graph.  When changes are made to this project, the version number (in smart.json) must be incremented and the package must be released to Atmosphere via “mrt release .” - to update the package without incrementing its version, use “mrt publish .”
+The library works as a standalone Meteor package (installed with mrt add futuregrapher) that allows for easy creation and manipulation of a D3 force-directed graph.  It is a separate Git repository, available at https://github.com/Futurescaper/Futuregrapher.
 
 The package exists on Atmosphere at:
 https://atmosphere.meteor.com/package/d3graph
@@ -14,7 +15,7 @@ https://atmosphere.meteor.com/package/d3graph
 Usage
 =====
 
-Using meteor-d3graph is done by creating an instance of the <code>GraphVis</code> class. The constructor for this takes two parameters: renderer and options. The renderer needs to be an instance of a renderer. At the time of writing, only one renderer exists, it's called <code>SvgRenderer</code>.
+Using Futuregrapher is done by creating an instance of the <code>GraphVis</code> class. The constructor for this takes two parameters: renderer and options. The renderer needs to be an instance of a renderer. At the time of writing, only one renderer exists, it's called <code>SvgRenderer</code>.
 
 
 The minimalist setup looks like this:
