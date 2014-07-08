@@ -7,7 +7,7 @@
  *   A Perl utility written by Kevin Lindsey (kevin@kevlindev.com)
  *
  *****/
- 
+
 Array.prototype.foreach=function(func){for(var i=0;i<this.length;i++)func(this[i]);};
 Array.prototype.map=function(func){var result=new Array();for(var i=0;i<this.length;i++)result.push(func(this[i]));return result;};
 Array.prototype.min=function(){var min=this[0];for(var i=0;i<this.length;i++)if(this[i]<min)min=this[i];return min;}
