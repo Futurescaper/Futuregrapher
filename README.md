@@ -4,6 +4,7 @@ Network visualization javascript library
 
 This library combines a number of D3 and custom features into a dynamic graph visualization library. It allows you to work with collapsible clusters as a way of grouping nodes.
 
+It is a plain Javascript library. It can be included with a simple <code>&lt;script&gt;</code> tag, with requirejs or amd, or it can be used with Meteor.
 
 Meteor
 ------
@@ -210,6 +211,74 @@ The <code>options</code> object allows the following properties for describing v
  * <code>describeCollapsedCluster</code> - describer function for collapsed clusters
  * <code>defaultExpandedClusterDescription</code> - default description for expanded clusters
  * <code>describeExpandedCluster</code> - describer function for expanded clusters
+
+#####describeVisNode
+This function can determine visual properties for the <code>NodeCircle</code> and <code>LabelText</code> created from a VisNode.
+The signature is: <code>describeVisNode(visNode, radiusFactor)</code>
+
+If this function doesn't exist or returns null, the NodeCircle and LabelText will use the <code>defaultNodeDescription</code> properties from <code>options</code>.
+The result from this function should be an object containing one or more of the following properties:
+
+ * <code>x</code> and <code>y</code> - if you want to lock a node into a certain position, set these. They should be in the range [0..canvasWidth] and [0..canvasHeight], without any consideration for zoom or pan as that will be applied afterwards. Not that setting these will override force effects and potentially pull other nodes that connected to this node and force-controlled.
+ * <code>radius</code> - the radius of the node, in pixels. Note that you should *not* apply the <code>radiusFactor</code> here, it will be applied by the renderer. I.e. this function should return the same radius for the node regardless of zoom if you want it to stay the same semantically.
+ * <code>color</code> - the fill color of the node. Can be a <code>string</code> or a <code>d3.rgb</code> instance.
+ * <code>borderColor</code> - the border color. Can be a <code>string</code> or a <code>d3.rgb</code> instance.
+ * <code>borderWith</code> - the width of the border, in pixels. Like <code>radius</code>, you should not apply <code>radiusFactor</code> yourself.
+ * <code>opacity</code> - the opacity ("reverse transparency") of the node. 0 means invisible, 0.5 means semi-transparent and 1 means opaque.
+ * <code>hoverText</code> - the tooltip text that will appear when hovering the mouse over the node. Can be used to show the entire title text if it's too long for the label
+
+In addition to these, you can specify the properties for the label. If you want the node to have a label, add a object called <code>label</code> to your result, containing one or more of the following:
+
+ * <code>offsetX</code> and <code>offsetY</code> - the position of the label, relative to the node center. 
+ * <code>anchor</code> - specifies whether the text goes left or right of the node. Should be a string containing either <code>"start"</code>, <code>"end"</code> or <code>"auto"</code>. <code>auto</code> will make the label face away from the centroid of the graph, possibly making the graph easier to read.
+ * <code>fontSize</code> - The font size of the label. Don't apply <code>radiusFactor</code>, it will be done automatically.
+ * <code>color</code> - the text color of the label. Can be a <code>string</code> or a <code>d3.rgb</code> instance.
+ * <code>borderColor</code> - the border color. Can be a <code>string</code> or a <code>d3.rgb</code> instance.
+ * <code>opacity</code> - the opacity ("reverse transparency") of the label. 0 means invisible, 0.5 means semi-transparent and 1 means opaque.
+ * <code>hoverText</code> - the tooltip text that will appear when hovering the mouse over the label.
+
+..so why is <code>radiusFactor</code> included as a parameter if you are not supposed to use it?
+
+Well, you *can*, if you want your labels or nodes to scale differently than with the zoom. Per default, radii, font sizes and the like are scaled with the <code>zoomDensityScale</code> specified in the options. If you want to further scale or unscale, you can do that here. Or, you can use the factor to determine whether a label should be visible or not. This can be helpful to achieve a Google Maps-like feel where you see more details when zooming in. However, note that for this to work properly, you need to set <code>updateOnlyPositionsOnZoom</code> to false (it defaults to true), which does have a rather significant performance penalty. It is not recommended for larger graphs.
+
+
+#####describeVisLink
+This function describes the <code>LinkLine</code> that corresponds to a VisLink.
+The signature is: <code>describeVisLink(visLink, sourceNodeCircle, targetNodeCircle, radiusFactor)</code>
+
+If this function exists and returns non-null, the LinkLine that is sent to the renderer will contain the properties from the result and from <code>defaultLinkDescription</code> when they are not specified.
+The <code>sourceNodeCircle</code> and <code>targetNodeCircle</code> parameters can be used if you, say, want your link to be colored based on the two nodes it connects etc.
+This result from this function should be an object containing one or more of the following properties:
+
+ * <code>width</code> - the width, in pixels, of the link line.
+ * <code>color</code> - the text color of the link. Can be a <code>string</code> or a <code>d3.rgb</code> instance.
+ * <code>opacity</code> - the opacity ("reverse transparency") of the link. 0 means invisible, 0.5 means semi-transparent and 1 means opaque.
+ * <code>marker</code> - (boolean) show an arrowhead on the link to indicate directionality?
+ * <code>curvature</code> - (boolean) make the link curve?
+ * <code>dashPattern</code> - will become the SVG <code>stroke-dasharray</code> string, e.g. "5, 5". See more [here](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray)
+ * <code>hoverText</code> - the tooltip text that will appear when hovering the mouse over the link.
+
+
+#####describeCollapsedCluster
+This function describes the <code>NodeCircle</code> that represents a collapsed cluster.
+The signature is: <code>describeCollapsedCluster(visCluster, clusterVisNodes, radiusFactor)</code>
+
+If this function exists and returns non-null, the <code>NodeCircle</code> that the renderer will receive for this cluster when it's collapsed will contain the properties from the result and from <code>defaultCollapsedClusterDescription</code> when they are not specified.
+
+The result has the same format as <code>describeVisNode</code>, see the description of that above for details.
+
+
+#####describeExpandedCluster
+This function describes the <code>ClusterHull</code> that represents an expanded cluster. 
+
+If this function exists and returns non-null, the <code>ClusterHull</code> that the renderer will receive for this cluster when it's expanded will contain the properties from the result and from <code>defaultExpandedClusterDescription</code> when they are specified.
+
+The result from this function should be an object containing one or more of the following properties:
+
+ * <code>color</code> - the fill color of the hull. Can be a <code>string</code> or a <code>d3.rgb</code> instance.
+ * <code>borderColor</code> - the border color. Can be a <code>string</code> or a <code>d3.rgb</code> instance.
+ * <code>opacity</code> - the opacity ("reverse transparency") of the hull. 0 means invisible, 0.5 means semi-transparent and 1 means opaque.
+ * <code>hoverText</code> - the tooltip text that will appear when hovering the mouse over the hull.
 
 
 GraphVis.unscaleCoords
