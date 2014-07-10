@@ -27,13 +27,14 @@ var requirejs, require, define;
      * to.
      * @returns {String} normalized name
      */
+    //[of]:    function normalize(name, baseName) {
     function normalize(name, baseName) {
         var nameParts, nameSegment, mapValue, foundMap,
             foundI, foundStarMap, starI, i, j, part,
             baseParts = baseName && baseName.split("/"),
             map = config.map,
             starMap = (map && map['*']) || {};
-
+    
         //Adjust any relative paths.
         if (name && name.charAt(0) === ".") {
             //If have a base name, try to normalize against it,
@@ -46,9 +47,9 @@ var requirejs, require, define;
                 //"one/two/three.js", but we want the directory, "one/two" for
                 //this normalization.
                 baseParts = baseParts.slice(0, baseParts.length - 1);
-
+    
                 name = baseParts.concat(name.split("/"));
-
+    
                 //start trimDots
                 for (i = 0; i < name.length; i += 1) {
                     part = name[i];
@@ -71,24 +72,24 @@ var requirejs, require, define;
                     }
                 }
                 //end trimDots
-
+    
                 name = name.join("/");
             }
         }
-
+    
         //Apply map config if available.
         if ((baseParts || starMap) && map) {
             nameParts = name.split('/');
-
+    
             for (i = nameParts.length; i > 0; i -= 1) {
                 nameSegment = nameParts.slice(0, i).join("/");
-
+    
                 if (baseParts) {
                     //Find the longest baseName segment match in the config.
                     //So, do joins on the biggest to smallest lengths of baseParts.
                     for (j = baseParts.length; j > 0; j -= 1) {
                         mapValue = map[baseParts.slice(0, j).join('/')];
-
+    
                         //baseName segment has  config, find if it has one for
                         //this name.
                         if (mapValue) {
@@ -102,11 +103,11 @@ var requirejs, require, define;
                         }
                     }
                 }
-
+    
                 if (foundMap) {
                     break;
                 }
-
+    
                 //Check for a star map match, but just hold on to it,
                 //if there is a shorter segment match later in a matching
                 //config, then favor over this star map.
@@ -115,20 +116,21 @@ var requirejs, require, define;
                     starI = i;
                 }
             }
-
+    
             if (!foundMap && foundStarMap) {
                 foundMap = foundStarMap;
                 foundI = starI;
             }
-
+    
             if (foundMap) {
                 nameParts.splice(0, foundI, foundMap);
                 name = nameParts.join('/');
             }
         }
-
+    
         return name;
     }
+    //[cf]
 
     function makeRequire(relName, forceSync) {
         return function () {
@@ -168,6 +170,7 @@ var requirejs, require, define;
     //Turns a plugin!resource to [plugin, resource]
     //with the plugin being undefined if the name
     //did not have a plugin prefix.
+    //[of]:    function splitPrefix(name) {
     function splitPrefix(name) {
         var prefix,
             index = name ? name.indexOf('!') : -1;
@@ -177,6 +180,7 @@ var requirejs, require, define;
         }
         return [prefix, name];
     }
+    //[cf]
 
     /**
      * Makes a name map, normalizing the name, and using a plugin
@@ -389,7 +393,7 @@ define("../vendor/almond", function(){});
 
 define('futuregrapher/core',[],function() {
     var futuregrapher = {
-        VERSION: '0.9.0'
+        VERSION: '0.9.1'
     };
     
     return futuregrapher;
@@ -3007,7 +3011,7 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
                 .remove();
             
             node.transition().duration(transitionDuration)
-                .attr("cx", function (d) { var sx = xScale(d.x); return isNaN(sx) ? 0 : sx; })
+                .attr("cx", function (d) { return 100; var sx = xScale(d.x); return isNaN(sx) ? 0 : sx; })
                 .attr("cy", function (d) { var sy = yScale(d.y); return isNaN(sy) ? 0 : sy; })
                 .attr("r", function (d) { return d.radius * radiusFactor; })
                 .style("stroke-width", function (d) { return d.borderWidth * radiusFactor; })
