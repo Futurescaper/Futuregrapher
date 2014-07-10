@@ -14,7 +14,7 @@ Meteor
 The library works as a standalone Meteor package (installed with mrt add futuregrapher) that allows for easy creation and manipulation of a D3 force-directed graph.  It is a separate Git repository, available at https://github.com/Futurescaper/Futuregrapher.
 
 The package exists on Atmosphere at:
-https://atmosphere.meteor.com/package/d3graph
+http://atmospherejs.com/package/futuregrapher
 
 Usage
 =====
