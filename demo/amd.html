@@ -1,14 +1,45 @@
 <!doctype html>
 <html>
 <head>
-  <title>Demo</title>
-  <script src="../vendor/require.js"></script>
+    <meta http-equiv="content-type" content="text/html; charset=UTF8">
+    <title>Demo</title>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.9/d3.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
+    
+    <script src="../vendor/require.js"></script>
 </head>
 <body>
-<script>
-require(['../dist/futuregrapher'],function(futuregrapher){
-  console.log("Futuregrapher version: ", futuregrapher.VERSION);
-});
-</script>
+    <div id="viz-container"></div>
+    <script>
+        require(['../dist/futuregrapher'], function(futuregrapher) {
+
+            console.log("Futuregrapher version: ", futuregrapher.VERSION);
+            
+            var people = [
+                { name: "John", vehicle: "car", age: 45 },
+                { name: "Lisa", vehicle: "car", age: 37 },
+                { name: "Alice", vehicle: "bike", age: 39 }
+            ];
+            
+            var vehicleColors = { car: "DodgerBlue", bike: "Aqua" };
+            
+            function describeVisNode(visNode) {
+                return {
+                    color: vehicleColors[visNode.data.vehicle],                
+                    radius: visNode.data.age / 2
+                };
+            }
+            
+            var svgRenderer = new futuregrapher.SvgRenderer($("#viz-container"), {});
+            var graphVis = new futuregrapher.GraphVis(svgRenderer, { describeVisNode: describeVisNode });
+            
+            var visNodes = _.map(people, function (person) { return new futuregrapher.VisNode(person.name, person);  });
+            
+            graphVis.update(visNodes, [], []);
+            graphVis.startForce();
+            
+        });
+    </script>
 </body>
 </html>
