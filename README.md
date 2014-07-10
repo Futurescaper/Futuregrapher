@@ -1,5 +1,8 @@
 Futuregrapher
 ==============
+
+[![Build Status](https://travis-ci.org/Futurescaper/Futuregrapher.svg?branch=master)](https://travis-ci.org/Futurescaper/Futuregrapher)
+
 Network visualization javascript library
 
 This library combines a number of D3 and custom features into a dynamic graph visualization library. It allows you to work with collapsible clusters as a way of grouping nodes.
