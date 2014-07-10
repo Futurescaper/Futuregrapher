@@ -1,7 +1,5 @@
-Futuregrapher
+Futuregrapher  [![Build Status](https://travis-ci.org/Futurescaper/Futuregrapher.svg?branch=master)](https://travis-ci.org/Futurescaper/Futuregrapher)
 ==============
-
-[![Build Status](https://travis-ci.org/Futurescaper/Futuregrapher.svg?branch=master)](https://travis-ci.org/Futurescaper/Futuregrapher)
 
 Network visualization javascript library
 
