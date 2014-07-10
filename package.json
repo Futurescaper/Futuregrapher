@@ -19,9 +19,6 @@
   },
   "dependencies": {
   },
-  "scripts": {
-    "test": "grunt test"
-  },
   "devDependencies": {
     "grunt": "~0.3.16",
     "grunt-contrib-requirejs": "~0.3.2",
