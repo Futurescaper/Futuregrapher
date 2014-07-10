@@ -30,7 +30,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-jasmine-task');
 
   // Make task shortcuts
-  grunt.registerTask('default', 'jasmine requirejs min');
-  grunt.registerTask('test', 'jasmine');
-
+  //grunt.registerTask('default', 'jasmine requirejs min');
+  grunt.registerTask('default', 'requirejs min');
+  //grunt.registerTask('test', 'jasmine');
 };
