@@ -22,6 +22,11 @@
                 { name: "Alice", vehicle: "bike", age: 39 }
             ];
             
+            var friendships = [
+                { from: "John", to: "Lisa" },
+                { from: "John", to: "Alice" },
+            ];
+            
             var vehicleColors = { car: "DodgerBlue", bike: "Aqua" };
             
             function describeVisNode(visNode) {
@@ -34,9 +39,10 @@
             var svgRenderer = new futuregrapher.SvgRenderer($("#viz-container"), {});
             var graphVis = new futuregrapher.GraphVis(svgRenderer, { describeVisNode: describeVisNode });
             
-            var visNodes = _.map(people, function (person) { return new futuregrapher.VisNode(person.name, person);  });
+            var visNodes = _.map(people, function (person) { return new futuregrapher.VisNode(person.name, person); });
+            var visLinks = _.map(friendships, function (friendship) { return new futuregrapher.VisLink(friendship.from, friendship.to); });
             
-            graphVis.update(visNodes, [], []);
+            graphVis.update(visNodes, visLinks, []);
             graphVis.startForce();
             
         });

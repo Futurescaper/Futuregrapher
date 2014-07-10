@@ -15,7 +15,7 @@ requirejs.config({
 
   optimize: "none",
 
-  // files to include along with almond.  only lib/skeleton.js is defined, as
+  // files to include along with almond.  only lib/futuregrapher.js is defined, as
   // it pulls in the rest of the dependencies automatically.
   include: ["futuregrapher"],
 
@@ -36,6 +36,7 @@ requirejs.config({
            "      define(function () { return library; });\n"+
            "    }(globalDefine));\n"+
            "  } else if(typeof Meteor !== 'undefined') {\n"+
+                // if used from Meteor, just set a global variable.
            "    futuregrapher = library;\n" +
            "  } else {\n"+
                 // define library on global namespace for inline script loading
