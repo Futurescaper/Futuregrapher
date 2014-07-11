@@ -2549,6 +2549,7 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
 
     // Polyfill for Function.prototype.bind in case it doesn't exist.
     if (!Function.prototype.bind) {
+        //[of]:        Function.prototype.bind = function (oThis) {
         Function.prototype.bind = function (oThis) {
             if (typeof this !== "function") {
                 // closest thing possible to the ECMAScript 5
@@ -2571,6 +2572,7 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
             
             return fBound;
         };
+        //[cf]
     }
     
     var SvgRenderer = function (containerElement, options) {
@@ -2642,9 +2644,6 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
                 var rty = ty - tr * normalizedVectorY;
                 
                 var result = "M " + rsx + " " + rsy + " L " + rtx + " " + rty;
-                
-                if(result.indexOf("NaN") !== -1)
-                    console.log("STOP");
                 
                 return result;
             } else {

@@ -3,6 +3,8 @@ var testCounter = 1;
 var soloTest = null;    // Set to a number to run only that particular test
 var logTestHeader = false;  // Set to true to log a header for each started test.
 
+var asyncWaitTime = 250;    // ms to wait before checking an async update
+
 TypeChecker.enabled = true;
 TypeChecker.logToConsole = true;
 
@@ -90,7 +92,7 @@ function addTest(name, isAsync, testFunction) {
 
 testLevel = "meteor-d3graph tests - SvgRenderer - ";
 
-//[of]:addTest("Constructor test", function (test) {
+//[of]:addTest("Constructor test", false, function (test) {
 addTest("Constructor test", false, function (test) {
     // Setup
     var containerElement = $("<div />");
@@ -129,7 +131,7 @@ addTest("Cluster hull test", true, function (test, next) {
         test.isTrue(cluster.attr("d").indexOf("M5,5") === 0, "Cluster path should begin with a move to 5,5");
         test.equal(cluster.css("fill"), "rgb(255, 136, 136)", "Node should have the border color we gave it (but specified as rgb because of the transition)");
         next();
-    }, 20);
+    }, asyncWaitTime);
 });
 
 //[cf]
@@ -158,7 +160,7 @@ addTest("Link test", true, function (test, next) {
         test.equal(link.css("stroke"), "rgb(255, 0, 0)", "Link should have the color we gave it");
         test.equal(link.attr("d"), "M 15.65685424949238 15.65685424949238 L 14.34314575050762 14.34314575050762", "Link path should be a straight line from node1 to node2");
         next();
-    }, 20);
+    }, asyncWaitTime);
 });
 
 
@@ -185,10 +187,10 @@ addTest("Node test", true, function (test, next) {
         test.equal(node.attr("cx"), "10", "Node should have the radius we gave it");
         test.equal(node.css("stroke"), "rgb(136, 0, 0)", "Node should have the border color we gave it");
         next();
-    }, 20);
+    }, asyncWaitTime);
 });
 //[cf]
-//[of]:addTest("Node event handler test", function (test) {
+//[of]:addTest("Node event handler test", false, function (test) {
 addTest("Node event handler test", false, function (test) {
     // Setup
     var containerElement = $("<div />");
@@ -209,7 +211,7 @@ addTest("Node event handler test", false, function (test) {
     test.isTrue(success, "The click handler should have set the success flag to true");
 });
 //[cf]
-//[of]:addTest("Link, cluster and label event handlers test", function (test) {
+//[of]:addTest("Link, cluster and label event handlers test", false, function (test) {
 addTest("Link, cluster and label event handlers test", false, function (test) {
     // Setup
     var containerElement = $("<div />");
@@ -268,7 +270,7 @@ addTest("Link marker test", true, function (test, next) {
         test.equal(marker.attr("fill"), "#ff0000", "Marker should have the right color");
         test.equal(marker.attr("opacity"), "1", "Marker should have the correct opacity");
         next();
-    }, 20);
+    }, asyncWaitTime);
 });
 
 //[cf]
@@ -300,7 +302,7 @@ addTest("Link marker opacity test", true, function (test, next) {
         test.equal(marker.attr("fill"), "#ff0000", "Marker should have the right color");
         test.equal(marker.attr("opacity"), "0.7", "Marker should have the correct opacity");
         next();
-    }, 20);
+    }, asyncWaitTime);
 });
 
 //[cf]
@@ -375,7 +377,7 @@ addTest("Curved links test", true, function (test, next) {
         // Note: if this test fails, it might be because intersect.js is missing.
         
         next();
-    }, 20);
+    }, asyncWaitTime);
 });
 //[cf]
 
