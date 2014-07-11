@@ -5,7 +5,18 @@ Network Visualization Javascript Library
 
 This library combines a number of D3 and custom features into a dynamic graph visualization library. It allows you to work with collapsible clusters as a way of grouping nodes.
 
-It is a plain Javascript library. It can be included with a simple <code>&lt;script&gt;</code> tag, with requirejs or amd, or it can be used with Meteor.
+It is a plain Javascript library. It can be included with a simple <code>&lt;script&gt;</code> tag, with require.js or amd, or it can be used with Meteor.
+
+
+Examples
+-----
+
+https://dev.futurescaper.com/futuregrapher/inline.html
+
+and
+
+https://dev.futurescaper.com/futuregrapher/amd.html
+
 
 Meteor
 ------
@@ -17,7 +28,7 @@ http://atmospherejs.com/package/futuregrapher
 Usage
 =====
 
-Using Futuregrapher is done by creating an instance of the <code>GraphVis</code> class. The constructor for this takes two parameters: renderer and options. The renderer needs to be an instance of a renderer. At the time of writing, only one renderer exists, it's called <code>SvgRenderer</code>.
+To use Futuregrapher, create an instance of the <code>GraphVis</code> class. The constructor for this takes two parameters: renderer and options. The renderer needs to be an instance of a renderer. Currently only one renderer exists: <code>SvgRenderer</code>.
 
 
 The minimalist setup looks like this:
