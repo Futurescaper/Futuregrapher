@@ -11,11 +11,11 @@ It is a plain Javascript library. It can be included with a simple <code>&lt;scr
 Examples
 -----
 
-https://dev.futurescaper.com/futuregrapher/inline.html
+<a href="https://dev.futurescaper.com/futuregrapher/inline.html" target="_blank">Inline Javascript example</a>
 
 and
 
-https://dev.futurescaper.com/futuregrapher/amd.html
+<a href="https://dev.futurescaper.com/futuregrapher/amd.html" target="_blank">AMD/RequireJS example</a>
 
 
 Meteor
