@@ -129,7 +129,7 @@ addTest("Cluster hull test", true, function (test, next) {
         var cluster = $(clusters[0]);
         test.equal(cluster.attr("data-id"), "cluster1", "Cluster should have the ID we gave it");
         test.isTrue(cluster.attr("d").indexOf("M5,5") === 0, "Cluster path should begin with a move to 5,5");
-        test.equal(cluster.css("fill"), "rgb(255, 136, 136)", "Node should have the border color we gave it (but specified as rgb because of the transition)");
+        test.equal(d3.rgb(cluster.css("fill")).toString(), "#ff8888", "Node should have the border color we gave it");
         next();
     }, asyncWaitTime);
 });
@@ -157,7 +157,7 @@ addTest("Link test", true, function (test, next) {
     setTimeout(function () {
         var link = $(links[0]);
         test.equal(link.attr("data-id"), "node1->node2", "Link should have the ID we gave it");
-        test.equal(link.css("stroke"), "rgb(255, 0, 0)", "Link should have the color we gave it");
+        test.equal(d3.rgb(link.css("stroke")).toString(), "#ff0000", "Link should have the color we gave it");
         test.equal(link.attr("d"), "M 15.65685424949238 15.65685424949238 L 14.34314575050762 14.34314575050762", "Link path should be a straight line from node1 to node2");
         next();
     }, asyncWaitTime);
@@ -185,7 +185,7 @@ addTest("Node test", true, function (test, next) {
         var node = $(nodes[0]);
         test.equal(node.attr("data-id"), "node1", "Node should have the ID we gave it");
         test.equal(node.attr("cx"), "10", "Node should have the radius we gave it");
-        test.equal(node.css("stroke"), "rgb(136, 0, 0)", "Node should have the border color we gave it");
+        test.equal(d3.rgb(node.css("stroke")).toString(), "#880000", "Node should have the border color we gave it");
         next();
     }, asyncWaitTime);
 });
@@ -371,7 +371,7 @@ addTest("Curved links test", true, function (test, next) {
     setTimeout(function () {
         var link = $(links[0]);
         test.equal(link.attr("data-id"), "node1->node2", "Link should have the ID we gave it");
-        test.equal(link.css("stroke"), "rgb(255, 0, 0)", "Link should have the color we gave it");
+        test.equal(d3.rgb(link.css("stroke")).toString(), "#ff0000", "Link should have the color we gave it");
         test.equal(link.attr("d"), "M 16.826227396983295 14.171644702593289 A 14.142135623730951 14.142135623730951 0 0 1 15.828355297406702 13.173772603016708", "Link path should be a curved line from node1 to node2");
         
         // Note: if this test fails, it might be because intersect.js is missing.
