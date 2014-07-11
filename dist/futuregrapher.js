@@ -2547,6 +2547,32 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
     var defaultSvgRendererOptions = require('futuregrapher/svgrendererdefaultoptions');
     require("../../vendor/intersect.js");
 
+    // Polyfill for Function.prototype.bind in case it doesn't exist.
+    if (!Function.prototype.bind) {
+        Function.prototype.bind = function (oThis) {
+            if (typeof this !== "function") {
+                // closest thing possible to the ECMAScript 5
+                // internal IsCallable function
+                throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+            }
+            
+            var aArgs = Array.prototype.slice.call(arguments, 1), 
+                fToBind = this, 
+                fNOP = function () {},
+                fBound = function () {
+                    return fToBind.apply(this instanceof fNOP && oThis
+                        ? this
+                        : oThis,
+                        aArgs.concat(Array.prototype.slice.call(arguments)));
+                };
+            
+            fNOP.prototype = this.prototype;
+            fBound.prototype = new fNOP();
+            
+            return fBound;
+        };
+    }
+    
     var SvgRenderer = function (containerElement, options) {
         options = $.extend(true, {}, defaultSvgRendererOptions, options);
     
@@ -3011,7 +3037,7 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
                 .remove();
             
             node.transition().duration(transitionDuration)
-                .attr("cx", function (d) { return 100; var sx = xScale(d.x); return isNaN(sx) ? 0 : sx; })
+                .attr("cx", function (d) { var sx = xScale(d.x); return isNaN(sx) ? 0 : sx; })
                 .attr("cy", function (d) { var sy = yScale(d.y); return isNaN(sy) ? 0 : sy; })
                 .attr("r", function (d) { return d.radius * radiusFactor; })
                 .style("stroke-width", function (d) { return d.borderWidth * radiusFactor; })
