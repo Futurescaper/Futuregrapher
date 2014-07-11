@@ -3,7 +3,7 @@ var testCounter = 1;
 var soloTest = null;    // Set to a number to run only that particular test
 var logTestHeader = false;  // Set to true to log a header for each started test.
 
-var asyncWaitTime = 250;    // ms to wait before checking an async update
+var asyncWaitTime = 20;    // ms to wait before checking an async update
 
 TypeChecker.enabled = true;
 TypeChecker.logToConsole = true;
@@ -514,8 +514,8 @@ addTest("Link test", false, function (test) {
     test.equal(ll.target, mockRenderer.nodeCircles[1], "The target should be node circle #2");
 });
 //[cf]
-//[of]:addTest("Zoom test", false, function (test) {
-addTest("Zoom test", false, function (test) {
+//[of]:addTest("Zoom test", true, function (test, next) {
+addTest("Zoom test", true, function (test, next) {
     // Setup
     var mockRenderer = makeMockRenderer();
     var graphVis = new futuregrapher.GraphVis(mockRenderer, {});
@@ -528,7 +528,13 @@ addTest("Zoom test", false, function (test) {
     mockRenderer.containerElement()[0].dispatchEvent(e);
     
     // Verify
-    test.isTrue(mockRenderer.radiusFactor > 0.8 && mockRenderer.radiusFactor < 1.0, "radiusFactor " + mockRenderer.radiusFactor + " should have increased a bit from the initial 0.8");
+    
+    setTimeout(function () {
+        test.isTrue(mockRenderer.radiusFactor > 0.8 && mockRenderer.radiusFactor < 1.0, "radiusFactor " + mockRenderer.radiusFactor + " should have increased a bit from the initial 0.8");
+        
+        next();
+    }, asyncWaitTime);
+
 });
 //[cf]
 //[of]:addTest("Collapse cluster simple test", false, function (test) {
