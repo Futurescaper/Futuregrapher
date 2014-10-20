@@ -2,7 +2,6 @@ module.exports = function(grunt) {
 
   // Configure Grunt
   grunt.initConfig({
-
     requirejs: {
       compile: {
         options: {
