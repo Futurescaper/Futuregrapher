@@ -1,0 +1,23 @@
+{
+  "name": "futuregrapher",
+  "version": "0.9.4",
+  "description": "Network visualisation library",
+  "main": "build.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Futurescaper/Futuregrapher.git",
+    "branch": "dev"
+  },
+  "author": "Futurescaper Ltd.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Futurescaper/Futuregrapher/issues"
+  },
+  "homepage": "https://github.com/Futurescaper/Futuregrapher"
+}
