@@ -3522,7 +3522,7 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
         var self = this;
         options = $.extend(true, {}, defaultGraphVisOptions, options);
     
-        var visNodes, visLinks, visClusters;
+        var visNodes, visNodeLookups, visLinks, visClusters;
         
         var clusterHulls = [];
         var linkLines = [];
@@ -3854,7 +3854,13 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
     
         //[of]:        this.update = function (newVisNodes, newVisLinks, newVisClusters, transitionDuration, updateType) {
         this.update = function (newVisNodes, newVisLinks, newVisClusters, transitionDuration, updateType) {
-            if (newVisNodes) visNodes = newVisNodes;
+            if (newVisNodes) {
+                visNodes = newVisNodes;
+                visNodeLookups = {};
+                _.each(visNodes, function(vn) {
+                    visNodeLookups[vn.id] = vn;
+                });
+            }
             if (newVisLinks) visLinks = newVisLinks;
             if (newVisClusters) visClusters = newVisClusters;
             if (_.isUndefined(transitionDuration)) transitionDuration = 250;
@@ -3892,7 +3898,7 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
             //[of]:    Create node circles and label texts
             //[c]Create node circles and label texts
             
-            var newNodeCircles = [];
+            var newNodeCircles = {};
             var newLabelTexts = [];
             _.each(visNodes, function (visNode) {
                 if (visNode.clusterId) {
@@ -3901,7 +3907,7 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
                     if (clusterHull) {
                         var nodeCombination = nodeCircleAndLabelTextFromVisNode(visNode);
                         var nodeCircle = nodeCombination.nodeCircle;
-                        newNodeCircles.push(nodeCircle);
+                        newNodeCircles[nodeCircle.id] = nodeCircle;
                         clusterHull.nodeCircles.push(nodeCircle);
             
                         if (nodeCombination.labelText)
@@ -3914,7 +3920,7 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
                     }
                 } else {
                     var nodeCombination = nodeCircleAndLabelTextFromVisNode(visNode);
-                    newNodeCircles.push(nodeCombination.nodeCircle);
+                    newNodeCircles[nodeCombination.nodeCircle.id] = nodeCombination.nodeCircle;
                     if (nodeCombination.labelText)
                         newLabelTexts.push(nodeCombination.labelText);
                 }
@@ -3923,7 +3929,7 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
             _.each(collapsedClusters, function (collapsedCluster, clusterId) {
                 var visCluster = _.find(visClusters, function (vc) { return vc.id === clusterId; });
                 var nodeCombination = nodeCircleAndLabelTextFromCollapsedCluster(visCluster, collapsedCluster.visNodes, collapsedCluster.visLinks);
-                newNodeCircles.push(nodeCombination.nodeCircle);
+                newNodeCircles[nodeCombination.nodeCircle.id] = nodeCombination.nodeCircle;
                 if (nodeCombination.labelText)
                     newLabelTexts.push(nodeCombination.labelText);
             });
@@ -3935,11 +3941,11 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
             
             var newLinkLines = [];
             _.each(visLinks, function (visLink) {
-                var sourceVisNode = _.find(visNodes, function (vn) { return vn.id === visLink.sourceNodeId; });
+                var sourceVisNode = visNodeLookups[visLink.sourceNodeId]; //_.find(visNodes, function (vn) { return vn.id === visLink.sourceNodeId; });
                 if (!sourceVisNode)
                     throw "Link refers to a source node '" + visLink.sourceNodeId + "' that wasn't found";
             
-                var targetVisNode = _.find(visNodes, function (vn) { return vn.id === visLink.targetNodeId; });
+                var targetVisNode = visNodeLookups[visLink.targetNodeId]; //_.find(visNodes, function (vn) { return vn.id === visLink.targetNodeId; });
                 if (!targetVisNode)
                     throw "Link refers to a target node '" + visLink.targetNodeId + "' that wasn't found";
             
@@ -3955,19 +3961,18 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
             
                 if (sourceVisCluster && sourceVisCluster.isCollapsed) {
                     isClusterLink = true;
-                    sourceNodeCircle = _.find(newNodeCircles, function (nc) { return nc.id === "placeholder-" + sourceVisCluster.id; });
+                    sourceNodeCircle = newNodeCircles['placeholder-' + sourceVisCluster.id]; //_.find(newNodeCircles, function (nc) { return nc.id === "placeholder-" + sourceVisCluster.id; });
                 }
-                else {
-                    sourceNodeCircle = _.find(newNodeCircles, function (nc) { return nc.id === sourceVisNode.id; });
-                }
-                
+                else
+                    sourceNodeCircle = newNodeCircles[sourceVisNode.id]; //_.find(newNodeCircles, function (nc) { return nc.id === sourceVisNode.id; });
+
                 if (targetVisCluster && targetVisCluster.isCollapsed) {
                     isClusterLink = true;
-                    targetNodeCircle = _.find(newNodeCircles, function (nc) { return nc.id === "placeholder-" + targetVisCluster.id; });
-                } else {
-                    targetNodeCircle = _.find(newNodeCircles, function (nc) { return nc.id === targetVisNode.id; });
+                    targetNodeCircle = newNodeCircles['placeholder-' + targetVisCluster.id]; //_.find(newNodeCircles, function (nc) { return nc.id === "placeholder-" + targetVisCluster.id; });
                 }
-                
+                else
+                    targetNodeCircle = newNodeCircles[targetVisNode.id]; //_.find(newNodeCircles, function (nc) { return nc.id === targetVisNode.id; });
+
                 if (isClusterLink) {
                     var id = sourceNodeCircle.id + "->" + targetNodeCircle.id;
                     if (!clusterLinks.hasOwnProperty(id))
@@ -3986,14 +3991,18 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
             });
             
             //[cf]
-        
+
+            // convert newNodeCircles to array
+            newNodeCircles = _.map(newNodeCircles, function(c) { return c; });
+
             // If there is a structural difference compared to last run, and we've started the physics engine,
-            // we need to update the nodes and links on it and call force.start. 
+            // we need to update the nodes and links on it and call force.start.
             var updateForce = false;
             if (force)
                 updateForce = !_.isEqual(nodeCircles, newNodeCircles) || !_.isEqual(linkLines, newLinkLines);
-        
+
             nodeCircles = newNodeCircles;
+
             linkLines = newLinkLines;
             labelTexts = newLabelTexts;
             clusterHulls = newClusterHulls;
@@ -4077,7 +4086,7 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
             }
         
             renderer.updatePositions(clusterHulls, linkLines, nodeCircles, labelTexts, xScale, yScale, radiusFactor);
-        }
+        };
         //[cf]
     
         //[of]:        function cluster(alpha) {

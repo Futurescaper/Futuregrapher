@@ -1,9 +1,0 @@
-{
-    "name": "futuregrapher",
-    "description": "Create and manipulate D3 force-directed graphs",
-    "homepage": "https://github.com/Futurescaper/futuregrapher",
-    "author": "Futurescaper Ltd.",
-    "version": "0.9.1",
-    "git": "https://github.com/Futurescaper/futuregrapher.git",
-    "packages": {}
-}
