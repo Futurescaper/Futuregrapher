@@ -3166,7 +3166,7 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
             });
         }
 
-        function getTransform(d, xScale, yScaoe) {
+        function getTransform(d, xScale, yScale) {
             var xs = xScale(d.x);
             var ys = yScale(d.y);
             return "translate(" + [isNaN(xs) ? 0 : xs, isNaN(ys) ? 0 : ys] + ")";
