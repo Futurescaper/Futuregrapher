@@ -1,6 +1,6 @@
 Package.describe({
     summary: "Network visualization library",
-    version: "1.0.5",
+    version: "1.0.6",
     name: "futurescaper:futuregrapher",
     git: "https://github.com/Futurescaper/futuregrapher.git"
 });
