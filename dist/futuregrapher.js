@@ -2707,7 +2707,12 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
                         sy = pt.y;
                     }
                 }
-                
+
+                if(isNaN(sx)) sx = 0;
+                if(isNaN(sy)) sy = 0;
+                if(isNaN(xt)) xt = 0;
+                if(isNaN(yt)) yt = 0;
+
                 return "M " + sx + " " + sy + " A " + dr + " " + dr + " 0 0 " + (xt > xs ? "1" : "0") + " " + xt + " " + yt;
 
                 /*
@@ -3031,8 +3036,14 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
                 })
                 .style("opacity", 1e-6)
                 .append("svg:text")
-                .attr("x", function (d) { return d.offsetX * radiusFactor; })
-                .attr("y", function (d) { return d.offsetY * radiusFactor; })
+                .attr("x", function (d) {
+                    var x = d.offsetX * radiusFactor;
+                    return (isNaN(x) || x == Infinity) ? 0 : x;
+                })
+                .attr("y", function (d) {
+                    var y = d.offsetY * radiusFactor;
+                    return (isNaN(y) || y == Infinity) ? 0 : y;
+                })
                 .style("font-size", function (d) { return d.fontSize * radiusFactor; });
             
             attachEvents(labelEnter, labelTexts);
@@ -3378,7 +3389,7 @@ define('futuregrapher/linkline',['require','futuregrapher/typechecker'],function
     LinkLine.prototype.updateProperties = function (properties) {
         TypeChecker.checkProperties(properties, [], this.propertyTypes, true);
         _.extend(this, properties);
-    }
+    };
     
     return LinkLine;
 });
