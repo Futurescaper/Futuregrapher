@@ -3062,8 +3062,14 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
                 .text(function (d) { return d.text; })
                 .transition().duration(transitionDuration)
                 .attr("text-anchor", function (d) { return getTextAnchor(d, centroidX); })
-                .attr("x", function (d) { return (getTextAnchor(d, centroidX) === "end" ? -d.offsetX : d.offsetX) * radiusFactor; })
-                .attr("y", function (d) { return d.offsetY * radiusFactor; })
+                .attr("x", function (d) {
+                    var x = (getTextAnchor(d, centroidX) === "end" ? -d.offsetX : d.offsetX) * radiusFactor;
+                    return (isNaN(x) || x == Infinity) ? 0 : x;
+                })
+                .attr("y", function (d) {
+                    var y = d.offsetY * radiusFactor;
+                    return (isNaN(y) || y == Infinity) ? 0 : y;
+                })
                 .style("font-size", function (d) { return d.fontSize * radiusFactor; })
                 .style("fill", function (d) { return d.color; });
             
@@ -3155,8 +3161,14 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
             
             label.select("text")
                 .attr("text-anchor", function (d) { return getTextAnchor(d, centroidX); })
-                .attr("x", function (d) { return (getTextAnchor(d, centroidX) === "end" ? -d.offsetX : d.offsetX) * radiusFactor; })
-                .attr("y", function (d) { return d.offsetY * radiusFactor; })
+                .attr("x", function (d) {
+                    var x = (getTextAnchor(d, centroidX) === "end" ? -d.offsetX : d.offsetX) * radiusFactor;
+                    return (isNaN(x) || x == Infinity) ? 0 : x;
+                })
+                .attr("y", function (d) {
+                    var y = d.offsetY * radiusFactor;
+                    return (isNaN(y) || y == Infinity) ? 0 : y;
+                })
                 .style("font-size", function (d) { return d.fontSize * radiusFactor; });
 
             previousRadiusFactor = radiusFactor;
