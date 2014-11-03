@@ -2549,7 +2549,6 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
 
     // Polyfill for Function.prototype.bind in case it doesn't exist.
     if (!Function.prototype.bind) {
-        //[of]:        Function.prototype.bind = function (oThis) {
         Function.prototype.bind = function (oThis) {
             if (typeof this !== "function") {
                 // closest thing possible to the ECMAScript 5
@@ -2572,7 +2571,6 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
             
             return fBound;
         };
-        //[cf]
     }
     
     var SvgRenderer = function (containerElement, options) {
@@ -2586,7 +2584,6 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
         this.width = function () { return containerElement.width(); };
         this.height = function () { return containerElement.height(); };
     
-        //[of]:        function makeHull(d, xScale, yScale) {
         function makeHull(d, xScale, yScale, radiusFactor) {
             var nodes = d.nodeCircles;
             var nodePoints = [];
@@ -2607,8 +2604,7 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
         
             return clusterCurve(d3.geom.hull(nodePoints));
         }
-        //[cf]
-        //[of]:        function makeLinkPath(d, xScale, yScale, radiusFactor) {
+
         function makeLinkPath(d, xScale, yScale, radiusFactor) {
             var sx = xScale(d.source.x);
             var sy = yScale(d.source.y);
@@ -2646,10 +2642,8 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
                 var result = "M " + rsx + " " + rsy + " L " + rtx + " " + rty;
                 
                 return result;
-            } else {
-                //[of]:        Original curve
-                //[c]Original curve
-                
+            }
+            else {
                 var dir = true;
                 
                 if(xs == xt && ys == yt)  // loop it
@@ -2715,10 +2709,7 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
                 }
                 
                 return "M " + sx + " " + sy + " A " + dr + " " + dr + " 0 0 " + (xt > xs ? "1" : "0") + " " + xt + " " + yt;
-                //[cf]
-                //[of]:        Simple curve
-                //[c]Simple curve
-                
+
                 /*
                 var sr = (d.source.radius + d.source.borderWidth) * radiusFactor;
                 var tr = (d.target.radius + d.target.borderWidth) * radiusFactor;
@@ -2743,10 +2734,7 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
                 //[cf]
             }
         }
-        
-        
-        //[cf]
-        //[of]:        function linkTween(xScale, yScale, radiusFactor, d, i, a) {
+
         function linkTween(xScale, yScale, radiusFactor, d, i, a) {
             return function (b) {
                 if(!d || !b)
@@ -2770,9 +2758,8 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
                 // and join it back together
                 return vals.join(' ');
             }
-        };
-        //[cf]
-        //[of]:        function makeMarkerDefs(linkLines) {
+        }
+
         function makeMarkerDefs(linkLines) {
             var sizeColorCombos = {};
             
@@ -2789,8 +2776,7 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
             
             return _.map(sizeColorCombos, function (sizeColorCombo, id) { return sizeColorCombo; });
         }
-        //[cf]
-        //[of]:        function getTextAnchor(labelText, xScale) {
+
         function getTextAnchor(labelText, centroidX) {
             if (labelText.anchor === "auto") {
                 return labelText.x < centroidX ? "end" : "start";
@@ -2798,13 +2784,10 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
                 return labelText.anchor;
             }
         }
-        //[cf]
-    
-        //[of]:        function attachEvents(selection, renderItems) {
+
         // This is an attempt to make a general purpose attach-eventhandlers-to-visual-element function. This is hard though.
         // If you want to support a complex set of events like click, double-click and drag, you will probably have better luck
         // with creating handlers for mousedown and mouseup and keeping track of timing, double click etc. yourself.
-        
         function attachEvents(selection, renderItems) {
             var dragBehavior;
         
@@ -2881,27 +2864,21 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
                 }
             });
         }
-        //[cf]
-    
-        //[of]:        this.getLayer = function (name) {
+
         this.getLayer = function (name) {
             return layers[name];
         };
-        //[cf]
-        
-        //[of]:        this.update = function (clusterHulls, linkLines, nodeCircles, labelTexts, xScale, yScale, radiusFactor, transitionDuration) {
+
         this.update = function (clusterHulls, linkLines, nodeCircles, labelTexts, xScale, yScale, radiusFactor, transitionDuration) {
             transitionDuration = transitionDuration === undefined ? 250 : transitionDuration;
         
             // This is used to know where labels with anchor="auto" should go.
             var centroidX = d3.mean(nodeCircles, function (nc) { return nc.x; });
-            
-            //[of]:    Clusters
-            //[c]Clusters
-            
-            if (TypeChecker.enabled) {
-                _.each(clusterHulls, function (ch) { TypeChecker.checkProperties(ch, ch.propertyTypes, ch.optionalPropertyTypes, true); });
-            }
+
+            if (TypeChecker.enabled)
+                _.each(clusterHulls, function (ch) {
+                    TypeChecker.checkProperties(ch, ch.propertyTypes, ch.optionalPropertyTypes, true);
+                });
             
             var cluster = layers.clusters.selectAll("path.cluster")
                 .data(clusterHulls, function (d) { return d.id; });
@@ -2929,13 +2906,7 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
             
             cluster.select("title")
                 .text(function (d) { return d.hoverText; });    
-            
-            
-            
-            //[cf]
-            //[of]:    Link markers
-            //[c]Link markers
-            
+
             var markerDefs = makeMarkerDefs(linkLines);
             
             var marker = defs.selectAll("marker.generated")
@@ -2963,15 +2934,12 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
             
             marker.exit()
                 .remove();
-            
-            //[cf]
-            //[of]:    Links
-            //[c]Links
-            
-            if (TypeChecker.enabled) {
-                _.each(linkLines, function (ll) { TypeChecker.checkProperties(ll, ll.propertyTypes, ll.optionalPropertyTypes, true); });
-            }
-            
+
+            if (TypeChecker.enabled)
+                _.each(linkLines, function (ll) {
+                    TypeChecker.checkProperties(ll, ll.propertyTypes, ll.optionalPropertyTypes, true);
+                });
+
             var link = layers.links.selectAll("path.link")
                 .data(linkLines, function (d) { return d.id; });
             
@@ -3007,13 +2975,10 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
             link.select("title")
                 .text(function (d) { return d.hoverText; });    
             
-            //[cf]
-            //[of]:    Nodes
-            //[c]Nodes
-            
-            if (TypeChecker.enabled) {
-                _.each(nodeCircles, function (nc) { TypeChecker.checkProperties(nc, nc.propertyTypes, nc.optionalPropertyTypes, true); });
-            }
+            if (TypeChecker.enabled)
+                _.each(nodeCircles, function (nc) {
+                    TypeChecker.checkProperties(nc, nc.propertyTypes, nc.optionalPropertyTypes, true);
+                });
             
             var node = layers.nodes.selectAll("circle.node")
                 .data(nodeCircles, function (d) { return d.id; });
@@ -3038,7 +3003,9 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
             node.transition().duration(transitionDuration)
                 .attr("cx", function (d) { var sx = xScale(d.x); return isNaN(sx) ? 0 : sx; })
                 .attr("cy", function (d) { var sy = yScale(d.y); return isNaN(sy) ? 0 : sy; })
-                .attr("r", function (d) { return d.radius * radiusFactor; })
+                .attr("r", function (d) {
+                    return (d.radius||1) * (radiusFactor < 100 ? radiusFactor : 100);
+                })
                 .style("stroke-width", function (d) { return d.borderWidth * radiusFactor; })
                 .style("opacity", function (d) { return d.opacity; })
                 .style("fill", function (d) { return d.color; })
@@ -3046,15 +3013,12 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
             
             node.select("title")
                 .text(function (d) { return d.hoverText; });    
-            
-            //[cf]
-            //[of]:    Labels
-            //[c]Labels
-            
-            if (TypeChecker.enabled) {
-                _.each(labelTexts, function (lt) { TypeChecker.checkProperties(lt, lt.propertyTypes, lt.optionalPropertyTypes, true); });
-            }
-            
+
+            if (TypeChecker.enabled)
+                _.each(labelTexts, function (lt) {
+                    TypeChecker.checkProperties(lt, lt.propertyTypes, lt.optionalPropertyTypes, true);
+                });
+
             var label = layers.labels.selectAll("g.label")
                 .data(labelTexts, function (d) { return d.id; });
             
@@ -3062,12 +3026,14 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
             labelEnter
                 .attr("class", "label")
                 .attr("data-id", function (d) { return d.id; })
-                .attr("transform", function (d) { return "translate(" + [xScale(d.x), yScale(d.y)] + ")"; })
+                .attr("transform", function (d) {
+                    return getTransform(d, xScale, yScale);
+                })
                 .style("opacity", 1e-6)
                 .append("svg:text")
                 .attr("x", function (d) { return d.offsetX * radiusFactor; })
                 .attr("y", function (d) { return d.offsetY * radiusFactor; })
-                .style("font-size", function (d) { return d.fontSize * radiusFactor; })
+                .style("font-size", function (d) { return d.fontSize * radiusFactor; });
             
             attachEvents(labelEnter, labelTexts);
             
@@ -3076,8 +3042,10 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
                 .remove();
             
             label.transition().duration(transitionDuration)
-                .attr("transform", function (d) { return "translate(" + [xScale(d.x), yScale(d.y)] + ")"; })
-                .style("opacity", function (d) { return d.opacity; })
+                .attr("transform", function (d) {
+                    return getTransform(d, xScale, yScale);
+                })
+                .style("opacity", function (d) { return d.opacity; });
             
             label.select("text")
                 .text(function (d) { return d.text; })
@@ -3087,32 +3055,20 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
                 .attr("y", function (d) { return d.offsetY * radiusFactor; })
                 .style("font-size", function (d) { return d.fontSize * radiusFactor; })
                 .style("fill", function (d) { return d.color; });
-            //    .style("stroke-width", function (d) { return 0.5 * radiusFactor; })
-            //    .style("stroke", function (d) { return d.borderColor; });
-            
-            //[cf]
             
             previousRadiusFactor = radiusFactor;
         };
-        //[cf]
-        //[of]:        this.updatePositions = function (clusterHulls, linkLines, nodeCircles, labelTexts, xScale, yScale, radiusFactor) {
+
         this.updatePositions = function (clusterHulls, linkLines, nodeCircles, labelTexts, xScale, yScale, radiusFactor) {
         
             // This is used to know where labels with anchor="auto" should go.
             var centroidX = d3.mean(nodeCircles, function (nc) { return nc.x; });
         
-            //[of]:    Clusters
-            //[c]Clusters
-            
             var cluster = layers.clusters.selectAll("path.cluster")
                 .data(clusterHulls, function (d) { return d.id; });
             
             cluster
                 .attr("d", function (d) { return makeHull(d, xScale, yScale, radiusFactor); });
-            
-            //[cf]
-            //[of]:    Link markers
-            //[c]Link markers
             
             var markerDefs = makeMarkerDefs(linkLines);
             
@@ -3140,14 +3096,11 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
             
             marker.exit()
                 .remove();
-            
-            //[cf]
-            //[of]:    Links
-            //[c]Links
-            
-            if (TypeChecker.enabled) {
-                _.each(linkLines, function (ll) { TypeChecker.checkProperties(ll, ll.propertyTypes, ll.optionalPropertyTypes, true); });
-            }
+
+            if (TypeChecker.enabled)
+                _.each(linkLines, function (ll) {
+                    TypeChecker.checkProperties(ll, ll.propertyTypes, ll.optionalPropertyTypes, true);
+                });
             
             var link = layers.links.selectAll("path.link")
                 .data(linkLines, function (d) { return d.id; });
@@ -3155,17 +3108,14 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
             link
                 .attr("d", function (d) { return makeLinkPath(d, xScale, yScale, radiusFactor); })
             
-            if (radiusFactor !== previousRadiusFactor) {
+            if (radiusFactor !== previousRadiusFactor)
                 link
                     .style("stroke-width", function (d) { return d.width * radiusFactor; });
-            }
-            //[cf]
-            //[of]:    Nodes
-            //[c]Nodes
             
-            if (TypeChecker.enabled) {
-                _.each(nodeCircles, function (nc) { TypeChecker.checkProperties(nc, nc.propertyTypes, nc.optionalPropertyTypes, true); });
-            }
+            if (TypeChecker.enabled)
+                _.each(nodeCircles, function (nc) {
+                    TypeChecker.checkProperties(nc, nc.propertyTypes, nc.optionalPropertyTypes, true);
+                });
             
             var node = layers.nodes.selectAll("circle.node")
                 .data(nodeCircles, function (d) { return d.id; });
@@ -3174,38 +3124,33 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
                 .attr("cx", function (d) { var sx = xScale(d.x); return isNaN(sx) ? 0 : sx; })
                 .attr("cy", function (d) { var sy = yScale(d.y); return isNaN(sy) ? 0 : sy; })
             
-            if (radiusFactor !== previousRadiusFactor) {
+            if (radiusFactor !== previousRadiusFactor)
                 node
                     .attr("r", function (d) { return d.radius * radiusFactor; })
                     .style("stroke-width", function (d) { return d.borderWidth * radiusFactor; });
-            }
-            //[cf]
-            //[of]:    Labels
-            //[c]Labels
             
-            if (TypeChecker.enabled) {
-                _.each(labelTexts, function (lt) { TypeChecker.checkProperties(lt, lt.propertyTypes, lt.optionalPropertyTypes, true); });
-            }
+            if (TypeChecker.enabled)
+                _.each(labelTexts, function (lt) {
+                    TypeChecker.checkProperties(lt, lt.propertyTypes, lt.optionalPropertyTypes, true);
+                });
             
             var label = layers.labels.selectAll("g.label")
                 .data(labelTexts, function (d) { return d.id; });
             
             label
-                .attr("transform", function (d) { return "translate(" + [xScale(d.x), yScale(d.y)] + ")"; });
+                .attr("transform", function (d) {
+                    return getTransform(d, xScale, yScale);
+                });
             
             label.select("text")
                 .attr("text-anchor", function (d) { return getTextAnchor(d, centroidX); })
                 .attr("x", function (d) { return (getTextAnchor(d, centroidX) === "end" ? -d.offsetX : d.offsetX) * radiusFactor; })
                 .attr("y", function (d) { return d.offsetY * radiusFactor; })
                 .style("font-size", function (d) { return d.fontSize * radiusFactor; });
-            
-            //[cf]
-            
+
             previousRadiusFactor = radiusFactor;
         };
-        //[cf]
-        
-        //[of]:        function initialize() {
+
         function initialize() {
             svg = d3.select(containerElement[0]).append("svg")
                 .attr("width", containerElement.width())
@@ -3220,7 +3165,13 @@ define('futuregrapher/svgrenderer',['require','futuregrapher/svgrendererdefaulto
                     .attr("class", "layer");
             });
         }
-        //[cf]
+
+        function getTransform(d, xScale, yScaoe) {
+            var xs = xScale(d.x);
+            var ys = yScale(d.y);
+            return "translate(" + [isNaN(xs) ? 0 : xs, isNaN(ys) ? 0 : ys] + ")";
+        }
+
         initialize();
     };
 
@@ -3469,7 +3420,7 @@ define('futuregrapher/labeltext',['require','futuregrapher/typechecker'],functio
     LabelText.prototype.updateProperties = function (properties) {
         TypeChecker.checkProperties(properties, [], this.propertyTypes, true);
         _.extend(this, properties);
-    }
+    };
 
     return LabelText;
 });
@@ -3542,7 +3493,6 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
         var zoomDensityScale = options.zoomDensityScale;
         var radiusFactor = zoomDensityScale(1);
     
-        //[of]:        function zoomed() {
         // This function is called by zoomBehavior and this.zoomPan to update the graph
         function zoomed() {
             var newRadiusFactor = zoomDensityScale(zoomBehavior.scale());
@@ -3564,23 +3514,20 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
                 d3.event.sourceEvent.stopPropagation();
             }
         }
-        //[cf]
+
         var zoomBehavior = d3.behavior.zoom()
             .x(xScale)
             .y(yScale)
             .scaleExtent(options.zoomExtent)
             .on("zoom", zoomed);
     
-        //[of]:        this.unscaleCoords = function(screenCoords) {
         this.unscaleCoords = function(screenCoords) {
             var unscaledX = xScale.invert(screenCoords[0]);
             var unscaledY = yScale.invert(screenCoords[1]);
             
             return [unscaledX, unscaledY];
         };
-        //[cf]
-    
-        //[of]:        function clusterHullFromVisCluster(visCluster) {
+
         function clusterHullFromVisCluster(visCluster) {
             var clusterHull;
             var id = visCluster.id;
@@ -3593,20 +3540,22 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
             }
         
             clusterHull.eventHandlers = {};    
-            if (options.onClusterClick) { clusterHull.eventHandlers.click = options.onClusterClick; }
+            if (options.onClusterClick)
+                clusterHull.eventHandlers.click = options.onClusterClick;
         
             // If a double click handler is provided, use it. Otherwise, default behavior is to collapse the cluster when double-clicking.
-            if (options.onClusterDoubleClick) { 
-                clusterHull.eventHandlers.dblclick = options.onClusterDoubleClick; 
-            } else {
-                clusterHull.eventHandlers.dblclick = function (d) { 
+            if (options.onClusterDoubleClick)
+                clusterHull.eventHandlers.dblclick = options.onClusterDoubleClick;
+            else
+                clusterHull.eventHandlers.dblclick = function () {
                     visCluster.isCollapsed = true;
                     self.update();
                 };
-            }
         
-            if (options.onClusterMouseOver) { clusterHull.eventHandlers.mouseover = options.onClusterMouseOver; }
-            if (options.onClusterMouseOut) { clusterHull.eventHandlers.mouseout = options.onClusterMouseOut; }
+            if (options.onClusterMouseOver)
+                clusterHull.eventHandlers.mouseover = options.onClusterMouseOver;
+            if (options.onClusterMouseOut)
+                clusterHull.eventHandlers.mouseout = options.onClusterMouseOut;
         
             clusterHull.nodeCircles = [];   // Do this so we can safely push nodeCircle's in here, even if we're reusing an old ClusterHull.
         
@@ -3618,8 +3567,6 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
             return clusterHull;
         }
         
-        //[cf]
-        //[of]:        function labelTextFromLabelDescription(label, id, x, y, nodeCircleColor, nodeCircleBorderColor, nodeCircleOpacity) {
         function labelTextFromLabelDescription(label, id, x, y, nodeCircleColor, nodeCircleBorderColor, nodeCircleOpacity) {
             var offsetX = _.isUndefined(label.offsetX) ? 0 : label.offsetX;
             var offsetY = _.isUndefined(label.offsetY) ? 0 : label.offsetY;
@@ -3653,8 +3600,7 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
         
             return result;
         }
-        //[cf]
-        //[of]:        function nodeCircleAndLabelTextFromVisNode(visNode) {
+
         function nodeCircleAndLabelTextFromVisNode(visNode) {
             var nodeCircle, labelText;
             var id = visNode.id;
@@ -3726,41 +3672,46 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
                 labelText: labelText
             };
         }
-        //[cf]
-        //[of]:        function nodeCircleAndLabelTextFromCollapsedCluster(visCluster, clusterVisNodes) {
+
         function nodeCircleAndLabelTextFromCollapsedCluster(visCluster, clusterVisNodes, clusterVisLinks) {
             var nodeCircle, labelText;
             var id = "placeholder-" + visCluster.id;
         
             var oldNodeCircle = _.find(nodeCircles, function (nc) { return nc.id === id; });
-            if (oldNodeCircle) {
+            if (oldNodeCircle)
                 nodeCircle = oldNodeCircle;
-            } else {
+            else {
                 nodeCircle = new NodeCircle(id, { visCluster: visCluster, visNodes: clusterVisNodes, visLinks: clusterVisLinks });
         
                 // If this cluster was just collapsed, nodeCircles (== the node circles of last render cycle) will contain nodeCircle instances
                 // for the individual nodes in the cluster. We need to position this new placeholder in the centroid of those.
-                var oldClusterNodeCircles = _.filter(nodeCircles, function (nc) { return nc.visData && nc.visData.clusterId === visCluster.id; });
+                var oldClusterNodeCircles = _.filter(nodeCircles, function (nc) {
+                    return nc.visData && nc.visData.clusterId === visCluster.id;
+                });
+
                 if (oldClusterNodeCircles.length) {
                     nodeCircle.x = d3.mean(oldClusterNodeCircles, function (nc) { return nc.x; });
                     nodeCircle.y = d3.mean(oldClusterNodeCircles, function (nc) { return nc.y; });
                 }
         
                 nodeCircle.eventHandlers = {};    
-                if (options.onClusterNodeClick) { nodeCircle.eventHandlers.click = options.onClusterNodeClick; }
+                if (options.onClusterNodeClick)
+                    nodeCircle.eventHandlers.click = options.onClusterNodeClick;
                 
-                if (options.onClusterNodeDoubleClick) { 
+                if (options.onClusterNodeDoubleClick)
                     nodeCircle.eventHandlers.dblclick = options.onClusterNodeDoubleClick; 
-                } else {
-                    nodeCircle.eventHandlers.dblclick = function (d) {
+                else
+                    nodeCircle.eventHandlers.dblclick = function () {
                         visCluster.isCollapsed = false; 
                         self.update(); 
                     }
-                }
                 
-                if (options.onClusterNodeMouseOver) { nodeCircle.eventHandlers.mouseover = options.onClusterNodeMouseOver; }
-                if (options.onClusterNodeMouseOut) { nodeCircle.eventHandlers.mouseout = options.onClusterNodeMouseOut; }
-                if (options.onClusterNodeDragStart) { nodeCircle.eventHandlers.dragstart = options.onClusterNodeDragStart; }
+                if (options.onClusterNodeMouseOver)
+                    nodeCircle.eventHandlers.mouseover = options.onClusterNodeMouseOver;
+                if (options.onClusterNodeMouseOut)
+                    nodeCircle.eventHandlers.mouseout = options.onClusterNodeMouseOut;
+                if (options.onClusterNodeDragStart)
+                    nodeCircle.eventHandlers.dragstart = options.onClusterNodeDragStart;
             }
         
             var dynamicDescription = options.describeCollapsedCluster ? options.describeCollapsedCluster(visCluster, clusterVisNodes, radiusFactor) : {};
@@ -3798,8 +3749,7 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
                 labelText: labelText
             };
         }
-        //[cf]
-        //[of]:        function linkLineFromVisLinkAndNodeCircles(visLink, sourceNodeCircle, targetNodeCircle) {
+
         function linkLineFromVisLinkAndNodeCircles(visLink, sourceNodeCircle, targetNodeCircle) {
             var linkLine;
             var id = sourceNodeCircle.id + "->" + targetNodeCircle.id;
@@ -3811,10 +3761,14 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
                 linkLine = new LinkLine(id, sourceNodeCircle, targetNodeCircle, visLink);
         
                 linkLine.eventHandlers = {};    
-                if (options.onLinkClick) { linkLine.eventHandlers.click = options.onLinkClick; }
-                if (options.onLinkDoubleClick) { linkLine.eventHandlers.dblclick = options.onLinkDoubleClick; }
-                if (options.onLinkMouseOver) { linkLine.eventHandlers.mouseover = options.onLinkMouseOver; }
-                if (options.onLinkMouseOut) { linkLine.eventHandlers.mouseout = options.onLinkMouseOut; }
+                if (options.onLinkClick)
+                    linkLine.eventHandlers.click = options.onLinkClick;
+                if (options.onLinkDoubleClick)
+                    linkLine.eventHandlers.dblclick = options.onLinkDoubleClick;
+                if (options.onLinkMouseOver)
+                    linkLine.eventHandlers.mouseover = options.onLinkMouseOver;
+                if (options.onLinkMouseOut)
+                    linkLine.eventHandlers.mouseout = options.onLinkMouseOut;
             }
         
             var dynamicDescription = options.describeVisLink ? options.describeVisLink(visLink, sourceNodeCircle, targetNodeCircle, radiusFactor) : {};
@@ -3824,8 +3778,7 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
         
             return linkLine;
         }
-        //[cf]
-        //[of]:        function linkLineFromClusterLink(sourceNodeCircle, targetNodeCircle, visLinks) {
+
         function linkLineFromClusterLink(sourceNodeCircle, targetNodeCircle, visLinks) {
             var linkLine;
             var id = sourceNodeCircle.id + "->" + targetNodeCircle.id;
@@ -3837,10 +3790,14 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
                 linkLine = new LinkLine(id, sourceNodeCircle, targetNodeCircle, visLinks);
         
                 linkLine.eventHandlers = {};    
-                if (options.onLinkClick) { linkLine.eventHandlers.click = options.onLinkClick; }
-                if (options.onLinkDoubleClick) { linkLine.eventHandlers.dblclick = options.onLinkDoubleClick; }
-                if (options.onLinkMouseOver) { linkLine.eventHandlers.mouseover = options.onLinkMouseOver; }
-                if (options.onLinkMouseOut) { linkLine.eventHandlers.mouseout = options.onLinkMouseOut; }
+                if (options.onLinkClick)
+                    linkLine.eventHandlers.click = options.onLinkClick;
+                if (options.onLinkDoubleClick)
+                    linkLine.eventHandlers.dblclick = options.onLinkDoubleClick;
+                if (options.onLinkMouseOver)
+                    linkLine.eventHandlers.mouseover = options.onLinkMouseOver;
+                if (options.onLinkMouseOut)
+                    linkLine.eventHandlers.mouseout = options.onLinkMouseOut;
             }
         
             var dynamicDescription = options.describeClusterLink ? options.describeClusterLink(visLinks, sourceNodeCircle, targetNodeCircle, radiusFactor) : {};
@@ -3850,9 +3807,7 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
         
             return linkLine;
         }
-        //[cf]
-    
-        //[of]:        this.update = function (newVisNodes, newVisLinks, newVisClusters, transitionDuration, updateType) {
+
         this.update = function (newVisNodes, newVisLinks, newVisClusters, transitionDuration, updateType) {
             if (newVisNodes) {
                 visNodes = newVisNodes;
@@ -3861,10 +3816,15 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
                     visNodeLookups[vn.id] = vn;
                 });
             }
-            if (newVisLinks) visLinks = newVisLinks;
-            if (newVisClusters) visClusters = newVisClusters;
-            if (_.isUndefined(transitionDuration)) transitionDuration = 250;
-            if (!updateType) updateType = "update";
+
+            if (newVisLinks)
+                visLinks = newVisLinks;
+            if (newVisClusters)
+                visClusters = newVisClusters;
+            if (_.isUndefined(transitionDuration))
+                transitionDuration = 250;
+            if (!updateType)
+                updateType = "update";
         
             if (options.onUpdatePreProcess) {
                 var params = {
@@ -3882,9 +3842,6 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
                 transitionDuration = params.transitionDuration;
             }
         
-            //[of]:    Create cluster hulls
-            //[c]Create cluster hulls
-            
             var newClusterHulls = [];   // We'll only create hulls for expanded clusters
             var collapsedClusters = {};  // Collapsed ones go in here to turn into placeholder NodeCircles
             _.each(visClusters, function (vc) {
@@ -3893,10 +3850,6 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
                 else
                     collapsedClusters[vc.id] = { visNodes: [], visLinks: [] };
             });
-            
-            //[cf]
-            //[of]:    Create node circles and label texts
-            //[c]Create node circles and label texts
             
             var newNodeCircles = {};
             var newLabelTexts = [];
@@ -3912,7 +3865,8 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
             
                         if (nodeCombination.labelText)
                             newLabelTexts.push(nodeCombination.labelText);
-                    } else {
+                    }
+                    else {
                         if (!collapsedClusters.hasOwnProperty(visNode.clusterId))
                             throw "Node '" + visNode.id + "' refers to a cluster '" + visNode.clusterId + "' that wasn't defined";
                         
@@ -3933,10 +3887,7 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
                 if (nodeCombination.labelText)
                     newLabelTexts.push(nodeCombination.labelText);
             });
-            //[cf]
-            //[of]:    Create link lines
-            //[c]Create link lines
-            
+
             var clusterLinks = {};
             
             var newLinkLines = [];
@@ -3989,8 +3940,6 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
                 var linkLine = linkLineFromClusterLink(clusterLink.source, clusterLink.target, clusterLink.visLinks);
                 newLinkLines.push(linkLine);
             });
-            
-            //[cf]
 
             // convert newNodeCircles to array
             newNodeCircles = _.map(newNodeCircles, function(c) { return c; });
@@ -4048,8 +3997,7 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
             
             renderer.update(clusterHulls, linkLines, nodeCircles, labelTexts, xScale, yScale, radiusFactor, transitionDuration);
         };
-        //[cf]
-        //[of]:        this.updatePositions = function (updateType) {
+
         this.updatePositions = function (updateType) {
             if (options.onUpdateAutoZoom) {
                 var renderElements = { clusterHulls: clusterHulls, linkLines: linkLines, nodeCircles: nodeCircles, labelTexts: labelTexts };
@@ -4059,6 +4007,8 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
                 if (updatedZoom.translate) zoomBehavior.translate(updatedZoom.translate);
         
                 radiusFactor = zoomDensityScale(zoomBehavior.scale());
+                if(radiusFactor > 100)
+                    radiusFactor = 100;
             }
         
             if (options.onUpdatePreRender) {
@@ -4087,9 +4037,7 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
         
             renderer.updatePositions(clusterHulls, linkLines, nodeCircles, labelTexts, xScale, yScale, radiusFactor);
         };
-        //[cf]
-    
-        //[of]:        function cluster(alpha) {
+
         function cluster(alpha) {
             return function(d) {
                 if (d.id.indexOf("placeholder") === 0) return;
@@ -4114,8 +4062,7 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
                 }
             };
         }
-        //[cf]
-        //[of]:        function collide(alpha) {
+
         function collide(alpha) {
             var padding = 10; // separation between same-color nodes
             var clusterPadding = 20; // separation between different-color nodes
@@ -4152,8 +4099,7 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
                 });
             };
         }
-        //[cf]
-        //[of]:        function tick(e) {
+
         function tick(e) {
             if (options.enableClusterForce)
                 _(nodeCircles).each(cluster(0.01));
@@ -4173,9 +4119,7 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
             else
                 self.update(null, null, null, 0, "tick");
         }
-        //[cf]
-    
-        //[of]:        this.startForce = function () {
+
         this.startForce = function () {
             if (force) {
                 force.start();
@@ -4195,13 +4139,11 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
                     .start();
             }
         };
-        //[cf]
-        //[of]:        this.resumeForce = function () {
+
         this.resumeForce = function () {
             force.resume();
-        }
-        //[cf]
-        //[of]:        this.updateForceDynamics = function (newForceParameters) {
+        };
+
         this.updateForceDynamics = function (newForceParameters) {
             _.extend(options.forceParameters, newForceParameters);
         
@@ -4222,26 +4164,21 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
                     force.start();
             }
         };
-        //[cf]
-        //[of]:        this.stopForce = function () {
+
         this.stopForce = function () {
             if (force) force.stop();
-        }
-        //[cf]
-    
-        //[of]:        this.zoomPan = function (scale, translate) {
+        };
+
         this.zoomPan = function (scale, translate) {
             zoomBehavior.scale(scale).translate(translate);
             zoomed();
         };
-        //[cf]
-    
+
         this.getVisNode = function(id) {
             if(nodeCircles)
                 return _.findWhere(nodeCircles, { id: id.toString() });
         };
     
-        //[of]:        function initialize() {
         function initialize() {
             var container = d3.select(renderer.containerElement()[0]);
             
@@ -4251,13 +4188,16 @@ define('futuregrapher/graphvis',['require','futuregrapher/defaultgraphvisoptions
                     .on("dblclick.zoom", null);
             }
         
-            if (options.onClick) { container.on("click", options.onClick); }
-            if (options.onMouseDown) { container.on("mousedown", options.onMouseDown); }
-            if (options.onMouseUp) { container.on("mouseup", options.onMouseUp); }
-            if (options.onMouseMove) { container.on("mousemove", options.onMouseMove); }
-            
+            if (options.onClick)
+                container.on("click", options.onClick);
+            if (options.onMouseDown)
+                container.on("mousedown", options.onMouseDown);
+            if (options.onMouseUp)
+                container.on("mouseup", options.onMouseUp);
+            if (options.onMouseMove)
+                container.on("mousemove", options.onMouseMove);
         }
-        //[cf]
+
         initialize();
     };
     
