@@ -3,7 +3,7 @@ Futuregrapher  [![Build Status](https://travis-ci.org/Futurescaper/Futuregrapher
 
 Network Visualization Javascript Library
 
-This library combines a number of D3 and custom features into a dynamic graph visualization library. It allows you to work with collapsible clusters as a way of grouping nodes.
+This library combines a number of D3 and customm features into a dynamic graph visualization library. It allows you to work with collapsible clusters as a way of grouping nodes.
 
 It is a plain Javascript library. It can be included with a simple <code>&lt;script&gt;</code> tag, with require.js or amd, or it can be used with Meteor.
 
@@ -20,11 +20,11 @@ and
 
 Meteor
 ------
-The library works as a standalone Meteor package (installed with mrt add futuregrapher) that allows for easy creation and manipulation of a D3 force-directed graph.  It is a separate Git repository, available at https://github.com/Futurescaper/Futuregrapher.
+The library works as a standalone Meteor package (installed with `meteor add futurescaper:futuregrapher`) that allows for easy creation and manipulation of a D3 force-directed graph.  It is a separate Git repository, available at https://github.com/Futurescaper/Futuregrapher.
 
 The package exists on Atmosphere at:
 
-http://atmospherejs.com/package/futuregrapher
+https://atmospherejs.com/futurescaper/futuregrapher
 
 Usage
 =====
