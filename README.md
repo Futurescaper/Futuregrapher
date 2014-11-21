@@ -3,9 +3,9 @@ Futuregrapher  [![Build Status](https://travis-ci.org/Futurescaper/Futuregrapher
 
 Network Visualization Javascript Library
 
-This library combines a number of D3 and customm features into a dynamic graph visualization library. It allows you to work with collapsible clusters as a way of grouping nodes.
+This library combines a number of D3 and custom features into a dynamic graph visualization library. It allows you to work with collapsible clusters as a way of grouping nodes.
 
-It is a plain Javascript library. It can be included with a simple <code>&lt;script&gt;</code> tag, with require.js or amd, or it can be used with Meteor.
+It is a plain JavaScript library. It can be included with a simple <code>&lt;script&gt;</code> tag, with require.js or amd, or it can be used with Meteor.
 
 
 Examples
